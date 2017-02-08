@@ -1,0 +1,64 @@
+﻿<UserControl x:Class="StrikeOne.UserPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:StrikeOne"
+             mc:Ignorable="d" 
+             d:DesignHeight="640" d:DesignWidth="1080">
+    <Grid Background="#88000000">
+        <Image x:Name="BGI" Opacity="0.25" HorizontalAlignment="Right" 
+               Margin="0,-55,-55,-55" Width="750" Source="{StaticResource Icon_alpha}" RenderTransformOrigin="0.5,0.5">
+            <Image.RenderTransform>
+                <RotateTransform x:Name="BgiRotateTransform"/>
+            </Image.RenderTransform>
+        </Image>
+        <Grid Margin="300,120,0,420" VerticalAlignment="Center" Height="100">
+            <Rectangle Fill="Transparent"/>
+            <Image Source="{StaticResource LocalStrike}" HorizontalAlignment="Left" Margin="170,10,0,10" Width="80"/>
+            <TextBlock Text="本机游戏" FontSize="40" Foreground="White" HorizontalAlignment="Left" Margin="260,10,0,0" VerticalAlignment="Top"/>
+            <TextBlock Text="Local Strike" FontSize="22.5" Foreground="White" HorizontalAlignment="Left" Margin="260,61,0,0" VerticalAlignment="Top"/>
+        </Grid>
+        <Grid Margin="300,220,0,320" VerticalAlignment="Center" Height="100">
+            <Rectangle Fill="Transparent"/>
+            <Image Source="{StaticResource CreateRoom}" HorizontalAlignment="Left" Margin="200,10,0,10" Width="80"/>
+            <TextBlock Text="创建房间" FontSize="40" Foreground="White" HorizontalAlignment="Left" Margin="290,10,0,0" VerticalAlignment="Top"/>
+            <TextBlock Text="Create Strike Room" FontSize="22.5" Foreground="White" HorizontalAlignment="Left" Margin="290,61,0,0" VerticalAlignment="Top"/>
+        </Grid>
+        <Grid Margin="300,320,0,220" VerticalAlignment="Center" Height="100">
+            <Rectangle Fill="Transparent"/>
+            <Image Source="{StaticResource JoinRoom}" HorizontalAlignment="Left" Margin="200,10,0,10" Width="80"/>
+            <TextBlock Text="加入房间" FontSize="40" Foreground="White" HorizontalAlignment="Left" Margin="290,10,0,0" VerticalAlignment="Top"/>
+            <TextBlock Text="Join Strike Room" FontSize="22.5" Foreground="White" HorizontalAlignment="Left" Margin="290,61,0,0" VerticalAlignment="Top"/>
+        </Grid>
+        <Grid Margin="300,420,0,120" VerticalAlignment="Center" Height="100">
+            <Rectangle Fill="Transparent"/>
+            <Image Source="{StaticResource Quit}" HorizontalAlignment="Left" Margin="170,10,0,10" Width="80"/>
+            <TextBlock Text="退出账号" FontSize="40" Foreground="White" HorizontalAlignment="Left" Margin="260,10,0,0" VerticalAlignment="Top"/>
+            <TextBlock Text="Quit Strike" FontSize="22.5" Foreground="White" HorizontalAlignment="Left" Margin="260,61,0,0" VerticalAlignment="Top"/>
+        </Grid>
+        <Path Margin="275,0,0,0" Fill="#FF00DCDC" HorizontalAlignment="Left" VerticalAlignment="Center" Width="200" Height="400">
+            <Path.Effect>
+                <DropShadowEffect BlurRadius="10" Color="Gray"/>
+            </Path.Effect>
+            <Path.Data>
+                <PathGeometry>
+                    <PathFigure StartPoint="0,0">
+                        <ArcSegment Point="0,400" Size="200,200" SweepDirection="Clockwise"/>
+                        <LineSegment Point="0,300"/>
+                        <ArcSegment Point="0,100" Size="100,100"/>
+                    </PathFigure>
+                </PathGeometry>
+            </Path.Data>
+        </Path>
+        <Rectangle HorizontalAlignment="Left" Width="300" Fill="White" Stroke="DodgerBlue">
+            <Rectangle.Effect>
+                <DropShadowEffect BlurRadius="5" ShadowDepth="0" Color="DodgerBlue"/>
+            </Rectangle.Effect>
+        </Rectangle>
+        <Grid x:Name="InfoGrid" HorizontalAlignment="Left" Width="300">
+
+        </Grid>
+
+    </Grid>
+</UserControl>

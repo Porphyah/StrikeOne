@@ -1,0 +1,31 @@
+﻿<UserControl x:Class="StrikeOne.LoginPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:StrikeOne"
+             mc:Ignorable="d" 
+             d:DesignHeight="640" d:DesignWidth="1080">
+    <UserControl.Resources>
+        <ResourceDictionary Source="Assets/Assets.xaml"/>
+    </UserControl.Resources>
+    <Grid>
+        <Ellipse x:Name="Avator" Stroke="DodgerBlue" StrokeThickness="3" HorizontalAlignment="Center" Height="150" Margin="0,0,0,250" VerticalAlignment="Bottom" Width="150">
+            <Ellipse.Effect>
+                <DropShadowEffect BlurRadius="8" Color="DodgerBlue" ShadowDepth="0"/>
+            </Ellipse.Effect>
+            <Ellipse.Fill>
+                <ImageBrush x:Name="AvatorImage"/>
+            </Ellipse.Fill>
+        </Ellipse>
+        <ComboBox x:Name="UsersBox" Foreground="DodgerBlue" Margin="250,0,250,180" VerticalAlignment="Bottom" SelectionChanged="SelectUser"/>
+        <Grid x:Name="ButtonGrid" Height="40" Margin="320,0,320,100" VerticalAlignment="Bottom">
+            <Button Content="登录" FontSize="15" Style="{StaticResource DefaultGreenButtonStyle}" HorizontalAlignment="Right" Margin="0,0,50,0" Width="120"/>
+            <Button Content="注册" FontSize="15" Style="{StaticResource DefaultBlueButtonStyle}" HorizontalAlignment="Left" Margin="50,0,0,0" Width="120" Click="SignupClick"/>
+        </Grid>
+        <TextBlock x:Name="NonUserText" Style="{StaticResource SegoeScript}" FontSize="50" TextAlignment="Center"  Margin="300,250,300,0" TextWrapping="Wrap" Text="No One in Game." VerticalAlignment="Top"/>
+        <TextBlock x:Name="NonUserDescription" HorizontalAlignment="Stretch" FontSize="15" TextAlignment="Center" Margin="275,330,275,0" TextWrapping="Wrap" Text="您尚未注册任何一个玩家身份。先注册一个吧。" VerticalAlignment="Top"/>
+        <Button x:Name="SignupButton" Content="注册" FontSize="15" Style="{StaticResource DefaultBlueButtonStyle}" Margin="450,375,450,0" Height="35" VerticalAlignment="Top" Click="SignupClick"/>
+
+    </Grid>
+</UserControl>

@@ -1,0 +1,22 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:StrikeOne"
+                    xmlns:Drawing="clr-namespace:System.Drawing;assembly=System.Drawing">
+    <Style x:Key="SegoeScript">
+        <Style.Setters>
+            <Setter Property="TextElement.FontFamily" Value="#Segoe Script"/>
+        </Style.Setters>
+    </Style>
+    
+    <BitmapImage x:Key="Icon_alpha" UriSource="Icon_alpha.png"/>
+    <BitmapImage x:Key="Icon_beta" UriSource="Icon_beta.png"/>
+    <BitmapImage x:Key="Icon_empty" UriSource="Icon_empty.png"/>
+    
+    <BitmapImage x:Key="LocalStrike" UriSource="LocalStrike.png"/>
+    <BitmapImage x:Key="CreateRoom" UriSource="CreateRoom.png"/>
+    <BitmapImage x:Key="JoinRoom" UriSource="JoinRoom.png"/>
+    <BitmapImage x:Key="Quit" UriSource="Quit.png"/>
+    
+    <BitmapImage x:Key="TBG" UriSource="TBG.png"/>
+    
+</ResourceDictionary>
