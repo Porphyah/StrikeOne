@@ -9,6 +9,7 @@ namespace StrikeOne
 {
     public class Record
     {
+        public Guid Id { set; get; }
         public bool Win { set; get; }
         public DateTime Time { set; get; }
         public List<Participant> Participants { set; get; } = new List<Participant>();

@@ -13,26 +13,22 @@
                 <RotateTransform x:Name="BgiRotateTransform"/>
             </Image.RenderTransform>
         </Image>
-        <Grid Margin="300,120,0,420" VerticalAlignment="Center" Height="100">
-            <Rectangle Fill="Transparent"/>
+        <Grid Background="Transparent" Margin="300,120,0,420" VerticalAlignment="Center" Height="100">
             <Image Source="{StaticResource LocalStrike}" HorizontalAlignment="Left" Margin="170,10,0,10" Width="80"/>
             <TextBlock Text="本机游戏" FontSize="40" Foreground="White" HorizontalAlignment="Left" Margin="260,10,0,0" VerticalAlignment="Top"/>
             <TextBlock Text="Local Strike" FontSize="22.5" Foreground="White" HorizontalAlignment="Left" Margin="260,61,0,0" VerticalAlignment="Top"/>
         </Grid>
-        <Grid Margin="300,220,0,320" VerticalAlignment="Center" Height="100">
-            <Rectangle Fill="Transparent"/>
+        <Grid Background="Transparent" Margin="300,220,0,320" VerticalAlignment="Center" Height="100">
             <Image Source="{StaticResource CreateRoom}" HorizontalAlignment="Left" Margin="200,10,0,10" Width="80"/>
             <TextBlock Text="创建房间" FontSize="40" Foreground="White" HorizontalAlignment="Left" Margin="290,10,0,0" VerticalAlignment="Top"/>
             <TextBlock Text="Create Strike Room" FontSize="22.5" Foreground="White" HorizontalAlignment="Left" Margin="290,61,0,0" VerticalAlignment="Top"/>
         </Grid>
-        <Grid Margin="300,320,0,220" VerticalAlignment="Center" Height="100">
-            <Rectangle Fill="Transparent"/>
+        <Grid Background="Transparent" Margin="300,320,0,220" VerticalAlignment="Center" Height="100">
             <Image Source="{StaticResource JoinRoom}" HorizontalAlignment="Left" Margin="200,10,0,10" Width="80"/>
             <TextBlock Text="加入房间" FontSize="40" Foreground="White" HorizontalAlignment="Left" Margin="290,10,0,0" VerticalAlignment="Top"/>
             <TextBlock Text="Join Strike Room" FontSize="22.5" Foreground="White" HorizontalAlignment="Left" Margin="290,61,0,0" VerticalAlignment="Top"/>
         </Grid>
-        <Grid Margin="300,420,0,120" VerticalAlignment="Center" Height="100">
-            <Rectangle Fill="Transparent"/>
+        <Grid Background="Transparent" Margin="300,420,0,120" VerticalAlignment="Center" Height="100">
             <Image Source="{StaticResource Quit}" HorizontalAlignment="Left" Margin="170,10,0,10" Width="80"/>
             <TextBlock Text="退出账号" FontSize="40" Foreground="White" HorizontalAlignment="Left" Margin="260,10,0,0" VerticalAlignment="Top"/>
             <TextBlock Text="Quit Strike" FontSize="22.5" Foreground="White" HorizontalAlignment="Left" Margin="260,61,0,0" VerticalAlignment="Top"/>
@@ -57,6 +53,20 @@
             </Rectangle.Effect>
         </Rectangle>
         <Grid x:Name="InfoGrid" HorizontalAlignment="Left" Width="300">
+            <Ellipse HorizontalAlignment="Center" VerticalAlignment="Top" 
+                     Width="100" Height="100" Margin="0,10,0,0" 
+                     Stroke="DodgerBlue" StrokeThickness="2">
+                <Ellipse.Effect>
+                    <DropShadowEffect BlurRadius="5" Color="DodgerBlue" ShadowDepth="0"/>
+                </Ellipse.Effect>
+                <Ellipse.Fill>
+                    <ImageBrush x:Name="AvatorImage" ImageSource="{DynamicResource Icon_empty}"/>
+                </Ellipse.Fill>
+            </Ellipse>
+            <TextBlock x:Name="NameBox" FontSize="20" Text="User Name" TextAlignment="Center" FontWeight="Light"
+                       HorizontalAlignment="Center" Margin="10,125,10,0" VerticalAlignment="Top" Width="280"/>
+            <TextBlock x:Name="IntroBox" TextWrapping="Wrap" Text="Introduction" Foreground="Gray" TextAlignment="Center"
+                       HorizontalAlignment="Center" Margin="10,160,10,0" VerticalAlignment="Top" Width="280" Height="27"/>
 
         </Grid>
 
