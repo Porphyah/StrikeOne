@@ -15,6 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using StrikeOne.Core;
 
 namespace StrikeOne
 {
@@ -140,7 +141,21 @@ namespace StrikeOne
             Timer.Start();
         }
 
-
+        private void LoginClick(object Sender, RoutedEventArgs E)
+        {
+            if ((User) UsersBox.SelectedItem == null)
+            {
+                MessageBox.Show("您尚未选中任何一个角色账号。请先选择一个再进行登录", "角色登录",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+            LeaveAction += delegate
+            {
+                App.CurrentUser = (User) UsersBox.SelectedItem;
+                MainWindow.Instance.EnterUserPage(true);
+            };
+            PageLeave();
+        }
         private void SignupClick(object Sender, RoutedEventArgs E)
         {
             LeaveAction += delegate { MainWindow.Instance.Signup(); };
@@ -169,5 +184,7 @@ namespace StrikeOne
                 }
             }
         }
+
+        
     }
 }

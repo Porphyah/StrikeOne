@@ -5,10 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:StrikeOne"
         xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:Components="clr-namespace:StrikeOne.Components"
         mc:Ignorable="d"
         Title="Strike One!" Height="669" Width="1086" ResizeMode="NoResize" WindowStartupLocation="CenterScreen"
         BorderBrush="DodgerBlue" GlowBrush="DodgerBlue" Icon="{StaticResource Icon_beta}" Loaded="WindowLoaded">
-    <Grid x:Name="MainGrid">
-        
+    <Grid>
+        <Grid x:Name="MainGrid"/>
+        <Components:UserGrid x:Name="InfoGrid" HorizontalAlignment="Left" Width="300" Margin="-300,0,0,0"/>
     </Grid>
 </Controls:MetroWindow>

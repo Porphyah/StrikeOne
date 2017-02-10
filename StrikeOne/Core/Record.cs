@@ -5,8 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StrikeOne
+namespace StrikeOne.Core
 {
+    [Serializable]
     public class Record
     {
         public Guid Id { set; get; }
@@ -16,6 +17,7 @@ namespace StrikeOne
         public int Rounds { set; get; }
     }
 
+    [Serializable]
     public class Participant
     {
         public Guid Id { set; get; }
@@ -25,5 +27,6 @@ namespace StrikeOne
         public int Rounds { set; get; }
         public int TotalDamage { set; get; }
         public int TotalInjured { set; get; }
+        public List<DiceRoll> Rolls { set; get; } = new List<DiceRoll>(); 
     }
 }

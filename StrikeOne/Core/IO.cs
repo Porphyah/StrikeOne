@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StrikeOne
+namespace StrikeOne.Core
 {
     public static class IO
     {
@@ -19,7 +20,7 @@ namespace StrikeOne
             {
                 var Stream = new FileStream(O, FileMode.Open);
                 BinaryFormatter BF = new BinaryFormatter();
-                User User = BF.Deserialize(Stream) as User;
+                var User = BF.Deserialize(Stream) as User;
                 Stream.Close();
                 return User;
             }).ToList();
@@ -33,6 +34,25 @@ namespace StrikeOne
             Stream.Seek(0, 0);
             Formatter.Serialize(Stream, User);
             Stream.Close();
+        }
+
+        public static void LoadConfig()
+        {
+            StreamReader Reader = new StreamReader("Config.ini", Encoding.UTF8);
+            Reader.ReadLine();
+            string CurrentLine;
+            while ((CurrentLine = Reader.ReadLine()) != null)
+            {
+                string[] Fragments = CurrentLine.Split(new char[] {'='}, 
+                    StringSplitOptions.RemoveEmptyEntries);
+                switch (Fragments[0])
+                {
+                    case "IpAddress":
+                        App.IpAddress = IPAddress.Parse(Fragments[1]);
+                        break;
+                }
+            }
+            Reader.Close();
         }
     }
 }

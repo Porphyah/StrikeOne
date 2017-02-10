@@ -20,7 +20,7 @@
         </Ellipse>
         <ComboBox x:Name="UsersBox" Foreground="DodgerBlue" Margin="250,0,250,180" VerticalAlignment="Bottom" SelectionChanged="SelectUser"/>
         <Grid x:Name="ButtonGrid" Height="40" Margin="320,0,320,100" VerticalAlignment="Bottom">
-            <Button Content="登录" FontSize="15" Style="{StaticResource DefaultGreenButtonStyle}" HorizontalAlignment="Right" Margin="0,0,50,0" Width="120"/>
+            <Button Content="登录" FontSize="15" Style="{StaticResource DefaultGreenButtonStyle}" HorizontalAlignment="Right" Margin="0,0,50,0" Width="120" Click="LoginClick"/>
             <Button Content="注册" FontSize="15" Style="{StaticResource DefaultBlueButtonStyle}" HorizontalAlignment="Left" Margin="50,0,0,0" Width="120" Click="SignupClick"/>
         </Grid>
         <TextBlock x:Name="NonUserText" Style="{StaticResource SegoeScript}" FontSize="50" TextAlignment="Center"  Margin="300,250,300,0" TextWrapping="Wrap" Text="No One in Game." VerticalAlignment="Top"/>

@@ -17,6 +17,16 @@
     <BitmapImage x:Key="JoinRoom" UriSource="JoinRoom.png"/>
     <BitmapImage x:Key="Quit" UriSource="Quit.png"/>
     
+    <BitmapImage x:Key="Matches" UriSource="Matches.png"/>
+    <BitmapImage x:Key="Victories" UriSource="Victories.png"/>
+    <BitmapImage x:Key="Luck" UriSource="Luck.png"/>
+    
+    <BitmapImage x:Key="Host" UriSource="Host.png"/>
+    <BitmapImage x:Key="Nobody" UriSource="Nobody.png"/>
+    <BitmapImage x:Key="Breakdown" UriSource="BreakDown.png"/>
+    <BitmapImage x:Key="Joined" UriSource="Joined.png"/>
+    <BitmapImage x:Key="Ready" UriSource="Ready.png"/>
+    
     <BitmapImage x:Key="TBG" UriSource="TBG.png"/>
     
 </ResourceDictionary>

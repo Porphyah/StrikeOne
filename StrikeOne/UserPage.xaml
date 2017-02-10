@@ -3,7 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:StrikeOne"
+             xmlns:Local="clr-namespace:StrikeOne"
+             xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:Components="clr-namespace:StrikeOne.Components"
              mc:Ignorable="d" 
              d:DesignHeight="640" d:DesignWidth="1080">
     <Grid Background="#88000000">
@@ -13,27 +15,40 @@
                 <RotateTransform x:Name="BgiRotateTransform"/>
             </Image.RenderTransform>
         </Image>
-        <Grid Background="Transparent" Margin="300,120,0,420" VerticalAlignment="Center" Height="100">
+        <Rectangle x:Name="SliderRect" Margin="300,0,0,540" Height="100" VerticalAlignment="Center" Fill="#A0000000" Opacity="0"/>
+        <Grid x:Name="LocalStrike" Background="Transparent" Margin="300,120,0,420" VerticalAlignment="Center" Height="100" ToolTip="与AI进行本机对战。">
+            <Grid.Effect>
+                <DropShadowEffect BlurRadius="10" ShadowDepth="0" Color="White" Opacity="0"/>
+            </Grid.Effect>
             <Image Source="{StaticResource LocalStrike}" HorizontalAlignment="Left" Margin="170,10,0,10" Width="80"/>
-            <TextBlock Text="本机游戏" FontSize="40" Foreground="White" HorizontalAlignment="Left" Margin="260,10,0,0" VerticalAlignment="Top"/>
+            <TextBlock Text="本机对战" FontSize="40" Foreground="White" HorizontalAlignment="Left" Margin="260,10,0,0" VerticalAlignment="Top"/>
             <TextBlock Text="Local Strike" FontSize="22.5" Foreground="White" HorizontalAlignment="Left" Margin="260,61,0,0" VerticalAlignment="Top"/>
         </Grid>
-        <Grid Background="Transparent" Margin="300,220,0,320" VerticalAlignment="Center" Height="100">
+        <Grid x:Name="CreateStrikeRoom" Background="Transparent" Margin="300,220,0,320" VerticalAlignment="Center" Height="100" ToolTip="创建一个对战房间。">
+            <Grid.Effect>
+                <DropShadowEffect BlurRadius="10" ShadowDepth="0" Color="White" Opacity="0"/>
+            </Grid.Effect>
             <Image Source="{StaticResource CreateRoom}" HorizontalAlignment="Left" Margin="200,10,0,10" Width="80"/>
             <TextBlock Text="创建房间" FontSize="40" Foreground="White" HorizontalAlignment="Left" Margin="290,10,0,0" VerticalAlignment="Top"/>
             <TextBlock Text="Create Strike Room" FontSize="22.5" Foreground="White" HorizontalAlignment="Left" Margin="290,61,0,0" VerticalAlignment="Top"/>
         </Grid>
-        <Grid Background="Transparent" Margin="300,320,0,220" VerticalAlignment="Center" Height="100">
+        <Grid x:Name="JoinStrikeRoom" Background="Transparent" Margin="300,320,0,220" VerticalAlignment="Center" Height="100" ToolTip="加入其他玩家开放的对战房间。">
+            <Grid.Effect>
+                <DropShadowEffect BlurRadius="10" ShadowDepth="0" Color="White" Opacity="0"/>
+            </Grid.Effect>
             <Image Source="{StaticResource JoinRoom}" HorizontalAlignment="Left" Margin="200,10,0,10" Width="80"/>
             <TextBlock Text="加入房间" FontSize="40" Foreground="White" HorizontalAlignment="Left" Margin="290,10,0,0" VerticalAlignment="Top"/>
             <TextBlock Text="Join Strike Room" FontSize="22.5" Foreground="White" HorizontalAlignment="Left" Margin="290,61,0,0" VerticalAlignment="Top"/>
         </Grid>
-        <Grid Background="Transparent" Margin="300,420,0,120" VerticalAlignment="Center" Height="100">
+        <Grid x:Name="QuitStrike" Background="Transparent" Margin="300,420,0,120" VerticalAlignment="Center" Height="100" MouseDown="Quit_Click" ToolTip="退出当前角色账号。">
+            <Grid.Effect>
+                <DropShadowEffect BlurRadius="10" ShadowDepth="0" Color="White" Opacity="0"/>
+            </Grid.Effect>
             <Image Source="{StaticResource Quit}" HorizontalAlignment="Left" Margin="170,10,0,10" Width="80"/>
             <TextBlock Text="退出账号" FontSize="40" Foreground="White" HorizontalAlignment="Left" Margin="260,10,0,0" VerticalAlignment="Top"/>
             <TextBlock Text="Quit Strike" FontSize="22.5" Foreground="White" HorizontalAlignment="Left" Margin="260,61,0,0" VerticalAlignment="Top"/>
         </Grid>
-        <Path Margin="275,0,0,0" Fill="#FF00DCDC" HorizontalAlignment="Left" VerticalAlignment="Center" Width="200" Height="400">
+        <Path x:Name="OrnamentRing" Margin="75,0,0,0" Fill="#FF00DCDC" HorizontalAlignment="Left" VerticalAlignment="Center" Width="200" Height="400">
             <Path.Effect>
                 <DropShadowEffect BlurRadius="10" Color="Gray"/>
             </Path.Effect>
@@ -47,28 +62,6 @@
                 </PathGeometry>
             </Path.Data>
         </Path>
-        <Rectangle HorizontalAlignment="Left" Width="300" Fill="White" Stroke="DodgerBlue">
-            <Rectangle.Effect>
-                <DropShadowEffect BlurRadius="5" ShadowDepth="0" Color="DodgerBlue"/>
-            </Rectangle.Effect>
-        </Rectangle>
-        <Grid x:Name="InfoGrid" HorizontalAlignment="Left" Width="300">
-            <Ellipse HorizontalAlignment="Center" VerticalAlignment="Top" 
-                     Width="100" Height="100" Margin="0,10,0,0" 
-                     Stroke="DodgerBlue" StrokeThickness="2">
-                <Ellipse.Effect>
-                    <DropShadowEffect BlurRadius="5" Color="DodgerBlue" ShadowDepth="0"/>
-                </Ellipse.Effect>
-                <Ellipse.Fill>
-                    <ImageBrush x:Name="AvatorImage" ImageSource="{DynamicResource Icon_empty}"/>
-                </Ellipse.Fill>
-            </Ellipse>
-            <TextBlock x:Name="NameBox" FontSize="20" Text="User Name" TextAlignment="Center" FontWeight="Light"
-                       HorizontalAlignment="Center" Margin="10,125,10,0" VerticalAlignment="Top" Width="280"/>
-            <TextBlock x:Name="IntroBox" TextWrapping="Wrap" Text="Introduction" Foreground="Gray" TextAlignment="Center"
-                       HorizontalAlignment="Center" Margin="10,160,10,0" VerticalAlignment="Top" Width="280" Height="27"/>
-
-        </Grid>
-
+        
     </Grid>
 </UserControl>

@@ -19,6 +19,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using Microsoft.Win32;
+using StrikeOne.Core;
 
 namespace StrikeOne
 {
@@ -236,7 +237,8 @@ namespace StrikeOne
                         Name = NameBox.Text,
                         Avator = Avator,
                         AvatorFormat = AvatorFormat,
-                        Introduction = DescriptionBox.Text
+                        Introduction = DescriptionBox.Text,
+                        IpAddress = App.IpAddress
                     };
                     App.UserList.Add(NewUser);
                 });

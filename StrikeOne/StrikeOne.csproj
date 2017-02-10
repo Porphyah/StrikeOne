@@ -75,19 +75,32 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Achievement.cs" />
+    <Compile Include="Components\ParticipantItem.xaml.cs">
+      <DependentUpon>ParticipantItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\UserGrid.xaml.cs">
+      <DependentUpon>UserGrid.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Core\Achievement.cs" />
     <Compile Include="AvatorWindow.xaml.cs">
       <DependentUpon>AvatorWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Components\Tailor.xaml.cs">
       <DependentUpon>Tailor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="IO.cs" />
-    <Compile Include="Record.cs" />
+    <Compile Include="Core\DiceRoll.cs" />
+    <Compile Include="Core\Group.cs" />
+    <Compile Include="Core\IO.cs" />
+    <Compile Include="Core\Record.cs" />
+    <Compile Include="Core\Room.cs" />
+    <Compile Include="Core\Socket.cs" />
+    <Compile Include="RoomWizardPage.xaml.cs">
+      <DependentUpon>RoomWizardPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SignupPage.xaml.cs">
       <DependentUpon>SignupPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="User.cs" />
+    <Compile Include="Core\User.cs" />
     <Compile Include="UserPage.xaml.cs">
       <DependentUpon>UserPage.xaml</DependentUpon>
     </Compile>
@@ -103,6 +116,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Components\ParticipantItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\ProgressBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Components\Tailor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -110,6 +131,10 @@
     <Page Include="Components\TextBox.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Components\UserGrid.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="LoginPage.xaml">
       <SubType>Designer</SubType>
@@ -130,6 +155,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="RoomWizardPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="SignupPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -184,6 +213,20 @@
     <Resource Include="Assets\JoinRoom.png" />
     <Resource Include="Assets\LocalStrike.png" />
     <Resource Include="Assets\Quit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Luck.png" />
+    <Resource Include="Assets\Matches.png" />
+    <Resource Include="Assets\Victories.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Host.png" />
+    <Resource Include="Assets\Joined.png" />
+    <Resource Include="Assets\Nobody.png" />
+    <Resource Include="Assets\Ready.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\BreakDown.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

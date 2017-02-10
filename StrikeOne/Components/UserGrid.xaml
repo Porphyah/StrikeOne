@@ -1,0 +1,49 @@
+﻿<UserControl x:Class="StrikeOne.Components.UserGrid"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:StrikeOne.Components"
+             xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="640" d:DesignWidth="300">
+    <Grid>
+        <Rectangle HorizontalAlignment="Left" Width="300" Fill="White" Stroke="DodgerBlue">
+            <Rectangle.Effect>
+                <DropShadowEffect BlurRadius="5" ShadowDepth="0" Color="DodgerBlue"/>
+            </Rectangle.Effect>
+        </Rectangle>
+        <Grid x:Name="InfoGrid" HorizontalAlignment="Left" Width="300">
+            <Ellipse HorizontalAlignment="Center" VerticalAlignment="Top" 
+                     Width="100" Height="100" Margin="0,10,0,0" 
+                     Stroke="DodgerBlue" StrokeThickness="2">
+                <Ellipse.Effect>
+                    <DropShadowEffect BlurRadius="5" Color="DodgerBlue" ShadowDepth="0"/>
+                </Ellipse.Effect>
+                <Ellipse.Fill>
+                    <ImageBrush x:Name="AvatorImage" ImageSource="{DynamicResource Icon_empty}"/>
+                </Ellipse.Fill>
+            </Ellipse>
+            <TextBlock x:Name="NameBox" FontSize="20" Text="User Name" TextAlignment="Center" FontWeight="Light"
+                       HorizontalAlignment="Center" Margin="10,125,10,0" VerticalAlignment="Top" Width="280"/>
+            <TextBlock x:Name="IntroBox" TextWrapping="Wrap" Text="Introduction" Foreground="Gray" TextAlignment="Center"
+                       HorizontalAlignment="Center" Margin="10,160,10,0" VerticalAlignment="Top" Width="280" Height="27"/>
+
+            <Image Source="{StaticResource Matches}" HorizontalAlignment="Left" Height="35" Margin="10,200,0,0" VerticalAlignment="Top" Width="35"/>
+            <TextBlock x:Name="MatchesBox" FontSize="15" HorizontalAlignment="Left" Margin="60,207.5,0,0" TextWrapping="Wrap" Text="共参与x场对战" VerticalAlignment="Top"/>
+
+            <Image Source="{StaticResource Victories}" HorizontalAlignment="Left" Height="35" Margin="10,245,0,0" VerticalAlignment="Top" Width="35"/>
+            <TextBlock FontSize="15" HorizontalAlignment="Left" Margin="60,245,0,0" Text="获胜率" VerticalAlignment="Top"/>
+            <WrapPanel HorizontalAlignment="Right" Margin="0,245,10,0" VerticalAlignment="Top" Width="120" Height="19" FlowDirection="RightToLeft">
+                <TextBlock x:Name="VictoryRatioText" FontSize="15" Foreground="LimeGreen" Text="%100"/>
+                <TextBlock x:Name="VictoryCountText" FontSize="15" Text=" - xxx/xxx"/>
+            </WrapPanel>
+            <Controls:MetroProgressBar x:Name="VictoryRatioProgress" Background="LightGray" Foreground="LimeGreen" Value="100" Margin="60,267.5,10,0" VerticalAlignment="Top" Height="12"/>
+
+            <Image Source="{StaticResource Luck}" HorizontalAlignment="Left" Height="35" Margin="10,290,0,0" VerticalAlignment="Top" Width="35"/>
+            <TextBlock FontSize="15" HorizontalAlignment="Left" Margin="60,290,0,0" Text="血统指数" VerticalAlignment="Top"/>
+            <TextBlock x:Name="LuckRatioText" HorizontalAlignment="Right" Margin="0,290,10,0" VerticalAlignment="Top" FontSize="15" Foreground="LimeGreen" Text="100%"/>
+            <Controls:MetroProgressBar x:Name="LuckRatioProgress" Background="LightGray" Foreground="LimeGreen" Value="100" Margin="60,312.5,10,0" VerticalAlignment="Top" Height="12"/>
+        </Grid>
+    </Grid>
+</UserControl>
