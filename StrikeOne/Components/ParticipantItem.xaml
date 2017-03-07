@@ -7,7 +7,12 @@
              mc:Ignorable="d" 
              d:DesignHeight="50" d:DesignWidth="750">
     <UserControl.Resources>
-        <ResourceDictionary Source="../Assets/Assets.xaml"/>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Assets/Assets.xaml"/>
+                <ResourceDictionary Source="Button.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
         <Image x:Name="StatusImg" Source="{DynamicResource Nobody}" HorizontalAlignment="Left" Width="30" Margin="10,10,0,10"/>
@@ -17,15 +22,17 @@
                     <ImageBrush x:Name="AvatorImage" ImageSource="{DynamicResource Icon_empty}"/>
                 </Ellipse.Fill>
             </Ellipse>
-            <Image x:Name="HostImg" Source="{StaticResource Host}" HorizontalAlignment="Left" Height="23" Margin="83,0,0,3" VerticalAlignment="Bottom" Width="20" Visibility="Hidden"/>
-            <TextBlock x:Name="NameBox" FontSize="20" FontWeight="Light" HorizontalAlignment="Left" Margin="120,12.5,0,12.5" TextWrapping="Wrap" Text="User Name" Width="301"/>
-            <Image Source="{StaticResource Matches}" HorizontalAlignment="Left" Margin="440,10,0,10" Width="30"/>
-            <TextBlock x:Name="MatchesBox" FontSize="15" HorizontalAlignment="Left" Margin="475,15,0,15" TextWrapping="Wrap" Text="0" Width="50"/>
-            <Image Source="{StaticResource Victories}" HorizontalAlignment="Left" Margin="535,10,0,10" Width="30"/>
-            <TextBlock x:Name="VictoryRatioBox" FontSize="15" HorizontalAlignment="Left" Margin="570,15,0,15" TextWrapping="Wrap" Text="0%" Width="50"/>
-            <Image Source="{StaticResource Luck}" HorizontalAlignment="Left" Margin="630,10,0,10" Width="30"/>
-            <TextBlock x:Name="LuckRatioBox" FontSize="15" HorizontalAlignment="Left" Margin="665,15,0,15" TextWrapping="Wrap" Text="0%" Width="50"/>
+            <Image x:Name="HostImg" Source="{StaticResource Host}" HorizontalAlignment="Left" Height="23" Margin="83,0,0,3" VerticalAlignment="Bottom" Width="20" Visibility="Hidden" ToolTip="房主Sama"/>
+            <TextBlock x:Name="NameBox" FontSize="18" FontWeight="Light" Margin="115,14,410,14" Text="User Name"/>
+            <local:SkillSelector x:Name="SkillSelector" Margin="0,5,160,5" HorizontalAlignment="Right" Width="235"/>
+            <Image Source="{StaticResource Matches}" HorizontalAlignment="Right" Margin="0,5,125,0" Width="25" Height="25" VerticalAlignment="Top" ToolTip="历史对战场数"/>
+            <TextBlock x:Name="MatchesBox" HorizontalAlignment="Right" Margin="0,30,122,0" Text="0" Width="31" TextAlignment="Center" VerticalAlignment="Top"/>
+            <Image Source="{StaticResource Victories}" HorizontalAlignment="Right" Margin="0,5,89,0" Width="25" Height="25" VerticalAlignment="Top" ToolTip="胜利率"/>
+            <TextBlock x:Name="VictoryRatioBox" HorizontalAlignment="Right" Margin="0,30,86,0" Text="0%" TextAlignment="Center" Width="31" VerticalAlignment="Top"/>
+            <Image Source="{StaticResource Luck}" HorizontalAlignment="Right" Margin="0,5,53,0" Width="25" Height="25" VerticalAlignment="Top" ToolTip="血统指数"/>
+            <TextBlock x:Name="LuckRatioBox" HorizontalAlignment="Right" Margin="0,30,50,0" Text="0%" Width="31" TextAlignment="Center" VerticalAlignment="Top"/>
         </Grid>
         <TextBlock x:Name="EmptyText" FontSize="15" HorizontalAlignment="Left" Margin="60,15,0,15" Text="角色空缺中" Visibility="Hidden"/>
+        <Button x:Name="ActionButton" Style="{StaticResource DefaultRedButtonStyle}" Content="×" HorizontalAlignment="Right" Margin="0,10,10,10" Width="30" Click="Action_Click"/>
     </Grid>
 </UserControl>

@@ -1,0 +1,25 @@
+﻿<UserControl x:Class="StrikeOne.Components.BattleTypeItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:StrikeOne.Components"
+             mc:Ignorable="d" 
+             d:DesignHeight="100" d:DesignWidth="780">
+    <Grid>
+        <Image x:Name="Image" Source="{DynamicResource OneVsOne}" Stretch="Fill"/>
+        <Rectangle>
+            <Rectangle.Fill>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <LinearGradientBrush.RelativeTransform>
+                        <RotateTransform Angle="90" CenterY="0.5" CenterX="0.5"/>
+                    </LinearGradientBrush.RelativeTransform>
+                    <GradientStop Color="Transparent" Offset="0"/>
+                    <GradientStop Color="#88000000" Offset="0.8"/>
+                </LinearGradientBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+        <TextBlock x:Name="TypeText" FontSize="40" FontWeight="Light" Foreground="White"  HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="Battle Type" VerticalAlignment="Top"/>
+        <TextBlock x:Name="DescriptionText" FontSize="25" Foreground="White" HorizontalAlignment="Left" Margin="10,0,0,10" TextWrapping="Wrap" Text="Description" VerticalAlignment="Bottom"/>
+    </Grid>
+</UserControl>

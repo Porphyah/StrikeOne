@@ -22,6 +22,8 @@ namespace StrikeOne.Core
                 BinaryFormatter BF = new BinaryFormatter();
                 var User = BF.Deserialize(Stream) as User;
                 Stream.Close();
+                User.LanIpAddress = App.LanIpAddress;
+                User.WanIpAddress = App.WanIpAddress;
                 return User;
             }).ToList();
         }
@@ -36,6 +38,50 @@ namespace StrikeOne.Core
             Stream.Close();
         }
 
+        public static void LoadAis()
+        {
+            App.AiList = Directory.GetFiles("AIs")
+                .Where(O => O.EndsWith(".data", StringComparison.CurrentCultureIgnoreCase))
+                .Select(O =>
+                {
+                    var Stream = new FileStream(O, FileMode.Open);
+                    BinaryFormatter BF = new BinaryFormatter();
+                    var AI = BF.Deserialize(Stream) as AI;
+                    Stream.Close();
+                    return AI;
+                }).ToList();
+        }
+
+        public static void SaveSkill(Skill Skill)
+        {
+            IFormatter Formatter = new BinaryFormatter();
+            Stream Stream = new FileStream("Skills/" + Skill.Id + ".data", FileMode.Create,
+                FileAccess.Write, FileShare.ReadWrite);
+            Stream.Seek(0, 0);
+            Formatter.Serialize(Stream, Skill);
+            Stream.Close();
+        }
+
+        public static void DeleteSkill(Skill Skill)
+        {
+            File.Delete(Directory.GetCurrentDirectory() + "/Skills/" +
+                Skill.Id + ".data");
+        }
+
+        public static void LoadSkills()
+        {
+            App.SkillList = Directory.GetFiles("Skills")
+                .Where(O => O.EndsWith(".data", StringComparison.CurrentCultureIgnoreCase))
+                .Select(O =>
+                {
+                    var Stream = new FileStream(O, FileMode.Open);
+                    BinaryFormatter BF = new BinaryFormatter();
+                    var Skill = BF.Deserialize(Stream) as Skill;
+                    Stream.Close();
+                    return Skill;
+                }).ToList();
+        }
+
         public static void LoadConfig()
         {
             StreamReader Reader = new StreamReader("Config.ini", Encoding.UTF8);
@@ -47,8 +93,11 @@ namespace StrikeOne.Core
                     StringSplitOptions.RemoveEmptyEntries);
                 switch (Fragments[0])
                 {
-                    case "IpAddress":
-                        App.IpAddress = IPAddress.Parse(Fragments[1]);
+                    case "LanIpAddress":
+                        App.LanIpAddress = IPAddress.Parse(Fragments[1]);
+                        break;
+                    case "WanIpAddress":
+                        App.WanIpAddress = IPAddress.Parse(Fragments[1]);
                         break;
                 }
             }

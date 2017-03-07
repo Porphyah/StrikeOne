@@ -75,8 +75,42 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AiWindow.xaml.cs">
+      <DependentUpon>AiWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChatWindow.xaml.cs">
+      <DependentUpon>ChatWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\AiItem.xaml.cs">
+      <DependentUpon>AiItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\BattleTypeItem.xaml.cs">
+      <DependentUpon>BattleTypeItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\BitmapConverter.cs" />
+    <Compile Include="Components\ChatterItem.xaml.cs">
+      <DependentUpon>ChatterItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\GroupItem.xaml.cs">
+      <DependentUpon>GroupItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\ParticipantDisplaySmall.xaml.cs">
+      <DependentUpon>ParticipantDisplaySmall.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Components\ParticipantItem.xaml.cs">
       <DependentUpon>ParticipantItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\ProbabilityControl.xaml.cs">
+      <DependentUpon>ProbabilityControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\ProgressItem.xaml.cs">
+      <DependentUpon>ProgressItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\SelectionItem.xaml.cs">
+      <DependentUpon>SelectionItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\SkillSelector.xaml.cs">
+      <DependentUpon>SkillSelector.xaml</DependentUpon>
     </Compile>
     <Compile Include="Components\UserGrid.xaml.cs">
       <DependentUpon>UserGrid.xaml</DependentUpon>
@@ -88,12 +122,45 @@
     <Compile Include="Components\Tailor.xaml.cs">
       <DependentUpon>Tailor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Core\AI.cs" />
+    <Compile Include="Core\Battlefield.cs" />
     <Compile Include="Core\DiceRoll.cs" />
+    <Compile Include="Core\Encryption.cs" />
     <Compile Include="Core\Group.cs" />
     <Compile Include="Core\IO.cs" />
+    <Compile Include="Core\Player.cs" />
+    <Compile Include="Core\Network\ISocket.cs" />
+    <Compile Include="Core\Network\ISocketHandler.cs" />
+    <Compile Include="Core\Network\SocketAsyncResult.cs" />
+    <Compile Include="Core\Network\SocketAsyncState.cs" />
+    <Compile Include="Core\Network\SocketDataManager.cs" />
+    <Compile Include="Core\Network\SocketHandler.cs" />
+    <Compile Include="Core\Network\SocketHandlerState.cs" />
+    <Compile Include="Core\Network\TcpClient.cs" />
+    <Compile Include="Core\Network\TcpListener.cs" />
+    <Compile Include="Core\Network\TcpListenerClient.cs" />
     <Compile Include="Core\Record.cs" />
     <Compile Include="Core\Room.cs" />
-    <Compile Include="Core\Socket.cs" />
+    <Compile Include="Core\SerializableExtension.cs" />
+    <Compile Include="Core\Skill.cs" />
+    <Compile Include="EditorPage.xaml.cs">
+      <DependentUpon>EditorPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="EditSkillPage.xaml.cs">
+      <DependentUpon>EditSkillPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="InvitationWindow.xaml.cs">
+      <DependentUpon>InvitationWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="LocalStrikePage.xaml.cs">
+      <DependentUpon>LocalStrikePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RoomJoinPage.xaml.cs">
+      <DependentUpon>RoomJoinPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RoomPage.xaml.cs">
+      <DependentUpon>RoomPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="RoomWizardPage.xaml.cs">
       <DependentUpon>RoomWizardPage.xaml</DependentUpon>
     </Compile>
@@ -104,6 +171,10 @@
     <Compile Include="UserPage.xaml.cs">
       <DependentUpon>UserPage.xaml</DependentUpon>
     </Compile>
+    <Page Include="AiWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Assets\Assets.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -112,15 +183,59 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="ChatWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\AiItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\BattleTypeItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Components\Button.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Components\ChatterItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\ComboBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\GroupItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\ParticipantDisplaySmall.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Components\ParticipantItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Components\ProbabilityControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Components\ProgressBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\ProgressItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\SelectionItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\SkillSelector.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -132,7 +247,27 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Components\ToggleSwitch.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Components\UserGrid.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="EditorPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="EditSkillPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="InvitationWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LocalStrikePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -155,6 +290,14 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="RoomJoinPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="RoomPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="RoomWizardPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -227,6 +370,91 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\BreakDown.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Battle.png" />
+    <Resource Include="Assets\Network.png" />
+    <Resource Include="Assets\Room.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Leader.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\More_grey.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\More.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Description.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\System.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Invitation.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Error.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\ChatBackground.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="NATUPNPLib">
+      <Guid>{1C565858-F302-471E-B409-F180AA4ABEC6}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\AI.png" />
+    <Resource Include="Assets\OneVsOne.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Cancel.png" />
+    <Resource Include="Assets\Confirm.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Luck_white.png" />
+    <Resource Include="Assets\Matches_white.png" />
+    <Resource Include="Assets\Victories_white.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Radical.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Editor.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\AI_grey.png" />
+    <Resource Include="Assets\AI_white.png" />
+    <Resource Include="Assets\Skill_grey.png" />
+    <Resource Include="Assets\Skill_white.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Add.png" />
+    <Resource Include="Assets\Remove.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Core\Lua\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\CoolDown_grey.png" />
+    <Resource Include="Assets\Count_grey.png" />
+    <Resource Include="Assets\Duration_grey.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\CoolDown_white.png" />
+    <Resource Include="Assets\Count_white.png" />
+    <Resource Include="Assets\Duration_white.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Back.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

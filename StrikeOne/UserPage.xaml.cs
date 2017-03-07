@@ -157,7 +157,7 @@ namespace StrikeOne
                 {
                     From = 0,
                     To = 1,
-                    Duration = TimeSpan.FromSeconds(5),
+                    Duration = TimeSpan.FromSeconds(1),
                     EasingFunction = new ExponentialEase() { EasingMode = EasingMode.EaseOut }
                 };
                 OpacityAnimation.Completed += delegate
@@ -248,5 +248,37 @@ namespace StrikeOne
            
             PageLeave();
         }
+
+        private void LocalStrike_Click(object Sender, MouseButtonEventArgs E)
+        {
+            LeaveAction = delegate
+            {
+                MainWindow.Instance.EnterLocalStrike();
+            };
+
+            PageLeave();
+        }
+
+        private void CreateRoom_Click(object Sender, MouseButtonEventArgs E)
+        {
+            LeaveAction = delegate
+            {
+                MainWindow.Instance.EnterRoomWizardPage();
+            };
+
+            PageLeave();
+        }
+
+        private void JoinRoom_Click(object Sender, MouseButtonEventArgs E)
+        {
+            LeaveAction = delegate
+            {
+                MainWindow.Instance.EnterRoomJoinPage();
+            };
+
+            PageLeave();
+        }
+
+        
     }
 }

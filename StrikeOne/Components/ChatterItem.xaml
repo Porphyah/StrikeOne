@@ -1,0 +1,51 @@
+﻿<UserControl x:Class="StrikeOne.Components.ChatterItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:StrikeOne.Components"
+             mc:Ignorable="d" 
+             d:DesignHeight="55" d:DesignWidth="650">
+    <UserControl.Resources>
+        <ResourceDictionary Source="../Assets/Assets.xaml"/>
+    </UserControl.Resources>
+    <Grid>
+        <Grid x:Name="AvatorGrid" Margin="5,5,0,0" HorizontalAlignment="Left" Width="40" Height="40" VerticalAlignment="Top">
+            <Ellipse x:Name="AvatorEllipse" Stroke="DodgerBlue">
+                <Ellipse.Fill>
+                    <ImageBrush x:Name="AvatorImage" ImageSource="{DynamicResource Icon_empty}"/>
+                </Ellipse.Fill>
+            </Ellipse>
+            <Image x:Name="HostImg" Source="{StaticResource Host}" HorizontalAlignment="Right" Height="24" Margin="0,0,-3,-3" VerticalAlignment="Bottom" Width="20" ToolTip="房主Sama"/>
+        </Grid>
+        <TextBlock x:Name="UserName" FontSize="15" FontWeight="Light" HorizontalAlignment="Left" Margin="60,3,0,0" TextWrapping="Wrap" Text="User Name" VerticalAlignment="Top"/>
+        <Grid x:Name="ConversationGrid" Margin="60,25,0,3" Background="White" HorizontalAlignment="Left" Width="530">
+            <Grid.Effect>
+                <DropShadowEffect x:Name="ConversationGridEffect" BlurRadius="6" ShadowDepth="0" Color="DodgerBlue"/>
+            </Grid.Effect>
+            <Path x:Name="LeftTriangle" Fill="White" Margin="-10,0,0,0" HorizontalAlignment="Left" Width="10" Height="20" VerticalAlignment="Top">
+                <Path.Data>
+                    <PathGeometry>
+                        <PathFigure StartPoint="10,0" IsClosed="True">
+                            <LineSegment Point="0,10"/>
+                            <LineSegment Point="10,20"/>
+                        </PathFigure>
+                    </PathGeometry>
+                </Path.Data>
+            </Path>
+            <Path x:Name="RightTriangle" Fill="White" Margin="0,0,-10,0" HorizontalAlignment="Right" Width="10" Height="20" VerticalAlignment="Top" Visibility="Hidden">
+                <Path.Data>
+                    <PathGeometry>
+                        <PathFigure StartPoint="0,0" IsClosed="True">
+                            <LineSegment Point="10,10"/>
+                            <LineSegment Point="0,20"/>
+                        </PathFigure>
+                    </PathGeometry>
+                </Path.Data>
+            </Path>
+            <TextBox x:Name="ConversationBox" Text="Conversation" Margin="5,0" TextWrapping="Wrap"
+                    FontSize="15" FontFamily="Microsoft YaHei UI" Style="{StaticResource DisplayTextBoxStyle}"/>
+        </Grid>
+
+    </Grid>
+</UserControl>

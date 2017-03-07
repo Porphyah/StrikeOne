@@ -1,0 +1,77 @@
+﻿<UserControl x:Class="StrikeOne.RoomJoinPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:StrikeOne"
+             xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="640" d:DesignWidth="1080">
+    <Grid Margin="300,0,0,0">
+        <Rectangle Height="100" Fill="#88000000" VerticalAlignment="Top"/>
+        <Grid x:Name="TitleGrid" Height="100" VerticalAlignment="Top">
+            <Image Source="Assets/JoinRoom.png" HorizontalAlignment="Left" Height="80" Margin="10,10,0,0" VerticalAlignment="Top" Width="80"/>
+            <Label Content="加入房间" Foreground="White" FontSize="35" HorizontalAlignment="Left" Margin="100,10,0,0" VerticalAlignment="Top"/>
+            <Label Content="Join Strike Room" Foreground="White" FontSize="20" HorizontalAlignment="Left" Margin="100,54,0,0" VerticalAlignment="Top"/>
+        </Grid>
+        <Grid x:Name="ContentGrid">
+            <Image Source="{StaticResource Invitation}" HorizontalAlignment="Left" Height="40" Margin="30,130,0,0" VerticalAlignment="Top" Width="40"/>
+            <Label Content="输入邀请码：" FontSize="15" HorizontalAlignment="Left" Margin="76,135,0,0" VerticalAlignment="Top"/>
+            <TextBox x:Name="InvitationBox" FontSize="15" Style="{StaticResource DefaultTextBoxStyle}" Height="28" Margin="181,136,135,0" VerticalAlignment="Top"/>
+            <TextBlock Margin="60,175,30,0" Text="将朋友发给您的邀请码复制粘贴到该文本框中。程序将根据邀请码链接目标房间。" VerticalAlignment="Top"/>
+            <Button x:Name="LinkButton" Content="链接房间" Style="{StaticResource DefaultBlueButtonStyle}" HorizontalAlignment="Right" Margin="0,135,30,0" VerticalAlignment="Top" Width="100" Height="30" Click="Link_Click"/>
+            <GroupBox x:Name="RoomInfoBox" Header="Room Connecting Status" Background="Orange" Foreground="White" BorderBrush="Orange" Margin="30,220,30,110" Visibility="Hidden" Opacity="0">
+                <Grid Margin="-5">
+                    <Grid x:Name="InProgressGrid" Visibility="Visible">
+                        <Controls:ProgressRing x:Name="ProgressRing" Foreground="Orange" Margin="270,0,0,0" Height="30" Width="30" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                        <TextBlock x:Name="ProgressText" Foreground="Black" FontSize="15" Margin="320,0,0,0" Text="正在尝试链接房间..." MaxWidth="500" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                        <Image x:Name="ErrorImg" Source="{StaticResource Error}" Margin="270,0,0,0" Height="30" Width="30" HorizontalAlignment="Left" VerticalAlignment="Center" Visibility="Hidden"/>
+                        <Controls:MetroProgressBar x:Name="ReceiveProgressBar" Foreground="Orange" VerticalAlignment="Bottom"/>
+                    </Grid>
+                    <Grid x:Name="RoomInfoGrid" Visibility="Hidden">
+                        <Rectangle Fill="#88000000" Height="75" VerticalAlignment="Top"/>
+                        <Label x:Name="RoomNameLabel" Content="房间名" Foreground="White" FontSize="27.5" HorizontalAlignment="Left" Margin="10,2.5,0,0" VerticalAlignment="Top"/>
+                        <Label x:Name="BattleTypeLabel" Content="战斗类型" FontWeight="Light" FontSize="18" Foreground="White" HorizontalAlignment="Left" Margin="10,40,0,0" VerticalAlignment="Top"/>
+                        <Ellipse Stroke="DodgerBlue" StrokeThickness="2" HorizontalAlignment="Left" Height="75" Margin="10,90,0,0" VerticalAlignment="Top" Width="75">
+                            <Ellipse.Effect>
+                                <DropShadowEffect ShadowDepth="0" BlurRadius="3" Color="DodgerBlue"/>
+                            </Ellipse.Effect>
+                            <Ellipse.Fill>
+                                <ImageBrush x:Name="HostImg" ImageSource="{DynamicResource Icon_empty}"/>
+                            </Ellipse.Fill>
+                        </Ellipse>
+                        <TextBlock x:Name="HostNameBlock" Text="User Name" FontSize="20" FontWeight="Light" Foreground="Black" HorizontalAlignment="Left" Margin="90,90,0,0" VerticalAlignment="Top" Width="272"/>
+                        <TextBlock x:Name="HostIntroBlock" FontSize="13" Foreground="Gray" HorizontalAlignment="Left" Height="45" Margin="90,120,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="272"/>
+                        <TextBlock x:Name="RoomDescriptionBlock" Foreground="Black" HorizontalAlignment="Left" Margin="10,170,0,10" TextWrapping="Wrap" Text="TextBlock" Width="352"/>
+                        <Grid HorizontalAlignment="Right" Margin="0,90,10,10" Width="340">
+                            <Grid.Effect>
+                                <DropShadowEffect ShadowDepth="0" BlurRadius="6" Color="DodgerBlue"/>
+                            </Grid.Effect>
+                            <Path Height="25" VerticalAlignment="Top" Fill="White">
+                                <Path.Data>
+                                    <PathGeometry>
+                                        <PathFigure StartPoint="0,0" IsClosed="True">
+                                            <LineSegment Point="40,0"/>
+                                            <ArcSegment Point="65,25" Size="25,25" SweepDirection="Clockwise"/>
+                                            <LineSegment Point="0,25"/>
+                                        </PathFigure>
+                                    </PathGeometry>
+                                </Path.Data>
+                            </Path>
+                            <ScrollViewer Margin="0,25,0,0" Background="White" VerticalScrollBarVisibility="Auto">
+                                <StackPanel x:Name="ParticipantStack"/>
+                            </ScrollViewer>
+                            <TextBlock HorizontalAlignment="Left" FontSize="13" Margin="5,5,0,0" Text="参与者" FontWeight="Bold" Foreground="DodgerBlue" VerticalAlignment="Top"/>
+
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </GroupBox>
+            <Button x:Name="JoinButton" IsEnabled="False" Content="加入房间" FontSize="20" FontWeight="Light" Style="{StaticResource DefaultGreenButtonStyle}" HorizontalAlignment="Right" Margin="0,0,40,50" VerticalAlignment="Bottom" Width="180" Height="50" Click="Join_Click"/>
+            <Button x:Name="ReturnButton" Content="返回" FontSize="20" FontWeight="Light" Style="{StaticResource DefaultBlueButtonStyle}" Margin="40,0,0,50" VerticalAlignment="Bottom" Height="50" HorizontalAlignment="Left" Width="180" Click="Return_Click"/>
+        </Grid>
+        <StatusBar x:Name="StatusBar" Margin="0,0,0,-30" Height="30" VerticalAlignment="Bottom">
+            <TextBlock x:Name="StatusText" Text="TextBlock"/>
+        </StatusBar>
+    </Grid>
+</UserControl>

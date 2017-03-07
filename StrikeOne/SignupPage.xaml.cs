@@ -238,7 +238,8 @@ namespace StrikeOne
                         Avator = Avator,
                         AvatorFormat = AvatorFormat,
                         Introduction = DescriptionBox.Text,
-                        IpAddress = App.IpAddress
+                        LanIpAddress = App.LanIpAddress,
+                        WanIpAddress = App.WanIpAddress
                     };
                     App.UserList.Add(NewUser);
                 });

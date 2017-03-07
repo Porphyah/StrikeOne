@@ -6,7 +6,31 @@
              xmlns:local="clr-namespace:StrikeOne"
              mc:Ignorable="d" 
              d:DesignHeight="640" d:DesignWidth="1080">
-    <Grid>
-            
+    <Grid Margin="300,0,0,0">
+        <Rectangle Height="100" Fill="#88000000" VerticalAlignment="Top"/>
+        <Grid x:Name="TitleGrid" Height="100" VerticalAlignment="Top">
+            <Image Source="Assets/CreateRoom.png" HorizontalAlignment="Left" Height="80" Margin="10,10,0,0" VerticalAlignment="Top" Width="80"/>
+            <Label Content="创建房间" Foreground="White" FontSize="35" HorizontalAlignment="Left" Margin="100,10,0,0" VerticalAlignment="Top"/>
+            <Label Content="Create Strike Room" Foreground="White" FontSize="20" HorizontalAlignment="Left" Margin="100,54,0,0" VerticalAlignment="Top"/>
+        </Grid>
+        <Grid x:Name="ContentGrid">
+            <Image Source="{StaticResource Room}" HorizontalAlignment="Left" Height="40" Margin="30,130,0,0" VerticalAlignment="Top" Width="40"/>
+            <Label Content="房间名：" FontSize="15" HorizontalAlignment="Left" Margin="76,135,0,0" VerticalAlignment="Top"/>
+            <TextBox x:Name="RoomNameBox" FontSize="15" Style="{StaticResource DefaultTextBoxStyle}" Height="28" Margin="151,136,29,0" VerticalAlignment="Top"/>
+            <Image Source="{StaticResource Battle}" HorizontalAlignment="Left" Height="35" Margin="32.5,175,0,0" VerticalAlignment="Top" Width="35"/>
+            <Label Content="对战类型：" FontSize="15" HorizontalAlignment="Left" Margin="76,177,0,0" VerticalAlignment="Top"/>
+            <ComboBox x:Name="BattleTypeBox" Margin="165,178,190,0" VerticalAlignment="Top" Height="28"/>
+            <Image Source="{StaticResource Network}" HorizontalAlignment="Right" Height="35" Margin="0,175,133,0" VerticalAlignment="Top" Width="35"/>
+            <CheckBox x:Name="NetworkCheckBox" Content="局域网对战" FontFamily="Microsoft YaHei UI" FontSize="15" HorizontalAlignment="Right" Margin="0,182,29,0" VerticalAlignment="Top"/>
+            <Image Source="{StaticResource Description}"  HorizontalAlignment="Left" Height="35" Margin="32,215,0,0" VerticalAlignment="Top" Width="36"/>
+            <Label Content="房间描述：" FontSize="15" HorizontalAlignment="Left" Margin="76,217.5,0,0" VerticalAlignment="Top"/>
+            <TextBox x:Name="DescriptionBox" Height="120" Margin="166,221,29,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="15"
+                     VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden"/>
+            <Button Content="生成房间" FontSize="20" FontWeight="Light" Style="{StaticResource DefaultGreenButtonStyle}" HorizontalAlignment="Right" Margin="0,0,40,50" VerticalAlignment="Bottom" Width="180" Height="50" Click="RoomGenerate_Click"/>
+            <Button Content="返回" FontSize="20" FontWeight="Light" Style="{StaticResource DefaultBlueButtonStyle}" Margin="40,0,0,50" VerticalAlignment="Bottom" Height="50" HorizontalAlignment="Left" Width="180" Click="Return_Click"/>
+        </Grid>
+        <StatusBar x:Name="StatusBar" Margin="0,0,0,-30" Height="30" VerticalAlignment="Bottom">
+            <TextBlock x:Name="StatusText" Text="TextBlock"/>
+        </StatusBar>
     </Grid>
 </UserControl>

@@ -1,0 +1,33 @@
+﻿<UserControl x:Class="StrikeOne.LocalStrikePage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:StrikeOne"
+             xmlns:Components="clr-namespace:StrikeOne.Components"
+             mc:Ignorable="d" 
+             d:DesignHeight="640" d:DesignWidth="1080">
+    <UserControl.Resources>
+        <ResourceDictionary Source="Assets/Assets.xaml"/>
+    </UserControl.Resources>
+    <Grid Margin="300,0,0,0">
+        <Rectangle Height="100" Fill="#88000000" VerticalAlignment="Top"/>
+        <Grid x:Name="TitleGrid" Height="100" VerticalAlignment="Top">
+            <Image Source="Assets/LocalStrike.png" HorizontalAlignment="Left" Height="80" Margin="10,10,0,0" VerticalAlignment="Top" Width="80"/>
+            <Label Content="本机对战" Foreground="White" FontSize="35" HorizontalAlignment="Left" Margin="100,10,0,0" VerticalAlignment="Top"/>
+            <Label Content="Local Strike" Foreground="White" FontSize="20" HorizontalAlignment="Left" Margin="100,54,0,0" VerticalAlignment="Top"/>
+        </Grid>
+        <Grid x:Name="ContentGrid">
+            <Rectangle Margin="0,100,0,0" VerticalAlignment="Top" Height="100" Fill="#88000000"/>
+            <TextBlock Text="Select a Battle Type..." Foreground="White" FontSize="40" FontWeight="Light"  Margin="10,125,10,0" VerticalAlignment="Top"/>
+            <ComboBox x:Name="BattleTypeComboBox" Style="{StaticResource ImgComboBoxStyle}" Background="Transparent" Foreground="White" BorderBrush="{x:Null}" 
+                      Margin="0,100,0,0" VerticalAlignment="Top" Height="100" SelectionChanged="BattleTypeSelected"/>
+            <ScrollViewer Margin="10,210,10,70" VerticalScrollBarVisibility="Auto">
+                <StackPanel x:Name="GroupStack" Margin="5"/>
+            </ScrollViewer>
+            <Button x:Name="ActiveButton" Content="开始对战" FontSize="20" FontWeight="Light" Style="{StaticResource DefaultGreenButtonStyle}" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="180" Height="50"
+                        ToolTipService.ShowOnDisabled="True" ToolTip="Ready to Strike!" IsEnabled="False" Click="Active_Click"/>
+            <Button Content="退出对战" FontSize="20" FontWeight="Light" Style="{StaticResource DefaultBlueButtonStyle}" HorizontalAlignment="Left" Margin="10,0,0,10" VerticalAlignment="Bottom" Width="180" Height="50" Click="QuitRoom_Click"/>
+        </Grid>
+    </Grid>
+</UserControl>

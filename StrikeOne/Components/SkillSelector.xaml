@@ -1,0 +1,74 @@
+﻿<UserControl x:Class="StrikeOne.Components.SkillSelector"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:StrikeOne.Components"
+             mc:Ignorable="d" 
+             d:DesignHeight="40" d:DesignWidth="250">
+    <Grid>
+        <Border Margin="30,5,0,5" Background="#88696969" CornerRadius="0,10,10,0">
+            <Border.Effect>
+                <DropShadowEffect ShadowDepth="2"/>
+            </Border.Effect>
+            <TextBlock Margin="15,5.5,35,5.5" Text="未选择技能..." FontWeight="Light" FontSize="13.5" Foreground="White"/>
+        </Border>
+        <Button x:Name="SkillButton" HorizontalAlignment="Right" Width="30" Margin="0,5">
+            <Button.Template>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border x:Name="Border" CornerRadius="0,10,10,0" Background="Transparent">
+                        <Image x:Name="Img" Margin="2.5,3,2.5,1" Source="{StaticResource More}"/>
+                    </Border>
+                    <ControlTemplate.Resources>
+                        <Storyboard x:Key="MouseEnterStoryboard" TargetName="Border" TargetProperty="(ButtonBase.Background).(SolidColorBrush.Color)">
+                            <ColorAnimationUsingKeyFrames>
+                                <ColorAnimationUsingKeyFrames.KeyFrames>
+                                    <EasingColorKeyFrame Value="White" KeyTime="0:0:0.25">
+                                        <EasingColorKeyFrame.EasingFunction>
+                                            <ExponentialEase EasingMode="EaseOut"/>
+                                        </EasingColorKeyFrame.EasingFunction>
+                                    </EasingColorKeyFrame>
+                                </ColorAnimationUsingKeyFrames.KeyFrames>
+                            </ColorAnimationUsingKeyFrames>
+                        </Storyboard>
+                        <Storyboard x:Key="MouseLeaveStoryboard" TargetName="Border" TargetProperty="(ButtonBase.Background).(SolidColorBrush.Color)">
+                            <ColorAnimationUsingKeyFrames>
+                                <ColorAnimationUsingKeyFrames.KeyFrames>
+                                    <EasingColorKeyFrame Value="Transparent" KeyTime="0:0:0.25">
+                                        <EasingColorKeyFrame.EasingFunction>
+                                            <ExponentialEase EasingMode="EaseIn"/>
+                                        </EasingColorKeyFrame.EasingFunction>
+                                    </EasingColorKeyFrame>
+                                </ColorAnimationUsingKeyFrames.KeyFrames>
+                            </ColorAnimationUsingKeyFrames>
+                        </Storyboard>
+                    </ControlTemplate.Resources>
+                    <ControlTemplate.Triggers>
+                        <EventTrigger RoutedEvent="MouseEnter">
+                            <EventTrigger.Actions>
+                                <BeginStoryboard Storyboard="{StaticResource MouseEnterStoryboard}"/>
+                            </EventTrigger.Actions>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="MouseLeave">
+                            <EventTrigger.Actions>
+                                <BeginStoryboard Storyboard="{StaticResource MouseLeaveStoryboard}"/>
+                            </EventTrigger.Actions>
+                        </EventTrigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Trigger.Setters>
+                                <Setter TargetName="Img" Property="Source" Value="{StaticResource More_grey}"/>
+                            </Trigger.Setters>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
+        <Ellipse HorizontalAlignment="Left" Width="40" Fill="DimGray">
+            <Ellipse.Effect>
+                <DropShadowEffect ShadowDepth="2"/>
+            </Ellipse.Effect>
+        </Ellipse>
+        <Image x:Name="SkillImg" HorizontalAlignment="Left" Margin="5,5,5,5" Width="30"/>
+        
+    </Grid>
+</UserControl>

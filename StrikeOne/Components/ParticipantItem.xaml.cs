@@ -26,18 +26,34 @@ namespace StrikeOne.Components
         {
             InitializeComponent();
         }
-        public User Participant { set; get; }
+        public int GroupIndex { set; get; }
+        public Player Participant { set; get; }
+        public Group Group { set; get; }
+        public Action<Player> JoinSyncAction { set; private get; }
+        public Action QuitSyncAction { set; private get; }
 
-        public void Init()
+        public void Init(int GroupIndex, Group ParentGroup)
         {
+            this.GroupIndex = GroupIndex;
+            this.Group = ParentGroup;
             StatusImg.Source = Resources["Nobody"] as BitmapImage;
-            StatusImg.ToolTip = "该角色槽当前正等待其他玩家的加入。";
+            StatusImg.ToolTip = "该角色槽当前正等待玩家的加入。";
             UserGrid.Visibility = Visibility.Hidden;
             EmptyText.Visibility = Visibility.Visible;
+            if (!Group.Room.HasParticipate(App.CurrentUser.Id))
+            {
+                ActionButton.Style = Resources["DefaultGreenButtonStyle"] as Style;
+                ActionButton.Content = "+";
+                ActionButton.ToolTip = "将您的角色加入到该位置。";
+            }
+            else
+                ActionButton.Visibility = Visibility.Hidden;
         }
-        public void Init(User User, bool Host = false)
+        public void Init(Player User, int GroupIndex, Group ParentGroup)
         {
-            Participant = User;
+            this.GroupIndex = GroupIndex;
+            this.Group = ParentGroup; 
+            this.Participant = User;
 
             StatusImg.Source = Resources["Joined"] as BitmapImage;
             StatusImg.ToolTip = "该角色槽已有玩家加入，且通信良好。";
@@ -54,8 +70,11 @@ namespace StrikeOne.Components
                     Temp.EndInit();
                     AvatorImage.ImageSource = Temp;
                 }
-            if (Host) HostImg.Visibility = Visibility.Visible;
+            if (User is User && Group.Room.IsHost((User)User))
+                HostImg.Visibility = Visibility.Visible;
             NameBox.Text = User.Name;
+
+            SkillSelector.EnableSelect(User.Id == Group.Room.Host.Id);
 
             MatchesBox.Text = User.Records.Count.ToString();
 
@@ -84,6 +103,195 @@ namespace StrikeOne.Components
                 LuckRatioBox.Foreground = Brushes.YellowGreen;
             else
                 LuckRatioBox.Foreground = Brushes.LimeGreen;
+
+            if (Participant.Id == App.CurrentUser.Id || Group.Room.IsHost(App.CurrentUser))
+            {
+                ActionButton.Style = Resources["DefaultRedButtonStyle"] as Style;
+                ActionButton.Content = "×";
+                ActionButton.ToolTip = "将角色：" + Participant.Name + "从当前位置移除。";
+            }
+            else
+                ActionButton.Visibility = Visibility.Hidden;
+        }
+        public void Join(Player User, bool NeedTransmission = true)
+        {
+            if (User != null)
+            {
+                Participant = User;
+                StatusImg.Source = Resources["Joined"] as BitmapImage;
+                StatusImg.ToolTip = "该角色槽已有玩家加入，且通信良好。";
+                UserGrid.Visibility = Visibility.Visible;
+                EmptyText.Visibility = Visibility.Hidden;
+                if (Participant.Avator != null)
+                    using (MemoryStream Stream = new MemoryStream())
+                    {
+                        Participant.Avator.Save(Stream, Participant.AvatorFormat);
+                        BitmapImage Temp = new BitmapImage();
+                        Temp.BeginInit();
+                        Temp.CacheOption = BitmapCacheOption.OnLoad;
+                        Temp.StreamSource = Stream;
+                        Temp.EndInit();
+                        AvatorImage.ImageSource = Temp;
+                    }
+                if (User is User && Group.Room.IsHost((User)User))
+                    HostImg.Visibility = Visibility.Visible;
+                NameBox.Text = Participant.Name;
+
+                SkillSelector.EnableSelect(Participant.Id == App.CurrentUser.Id);
+
+                MatchesBox.Text = Participant.Records.Count.ToString();
+
+                double VictoryRatio = Participant.VictoryRatio;
+                VictoryRatioBox.Text = (VictoryRatio * 100).ToString("0.0") + "%";
+                if (Participant.Records.Count == 0)
+                    VictoryRatioBox.Foreground = Brushes.Gray;
+                else if (VictoryRatio <= 0.25)
+                    VictoryRatioBox.Foreground = Brushes.Red;
+                else if (VictoryRatio <= 0.5)
+                    VictoryRatioBox.Foreground = Brushes.DarkOrange;
+                else if (VictoryRatio <= 0.75)
+                    VictoryRatioBox.Foreground = Brushes.YellowGreen;
+                else
+                    VictoryRatioBox.Foreground = Brushes.LimeGreen;
+
+                double LuckRatio = Participant.LuckRatio;
+                LuckRatioBox.Text = (LuckRatio * 100).ToString("0.0") + "%";
+                if (Participant.Records.Count == 0)
+                    LuckRatioBox.Foreground = Brushes.Gray;
+                else if (LuckRatio <= 0.25)
+                    LuckRatioBox.Foreground = Brushes.Red;
+                else if (LuckRatio <= 0.5)
+                    LuckRatioBox.Foreground = Brushes.DarkOrange;
+                else if (LuckRatio <= 0.75)
+                    LuckRatioBox.Foreground = Brushes.YellowGreen;
+                else
+                    LuckRatioBox.Foreground = Brushes.LimeGreen;
+
+                if (Participant.Id == App.CurrentUser.Id || Group.Room.IsHost(App.CurrentUser))
+                {
+                    ActionButton.Style = Resources["DefaultRedButtonStyle"] as Style;
+                    ActionButton.Content = "×";
+                    ActionButton.ToolTip = "将角色：" + Participant.Name + "从当前位置移除。";
+                }
+                else
+                    ActionButton.Visibility = Visibility.Hidden;
+
+                if (NeedTransmission)
+                {
+                    if (Group.Room.IsHost(App.CurrentUser))
+                        foreach (var Client in App.Server)
+                            Client.SendAsync(Encoding.UTF8.GetBytes("ParticipateChanged|*|Add|*|" +
+                                Participant.Id + "|*|" + Group.Name + "|*|" + GroupIndex));
+                    else
+                        App.Client.SendAsync(Encoding.UTF8.GetBytes("ParticipateChanged|*|Add|*|" + 
+                            Participant.Id + "|*|" + Group.Name + "|*|" + GroupIndex));
+                }
+            }
+            else
+            {
+                StatusImg.Source = Resources["Nobody"] as BitmapImage;
+                StatusImg.ToolTip = "该角色槽当前正等待玩家的加入。";
+                UserGrid.Visibility = Visibility.Hidden;
+                EmptyText.Visibility = Visibility.Visible;
+                if (!Group.Room.HasParticipate(App.CurrentUser.Id))
+                {
+                    ActionButton.Style = Resources["DefaultGreenButtonStyle"] as Style;
+                    ActionButton.Content = "+";
+                    ActionButton.ToolTip = "将您的角色加入到该位置。";
+                }
+                else
+                    ActionButton.Visibility = Visibility.Hidden;
+
+                if (NeedTransmission)
+                {
+                    if (Group.Room.IsHost(App.CurrentUser))
+                        foreach (var Client in App.Server)
+                            Client.SendAsync(Encoding.UTF8.GetBytes("ParticipateChanged|*|Remove|*|" +
+                                Participant.Id + "|*|" + Group.Name + "|*|" + GroupIndex));
+                    else
+                        App.Client.SendAsync(Encoding.UTF8.GetBytes("ParticipateChanged|*|Remove|*|" +
+                            Participant.Id + "|*|" + Group.Name + "|*|" + GroupIndex));
+                }
+
+                Participant = null;
+            }
+        }
+
+        public void Ready()
+        {
+            StatusImg.Source = Resources["Ready"] as BitmapImage;
+            StatusImg.ToolTip = "该角色已做好了准备。";
+            ActionButton.IsEnabled = false;
+        }
+
+        private void Action_Click(object Sender, RoutedEventArgs E)
+        {
+            if (Participant == null)
+            {
+                Group.Participants[GroupIndex] = App.CurrentUser;
+                this.Join(App.CurrentUser);
+                JoinSyncAction?.Invoke(App.CurrentUser);
+            }
+            else
+            {
+                if (Participant.Id != App.CurrentUser.Id)
+                {
+                    var Result = MessageBox.Show("确实要把角色：" + Participant.Name + "踢出房间么？\n" +
+                                                 "选是，则将" + Participant.Name + "踢出房间；\n" +
+                                                 "选否，则仅将" + Participant.Name + "移出当前角色槽；\n" +
+                                                 "选取消，则返回不作任何操作。", "踢翻友谊的小船？", 
+                                                 MessageBoxButton.YesNoCancel, MessageBoxImage.Question);
+                    switch (Result)
+                    {
+                        default:
+                            return;
+                        case MessageBoxResult.Yes:
+                            Group.Participants[GroupIndex] = null;
+                            this.Join(null);
+                            QuitSyncAction?.Invoke();
+                            break;
+                        case MessageBoxResult.No:
+                            Group.Participants[GroupIndex] = null;
+                            this.Join(null);
+                            QuitSyncAction?.Invoke();
+                            break;
+                    }
+                }
+                else
+                {
+                    if (MessageBox.Show("确实要将自己移出当前角色槽么？", "移出角色槽",
+                        MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No) return;
+                    Group.Participants[GroupIndex] = null;
+                    this.Join(null);
+                    QuitSyncAction?.Invoke();
+                }
+            }
+        }
+        private void LocalAction_Click(object Sender, RoutedEventArgs E)
+        {
+            AiWindow AiWindow = new AiWindow();
+            AiWindow.ShowDialog();
+
+        }
+
+        public void LocalInit(int GroupIndex, Group ParentGroup)
+        {
+            this.GroupIndex = GroupIndex;
+            this.Group = ParentGroup;
+            StatusImg.Source = Resources["Nobody"] as BitmapImage;
+            StatusImg.ToolTip = "该角色槽当前正等待玩家的加入。";
+            UserGrid.Visibility = Visibility.Hidden;
+            EmptyText.Visibility = Visibility.Visible;
+            if (Participant == null)
+            {
+                ActionButton.Style = Resources["DefaultGreenButtonStyle"] as Style;
+                ActionButton.Content = "+";
+                ActionButton.ToolTip = "将您的角色或者一个AI加入到该位置。";
+            }
+            else
+                ActionButton.Visibility = Visibility.Hidden;
+            ActionButton.Click -= Action_Click;
+            ActionButton.Click += LocalAction_Click;
         }
     }
 }

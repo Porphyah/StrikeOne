@@ -7,7 +7,7 @@
         xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:Components="clr-namespace:StrikeOne.Components"
         mc:Ignorable="d"
-        Title="Strike One!" Height="669" Width="1086" ResizeMode="NoResize" WindowStartupLocation="CenterScreen"
+        Title="Strike One!" Height="669" Width="1086" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen"
         BorderBrush="DodgerBlue" GlowBrush="DodgerBlue" Icon="{StaticResource Icon_beta}" Loaded="WindowLoaded">
     <Grid>
         <Grid x:Name="MainGrid"/>

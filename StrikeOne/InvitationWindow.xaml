@@ -1,0 +1,15 @@
+﻿<Controls:MetroWindow x:Class="StrikeOne.InvitationWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:StrikeOne"
+        xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+        mc:Ignorable="d"
+        Title="获取邀请码" Height="100" Width="400" ResizeMode="NoResize" WindowStyle="ToolWindow" ShowInTaskbar="False" WindowStartupLocation="CenterScreen"
+        GlowBrush="DodgerBlue" BorderBrush="DodgerBlue" Topmost="True">
+    <Grid>
+        <TextBlock Margin="10,10,10,0" TextWrapping="Wrap" Text="将下列邀请码发送给你的好友以便他们加入你的房间！" VerticalAlignment="Top"/>
+        <TextBox x:Name="InvitationBox" FontSize="15" IsReadOnly="True" Style="{StaticResource DefaultTextBoxStyle}" Height="25" Margin="10,30,10,0" VerticalAlignment="Top"/>
+    </Grid>
+</Controls:MetroWindow>

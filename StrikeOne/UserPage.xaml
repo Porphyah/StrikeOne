@@ -16,7 +16,7 @@
             </Image.RenderTransform>
         </Image>
         <Rectangle x:Name="SliderRect" Margin="300,0,0,540" Height="100" VerticalAlignment="Center" Fill="#A0000000" Opacity="0"/>
-        <Grid x:Name="LocalStrike" Background="Transparent" Margin="300,120,0,420" VerticalAlignment="Center" Height="100" ToolTip="与AI进行本机对战。">
+        <Grid x:Name="LocalStrike" Background="Transparent" Margin="300,120,0,420" VerticalAlignment="Center" Height="100" MouseDown="LocalStrike_Click" ToolTip="与AI进行本机对战。">
             <Grid.Effect>
                 <DropShadowEffect BlurRadius="10" ShadowDepth="0" Color="White" Opacity="0"/>
             </Grid.Effect>
@@ -24,7 +24,7 @@
             <TextBlock Text="本机对战" FontSize="40" Foreground="White" HorizontalAlignment="Left" Margin="260,10,0,0" VerticalAlignment="Top"/>
             <TextBlock Text="Local Strike" FontSize="22.5" Foreground="White" HorizontalAlignment="Left" Margin="260,61,0,0" VerticalAlignment="Top"/>
         </Grid>
-        <Grid x:Name="CreateStrikeRoom" Background="Transparent" Margin="300,220,0,320" VerticalAlignment="Center" Height="100" ToolTip="创建一个对战房间。">
+        <Grid x:Name="CreateStrikeRoom" Background="Transparent" Margin="300,220,0,320" VerticalAlignment="Center" Height="100" MouseDown="CreateRoom_Click" ToolTip="创建一个对战房间。">
             <Grid.Effect>
                 <DropShadowEffect BlurRadius="10" ShadowDepth="0" Color="White" Opacity="0"/>
             </Grid.Effect>
@@ -32,7 +32,7 @@
             <TextBlock Text="创建房间" FontSize="40" Foreground="White" HorizontalAlignment="Left" Margin="290,10,0,0" VerticalAlignment="Top"/>
             <TextBlock Text="Create Strike Room" FontSize="22.5" Foreground="White" HorizontalAlignment="Left" Margin="290,61,0,0" VerticalAlignment="Top"/>
         </Grid>
-        <Grid x:Name="JoinStrikeRoom" Background="Transparent" Margin="300,320,0,220" VerticalAlignment="Center" Height="100" ToolTip="加入其他玩家开放的对战房间。">
+        <Grid x:Name="JoinStrikeRoom" Background="Transparent" Margin="300,320,0,220" VerticalAlignment="Center" Height="100" MouseDown="JoinRoom_Click" ToolTip="加入其他玩家开放的对战房间。">
             <Grid.Effect>
                 <DropShadowEffect BlurRadius="10" ShadowDepth="0" Color="White" Opacity="0"/>
             </Grid.Effect>

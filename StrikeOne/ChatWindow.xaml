@@ -1,0 +1,25 @@
+﻿<Controls:MetroWindow x:Class="StrikeOne.ChatWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:StrikeOne"
+        xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+        mc:Ignorable="d"
+        Title="ChatWindow" Height="554" Width="670" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen"
+        BorderBrush="DodgerBlue" GlowBrush="DodgerBlue" Closing="WindowClosing" Icon="{StaticResource Icon_beta}">
+    <Grid>
+        <ScrollViewer x:Name="ChatScrollViewer" Margin="0,0,0,125">
+            <ScrollViewer.Background>
+                <ImageBrush ImageSource="{StaticResource CBG}" TileMode="Tile" ViewboxUnits="Absolute" Viewport="0,0,64,64"/>
+            </ScrollViewer.Background>
+            <StackPanel x:Name="ChatStack" VerticalAlignment="Top"/>
+        </ScrollViewer>
+        <TextBox x:Name="InputBox" Height="85" Margin="0,0,0,40" TextWrapping="Wrap" VerticalAlignment="Bottom" KeyDown="InputKeyDown" FontSize="15"/>
+        <Button x:Name="SendButton" Style="{StaticResource DefaultGreenButtonStyle}" Content="发送" HorizontalAlignment="Right" Margin="0,0,5,5" VerticalAlignment="Bottom" Height="30" Width="100" Click="SendClick"/>
+        <Button x:Name="CloseButton" Style="{StaticResource DefaultBlueButtonStyle}" Content="关闭" HorizontalAlignment="Left" Margin="5,0,0,5" VerticalAlignment="Bottom" Height="30" Width="100" IsCancel="True"/>
+        <Controls:ToggleSwitch ToggleSwitchButtonStyle="{StaticResource DefaultToggleSwitchButton}" Margin="0,0,125,10" VerticalAlignment="Bottom" HorizontalAlignment="Right" Height="20"
+                                ThumbIndicatorWidth="20" ThumbIndicatorBrush="White" Content="使用Ctrl+Enter发送" FontSize="13" Checked="CtrlEnterChecked" Unchecked="CtrlEnterUnchecked"
+                                OffSwitchBrush="LightGray" OnSwitchBrush="DodgerBlue" FontFamily="Microsoft YaHei UI" Width="180" />
+    </Grid>
+</Controls:MetroWindow>
