@@ -1,4 +1,4 @@
-﻿using System;
+﻿ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+ using StrikeOne.Core.Lua;
 
 namespace StrikeOne.Core
 {
@@ -24,7 +25,7 @@ namespace StrikeOne.Core
         public int Probability { set; get; } = 2;
         public int TotalCount { set; get; } = -1;
         public int Duration { set; get; } = 0;
-        public int CoolDownDelay { set; get; } = 0;
+        public int CoolDown { set; get; } = 0;
         
         public Player Owner { set; get; }
         public int RemainedCount { set; get; }
@@ -42,7 +43,15 @@ namespace StrikeOne.Core
             ContinuedDuration = -1;
             CoolDownStartRound = -1;
             Tag = null;
+
+            LuaMain.LuaState["CurrentSkill"] = this;
+            LuaMain.LuaState.ExecuteString("CurrentSkill.SkillLaunch:Add(function(Skill, E)\n" +
+                LaunchScript + "\nend)");
+            LuaMain.LuaState.ExecuteString("CurrentSkill.SkillAffect:Add(function(Skill, E)\n" +
+                AffectScript + "\nend)");
+            LuaMain.LuaState["CurrentSkill"] = null;
         }
+
         public bool Enable =>
             !IsCoolingDown() && RemainedCount != 0 && !IsAffecting();
         public void Launch(List<Player> TargetPlayers)
@@ -56,7 +65,7 @@ namespace StrikeOne.Core
             if (Duration == 0)
             {
                 if (TotalCount != -1) RemainedCount--;
-                CoolDownStartRound = Owner.Battlefield.Round;
+                CoolDownStartRound = Owner.BattleData.Battlefield.Round;
             }
             else
                 ContinuedDuration = 0;
@@ -74,10 +83,15 @@ namespace StrikeOne.Core
             {
                 if (TotalCount != -1) RemainedCount--;
                 ContinuedDuration = 0;
-                CoolDownStartRound = Owner.Battlefield.Round;
+                CoolDownStartRound = Owner.BattleData.Battlefield.Round;
             }
         }
 
+        public bool IsRemainingCount()
+        {
+            if (TotalCount == -1) return true;
+            return RemainedCount != 0;
+        }
         public bool IsAffecting()
         {
             if (Duration == 0) return false;
@@ -86,7 +100,7 @@ namespace StrikeOne.Core
         public bool IsCoolingDown()
         {
             if (CoolDownStartRound == -1) return false;
-            if (Owner.Battlefield.Round > CoolDownStartRound + CoolDownDelay)
+            if (Owner.BattleData.Battlefield.Round > CoolDownStartRound + CoolDown)
             {
                 CoolDownStartRound = -1;
                 return false;
@@ -107,7 +121,7 @@ namespace StrikeOne.Core
             Probability = info.GetInt32("Probability");
             TotalCount = info.GetInt32("TotalCount");
             Duration = info.GetInt32("Duration");
-            CoolDownDelay = info.GetInt32("CoolDown");
+            CoolDown = info.GetInt32("CoolDown");
         }
 
         public object Clone()
@@ -123,7 +137,7 @@ namespace StrikeOne.Core
                 Probability = Probability,
                 TotalCount = TotalCount,
                 Duration = Duration,
-                CoolDownDelay = CoolDownDelay,
+                CoolDown = CoolDown,
                 TargetSelections = TargetSelections.ToList()
             };
         }
@@ -148,10 +162,11 @@ namespace StrikeOne.Core
             info.AddValue("Probability", Probability);
             info.AddValue("TotalCount", TotalCount);
             info.AddValue("Duration", Duration);
-            info.AddValue("CoolDown", CoolDownDelay);
+            info.AddValue("CoolDown", CoolDown);
         }
     }
 
+    [Serializable]
     public enum SkillOccasion
     {
         UnderAttack,
@@ -162,6 +177,7 @@ namespace StrikeOne.Core
         BeforeAttacking,
         AfterAttacking
     }
+    [Serializable]
     public enum SkillTarget
     {
         Self,

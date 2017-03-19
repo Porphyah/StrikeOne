@@ -16,6 +16,8 @@ namespace StrikeOne.Core
         public DateTime Time { set; get; }
         public List<Participant> Participants { set; get; } = new List<Participant>();
         public int Rounds { set; get; }
+
+        
     }
 
     [Serializable]

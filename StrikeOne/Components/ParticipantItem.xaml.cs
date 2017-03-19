@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -26,6 +27,7 @@ namespace StrikeOne.Components
         {
             InitializeComponent();
         }
+        public bool Local { set; get; }
         public int GroupIndex { set; get; }
         public Player Participant { set; get; }
         public Group Group { set; get; }
@@ -62,7 +64,7 @@ namespace StrikeOne.Components
             if (User.Avator != null)
                 using (MemoryStream Stream = new MemoryStream())
                 {
-                    User.Avator.Save(Stream, User.AvatorFormat);
+                    User.Avator.Save(Stream, ImageFormat.Png);
                     BitmapImage Temp = new BitmapImage();
                     Temp.BeginInit();
                     Temp.CacheOption = BitmapCacheOption.OnLoad;
@@ -125,7 +127,7 @@ namespace StrikeOne.Components
                 if (Participant.Avator != null)
                     using (MemoryStream Stream = new MemoryStream())
                     {
-                        Participant.Avator.Save(Stream, Participant.AvatorFormat);
+                        Participant.Avator.Save(Stream, ImageFormat.Png);
                         BitmapImage Temp = new BitmapImage();
                         Temp.BeginInit();
                         Temp.CacheOption = BitmapCacheOption.OnLoad;
@@ -135,6 +137,12 @@ namespace StrikeOne.Components
                     }
                 if (User is User && Group.Room.IsHost((User)User))
                     HostImg.Visibility = Visibility.Visible;
+                else if (User is AI)
+                {
+                    HostImg.Source = Resources["AI"] as BitmapImage;
+                    HostImg.Visibility = Visibility.Visible;
+                    HostImg.ToolTip = "AI标识";
+                }
                 NameBox.Text = Participant.Name;
 
                 SkillSelector.EnableSelect(Participant.Id == App.CurrentUser.Id);
@@ -193,11 +201,11 @@ namespace StrikeOne.Components
                 StatusImg.ToolTip = "该角色槽当前正等待玩家的加入。";
                 UserGrid.Visibility = Visibility.Hidden;
                 EmptyText.Visibility = Visibility.Visible;
-                if (!Group.Room.HasParticipate(App.CurrentUser.Id))
+                if (!Group.Room.HasParticipate(App.CurrentUser.Id) || Local)
                 {
                     ActionButton.Style = Resources["DefaultGreenButtonStyle"] as Style;
                     ActionButton.Content = "+";
-                    ActionButton.ToolTip = "将您的角色加入到该位置。";
+                    ActionButton.ToolTip = Local ? "将您的角色或者一个AI加入到该位置。" : "将您的角色加入到该位置。";
                 }
                 else
                     ActionButton.Visibility = Visibility.Hidden;
@@ -269,13 +277,40 @@ namespace StrikeOne.Components
         }
         private void LocalAction_Click(object Sender, RoutedEventArgs E)
         {
-            AiWindow AiWindow = new AiWindow();
-            AiWindow.ShowDialog();
+            if (Participant == null)
+            {
+                AiWindow AiWindow = new AiWindow();
+                AiWindow.ShowDialog();
+                if (AiWindow.Canceled) return;
 
+                if (!AiWindow.IsSelectingAi)
+                {
+                    Group.Participants[GroupIndex] = App.CurrentUser;
+                    this.Join(App.CurrentUser, false);
+                    JoinSyncAction?.Invoke(App.CurrentUser);
+                }
+                else
+                {
+                    Group.Participants[GroupIndex] = AiWindow.SelectedAi;
+                    this.Join(AiWindow.SelectedAi, false);
+                    JoinSyncAction?.Invoke(AiWindow.SelectedAi);
+                    SkillSelector.Select(AiWindow.SelectedAi.ChooseSkill());
+                    //this.Ready();
+                }
+            }
+            else
+            {
+                if (MessageBox.Show("确实要将" + (Participant.Id == App.CurrentUser.Id ? "自己" : "AI：" +  Participant.Name) + "移出当前角色槽么？", 
+                    "移出角色槽", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No) return;
+                Group.Participants[GroupIndex] = null;
+                this.Join(null, false);
+                QuitSyncAction?.Invoke();
+            }
         }
 
         public void LocalInit(int GroupIndex, Group ParentGroup)
         {
+            this.Local = true;
             this.GroupIndex = GroupIndex;
             this.Group = ParentGroup;
             StatusImg.Source = Resources["Nobody"] as BitmapImage;

@@ -31,4 +31,71 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style x:Key="CircleProgressBarStyle" x:Name="CircleProgressBar" TargetType="{x:Type ProgressBar}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ProgressBar}">
+                    <ControlTemplate.Resources>
+                        <local:CircleProgressCenterConverter x:Key="CircleProgressCenterConverter"/>
+                        <local:CircleProgressRadiusConverter x:Key="CircleProgressRadiusConverter"/>
+                        <local:CircleProgressValueConverter x:Key="CircleProgressValueConverter"/>
+                    </ControlTemplate.Resources>
+                    <Grid>
+                        <Path Fill="{TemplateBinding Background}"
+                            Stroke="{TemplateBinding BorderBrush}"
+                            StrokeThickness="{TemplateBinding BorderThickness}">
+                            <Path.Data>
+                                <GeometryGroup>
+                                    <EllipseGeometry 
+                                        RadiusX="{Binding Width, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource CircleProgressRadiusConverter}}" 
+                                        RadiusY="{Binding Height, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource CircleProgressRadiusConverter}}">
+                                        <EllipseGeometry.Center>
+                                            <MultiBinding Converter="{StaticResource CircleProgressCenterConverter}">
+                                                <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Height"/>
+                                                <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Width"/>
+                                            </MultiBinding>
+                                        </EllipseGeometry.Center>
+                                    </EllipseGeometry>
+                                    <EllipseGeometry>
+                                        <EllipseGeometry.Center>
+                                            <MultiBinding Converter="{StaticResource CircleProgressCenterConverter}">
+                                                <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Height"/>
+                                                <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Width"/>
+                                            </MultiBinding>
+                                        </EllipseGeometry.Center>
+                                        <EllipseGeometry.RadiusX>
+                                            <MultiBinding Converter="{StaticResource CircleProgressRadiusConverter}">
+                                                <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Width"/>
+                                                <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Tag"/>
+                                            </MultiBinding>
+                                        </EllipseGeometry.RadiusX>
+                                        <EllipseGeometry.RadiusY>
+                                            <MultiBinding Converter="{StaticResource CircleProgressRadiusConverter}">
+                                                <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Height"/>
+                                                <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Tag"/>
+                                            </MultiBinding>
+                                        </EllipseGeometry.RadiusY>
+                                    </EllipseGeometry>
+                                </GeometryGroup>
+                            </Path.Data>
+                        </Path>
+                        <Path Fill="{TemplateBinding Foreground}">
+                            <Path.Data>
+                                <MultiBinding Converter="{StaticResource CircleProgressValueConverter}">
+                                    <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Value"/>
+                                    <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Minimum"/>
+                                    <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Maximum"/>
+                                    <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Height"/>
+                                    <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Width"/>
+                                    <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Tag"/>
+                                    <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Orientation"/>
+                                </MultiBinding>
+                            </Path.Data>
+                        </Path>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

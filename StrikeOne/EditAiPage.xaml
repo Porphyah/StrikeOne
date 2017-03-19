@@ -1,0 +1,164 @@
+﻿<UserControl x:Class="StrikeOne.EditAiPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:StrikeOne"
+             xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:Components="clr-namespace:StrikeOne.Components"
+             mc:Ignorable="d" 
+             d:DesignHeight="640" d:DesignWidth="1080">
+    <UserControl.Resources>
+        <BitmapImage x:Key="EmptyIcon" UriSource="Assets/Icon_empty.png"/>
+        <Components:BitmapConverter x:Key="BitmapConverter"/>
+    </UserControl.Resources>
+    <Grid>
+        <Rectangle Height="100" Fill="#88000000" VerticalAlignment="Top"/>
+        <Grid x:Name="TitleGrid" Height="100" VerticalAlignment="Top">
+            <Image Source="{StaticResource Ai_white}" HorizontalAlignment="Left" Height="70" Margin="10,15,0,0" VerticalAlignment="Top" Width="80"/>
+            <Label Content="AI编辑" Foreground="White" FontSize="35" HorizontalAlignment="Left" Margin="100,10,0,0" VerticalAlignment="Top"/>
+            <Label Content="Edit Strike AI" Foreground="White" FontSize="20" HorizontalAlignment="Left" Margin="100,54,0,0" VerticalAlignment="Top"/>
+            <Button HorizontalAlignment="Right" Margin="0,20,20,20" Width="60" ToolTip="返回编辑菜单。" Click="Back_Click">
+                <Button.Template>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Image Source="{StaticResource Back}"/>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect ShadowDepth="0" Color="White"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+        </Grid>
+        <Grid x:Name="AiListGrid" HorizontalAlignment="Left" Width="300" Background="#88000000" Margin="-300,100,0,0">
+            <Label Content="AI List" FontSize="25" FontWeight="Light" Foreground="White" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
+            <ListBox x:Name="AiListBox" Background="Transparent" Margin="15,50,15,50" SelectionChanged="SelectAi">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <WrapPanel VerticalAlignment="Center">
+                            <Ellipse Width="25" Height="25">
+                                <Ellipse.Fill>
+                                    <ImageBrush x:Name="SkillImg" ImageSource="{Binding Avator, Converter={StaticResource BitmapConverter}, ConverterParameter=Png}"/>
+                                </Ellipse.Fill>
+                            </Ellipse>
+                            <TextBlock Padding="5,0,0,0" Foreground="White" VerticalAlignment="Center" x:Name="SkillName" Text="{Binding Name}"/>
+                        </WrapPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <Button x:Name="AddButton" HorizontalAlignment="Left" Margin="15,0,0,10" VerticalAlignment="Bottom" Width="80" Height="35" Click="AddAi_Click">
+                <Button.Template>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid x:Name="Container">
+                            <Image HorizontalAlignment="Left" Margin="5" Width="25" Source="{StaticResource Add}"/>
+                            <TextBlock Text="添加" Foreground="White" FontSize="18" FontFamily="Microsoft YaHei UI Light" Margin="35,0,0,0" VerticalAlignment="Center"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Effect" TargetName="Container">
+                                    <Setter.Value>
+                                        <DropShadowEffect ShadowDepth="0" Color="White"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+            <Button x:Name="DeleteButton" HorizontalAlignment="Right" Margin="0,0,15,10" VerticalAlignment="Bottom" Width="80" Height="35" Visibility="Hidden" Click="DeleteAi_Click">
+                <Button.Template>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid x:Name="Container">
+                            <Image HorizontalAlignment="Left" Margin="5" Width="25" Source="{StaticResource Remove}"/>
+                            <TextBlock Text="删除" Foreground="White" FontSize="18" FontFamily="Microsoft YaHei UI Light" Margin="35,0,0,0" VerticalAlignment="Center"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Effect" TargetName="Container">
+                                    <Setter.Value>
+                                        <DropShadowEffect ShadowDepth="0" Color="White"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
+        </Grid>
+        <ScrollViewer x:Name="ContentViewer" Margin="300,100,0,0">
+            <Grid Margin="45,40,45,45">
+                <Ellipse Stroke="DodgerBlue" HorizontalAlignment="Left" Height="100" Margin="10,10,0,0" VerticalAlignment="Top" Width="100">
+                    <Ellipse.Effect>
+                        <DropShadowEffect BlurRadius="8" ShadowDepth="0" Color="DodgerBlue"/>
+                    </Ellipse.Effect>
+                    <Ellipse.Fill>
+                        <ImageBrush x:Name="AvatorImage" ImageSource="{DynamicResource Icon_empty}"/>
+                    </Ellipse.Fill>
+                </Ellipse>
+                <TextBlock HorizontalAlignment="Left" Margin="31,115,0,0" VerticalAlignment="Top">
+                    <Hyperlink Foreground="DodgerBlue" Click="SetAiAvator_Click">设置AI头像</Hyperlink>
+                </TextBlock>
+                <Label Content="名字：" HorizontalAlignment="Left" Margin="115,10,0,0" VerticalAlignment="Top"/>
+                <TextBox x:Name="AiName" Style="{StaticResource DefaultTextBoxStyle}" Height="23" Margin="160,11,10,0" VerticalAlignment="Top"/>
+                <Label Content="描述：" HorizontalAlignment="Left" Margin="115,39,0,0" VerticalAlignment="Top"/>
+                <TextBox x:Name="AiDescription" Height="73" Margin="160,40,10,0" VerticalAlignment="Top"/>
+                <Grid Background="#881E90FF" HorizontalAlignment="Right" Height="320" VerticalAlignment="Bottom" Width="183" Margin="0,0,10,10"
+                      MouseEnter="Drawing_MouseEnter" MouseLeave="Drawing_MouseLeave">
+                    <Image x:Name="DrawingImage">
+                        <Image.Effect>
+                            <BlurEffect x:Name="DrawingBlurEffect" Radius="0" KernelType="Gaussian"/>
+                        </Image.Effect>
+                    </Image>
+                    <Button x:Name="SetDrawingButton" VerticalAlignment="Center" HorizontalAlignment="Center" Width="75" Height="60" Click="SetAiDrawing_Click">
+                        <Button.Template>
+                            <ControlTemplate TargetType="{x:Type Button}">
+                                <Grid x:Name="ContentGrid">
+                                    <Image Source="{StaticResource Add}" HorizontalAlignment="Center" VerticalAlignment="Top" Height="35" Width="35"/>
+                                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Bottom"
+                                               FontFamily="Microsoft YaHei UI" FontWeight="Normal" Foreground="White" Text="设置立绘" FontSize="13"/>
+                                </Grid>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Trigger.Setters>
+                                            <Setter TargetName="ContentGrid" Property="Effect">
+                                                <Setter.Value>
+                                                    <DropShadowEffect Color="White" ShadowDepth="0"/>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Trigger.Setters>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </Grid>
+                <Label Content="反击使用率：" HorizontalAlignment="Left" Margin="10,135,0,0" VerticalAlignment="Top"/>
+                <Slider x:Name="RadicalSlider" HorizontalAlignment="Left" Margin="100,140,0,0" VerticalAlignment="Top" Width="315" 
+                        SmallChange="0.01" LargeChange="0.1" TickFrequency="0.1" TickPlacement="BottomRight" Maximum="1" Value="0.5" ValueChanged="SetRadicalValue"/>
+                <TextBlock x:Name="RadicalText" HorizontalAlignment="Left" Margin="428,140,0,0" Text="100%" VerticalAlignment="Top"/>
+                <Label Content="拥有技能：" HorizontalAlignment="Left" Margin="10,169,0,0" VerticalAlignment="Top"/>
+                <ListBox x:Name="SkillListBox" HorizontalAlignment="Left" Margin="10,195,0,50" Width="450" Background="#88000000" SelectionChanged="SelectSkillPool">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <WrapPanel VerticalAlignment="Center">
+                                <Image x:Name="SkillImg" Width="25" Height="25" Source="{Binding Image, Converter={StaticResource BitmapConverter}, ConverterParameter=Png}"/>
+                                <TextBlock Foreground="White" VerticalAlignment="Center" x:Name="SkillName" Text="{Binding Name}"/>
+                            </WrapPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+                <Button x:Name="AddSkillButton" Content="+" Style="{StaticResource DefaultGreenButtonStyle}"  HorizontalAlignment="Left" Margin="10,0,0,10" VerticalAlignment="Bottom" Width="35" Height="35" Click="AddSkill_Click"/>
+                <Button x:Name="DeleteSkillButton" Content="-" Style="{StaticResource DefaultRedButtonStyle}" IsEnabled="False" HorizontalAlignment="Left" Margin="50,0,0,10" VerticalAlignment="Bottom" Width="35" Height="35" Click="DeleteSkill_Click"/>
+                <Button x:Name="EditSkillButton" Content="设置使用脚本" Style="{StaticResource DefaultBlueButtonStyle}" IsEnabled="False" HorizontalAlignment="Left" Margin="100,0,0,10" VerticalAlignment="Bottom" Width="100" Height="35" 
+                        Click="EditSkill_Click" ToolTip="教会AI使用这项技能，包括使用条件和使用对象。"/>
+
+
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

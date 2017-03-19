@@ -329,7 +329,8 @@ namespace StrikeOne
         }
         private void EditAi_Click(object Sender, MouseButtonEventArgs E)
         {
-            
+            LeaveAction = delegate { MainWindow.Instance.EditAi(); };
+            this.PageLeave();
         }
     }
 }

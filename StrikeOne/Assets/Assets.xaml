@@ -11,11 +11,18 @@
     <BitmapImage x:Key="Icon_alpha" UriSource="Icon_alpha.png"/>
     <BitmapImage x:Key="Icon_beta" UriSource="Icon_beta.png"/>
     <BitmapImage x:Key="Icon_empty" UriSource="Icon_empty.png"/>
-
+    <BitmapImage x:Key="LogoFragment_Ring" UriSource="LogoFragment_Ring.png"/>
+    <BitmapImage x:Key="LogoFragment_ArcNE" UriSource="LogoFragment_ArcNE.png"/>
+    <BitmapImage x:Key="LogoFragment_ArcSW" UriSource="LogoFragment_ArcSW.png"/>
+    
     <BitmapImage x:Key="Ai_white" UriSource="Ai_white.png"/>
     <BitmapImage x:Key="Ai_grey" UriSource="Ai_grey.png"/>
     <BitmapImage x:Key="Skill_white" UriSource="Skill_white.png"/>
     <BitmapImage x:Key="Skill_grey" UriSource="Skill_grey.png"/>
+    <BitmapImage x:Key="Attack" UriSource="Attack.png"/>
+    <BitmapImage x:Key="Defend" UriSource="Defend.png"/>
+    <BitmapImage x:Key="Counter" UriSource="Counter.png"/>
+    <BitmapImage x:Key="Abondon" UriSource="Abondon.png"/>
     <BitmapImage x:Key="Confirm" UriSource="Confirm.png"/>
     <BitmapImage x:Key="Cancel" UriSource="Cancel.png"/>
     <BitmapImage x:Key="Add" UriSource="Add.png"/>
@@ -34,6 +41,8 @@
     <BitmapImage x:Key="Victories_white" UriSource="Victories_white.png"/>
     <BitmapImage x:Key="Luck_white" UriSource="Luck_white.png"/>
     <BitmapImage x:Key="Radical" UriSource="Radical.png"/>
+    <BitmapImage x:Key="Health" UriSource="Health_grey.png"/>
+    <BitmapImage x:Key="Health_white" UriSource="Health_white.png"/>
     
     <BitmapImage x:Key="Host" UriSource="Host.png"/>
     <BitmapImage x:Key="Leader" UriSource="Leader.png"/>
@@ -52,6 +61,7 @@
     <BitmapImage x:Key="Description" UriSource="Description.png"/>
     <BitmapImage x:Key="Invitation" UriSource="Invitation.png"/>
     <BitmapImage x:Key="Error" UriSource="Error.png"/>
+    <BitmapImage x:Key="Ok" UriSource="OK.png"/>
     <BitmapImage x:Key="System" UriSource="System.png"/>
 
     <BitmapImage x:Key="Count_grey" UriSource="Count_grey.png"/>
@@ -60,9 +70,17 @@
     <BitmapImage x:Key="Count_white" UriSource="Count_white.png"/>
     <BitmapImage x:Key="Duration_white" UriSource="Duration_white.png"/>
     <BitmapImage x:Key="CoolDown_white" UriSource="CoolDown_white.png"/>
-    
+
+    <BitmapImage x:Key="Vs" UriSource="VS.png"/>
     <BitmapImage x:Key="OneVsOne" UriSource="OneVsOne.png"/>
 
+    <BitmapImage x:Key="One" UriSource="One.png"/>
+    <BitmapImage x:Key="Two" UriSource="Two.png"/>
+    <BitmapImage x:Key="Three" UriSource="Three.png"/>
+    <BitmapImage x:Key="Four" UriSource="Four.png"/>
+    <BitmapImage x:Key="Five" UriSource="Five.png"/>
+    <BitmapImage x:Key="Six" UriSource="Six.png"/>
+    
     <BitmapImage x:Key="TBG" UriSource="TBG.png"/>
     <BitmapImage x:Key="CBG" UriSource="ChatBackground.png"/>
 </ResourceDictionary>

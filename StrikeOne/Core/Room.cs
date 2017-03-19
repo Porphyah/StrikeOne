@@ -18,6 +18,7 @@ namespace StrikeOne.Core
         public bool LAN { set; get; }
         public bool Private { set; get; }
         public BattleType BattleType { set; get; }
+        public Battlefield Battlefield { set; get; }
         public List<Group> Groups { get; } = new List<Group>();
         public List<Player> Members { get; } = new List<Player>();
 

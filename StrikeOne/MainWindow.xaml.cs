@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Media.Animation;
 using MahApps.Metro.Controls;
 using StrikeOne.Core;
@@ -13,6 +14,7 @@ namespace StrikeOne
     public partial class MainWindow : MetroWindow
     {
         public static MainWindow Instance { set; get; }
+        public DebugWindow DebugWindow { private set; get; }
 
         public LoginPage LoginPage { set; get; }
         public SignupPage SignupPage { set; get; }
@@ -21,9 +23,12 @@ namespace StrikeOne
         public RoomWizardPage RoomWizardPage { set; get; }
         public RoomJoinPage RoomJoinPage { set; get; }
         public RoomPage RoomPage { set; get; }
+        public PrepareStrikePage PrepareStrikePage { set; get; }
+        public BattlefieldPage BattlefieldPage { set; get; }
 
         public EditorPage EditorPage { set; get; }
         public EditSkillPage EditSkillPage { set; get; }
+        public EditAiPage EditAiPage { set; get; }
 
         public UserControl CurrentPage { set; get; }
 
@@ -35,11 +40,28 @@ namespace StrikeOne
         private void WindowLoaded(object Sender, RoutedEventArgs E)
         {
             Instance = this;
+
             IO.LoadConfig();
+            IO.LoadSkills();
+            IO.LoadUsers();
+            IO.LoadAis();
+
             if (!App.EditorMode)
+            {
+                if (App.DebugMode)
+                {
+                    DebugWindow = new DebugWindow();
+                    DebugWindow.Show();
+                }
                 Login();
+            }
             else
                 EnterEditorMode();
+        }
+
+        public void SetLog(string Text, Color Color, bool Bold = false, bool Italic = false)
+        {
+            DebugWindow?.SetLog(Text, Color, Bold, Italic);
         }
 
         public void Login()
@@ -177,6 +199,38 @@ namespace StrikeOne
             RoomPage.PageEnter(Target);
         }
 
+        public void PrepareStrike(Room Target)
+        {
+            if (CurrentPage != null)
+                MainGrid.Children.Remove(CurrentPage);
+
+            PrepareStrikePage = new PrepareStrikePage()
+            {
+                Height = MainGrid.ActualHeight,
+                Width = MainGrid.ActualWidth
+            };
+
+            MainGrid.Children.Add(PrepareStrikePage);
+            CurrentPage = PrepareStrikePage;
+            PrepareStrikePage.PageEnter(Target);
+        }
+
+        public void EnterBattlefield(Battlefield Battlefield)
+        {
+            if (CurrentPage != null)
+                MainGrid.Children.Remove(CurrentPage);
+
+            BattlefieldPage = new BattlefieldPage()
+            {
+                Height = MainGrid.ActualHeight,
+                Width = MainGrid.ActualWidth
+            };
+
+            MainGrid.Children.Add(BattlefieldPage);
+            CurrentPage = BattlefieldPage;
+            BattlefieldPage.PageEnter(Battlefield);
+        }
+
         public void EnterEditorMode()
         {
             if (CurrentPage != null)
@@ -207,6 +261,21 @@ namespace StrikeOne
             MainGrid.Children.Add(EditSkillPage);
             CurrentPage = EditSkillPage;
             EditSkillPage.PageEnter();
+        }
+        public void EditAi()
+        {
+            if (CurrentPage != null)
+                MainGrid.Children.Remove(CurrentPage);
+
+            EditAiPage = new EditAiPage()
+            {
+                Height = MainGrid.ActualHeight,
+                Width = MainGrid.ActualWidth
+            };
+
+            MainGrid.Children.Add(EditAiPage);
+            CurrentPage = EditAiPage;
+            EditAiPage.PageEnter();
         }
     }
 }

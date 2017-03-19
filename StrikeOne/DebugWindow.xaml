@@ -1,0 +1,22 @@
+﻿<Controls:MetroWindow x:Class="StrikeOne.DebugWindow"
+         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:StrikeOne"
+        xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+        mc:Ignorable="d"
+        Title="调试窗口" Height="280" Width="500" WindowStyle="ToolWindow" ResizeMode="CanMinimize" Topmost="True"
+        GlowBrush="DodgerBlue" BorderBrush="DodgerBlue">
+    <Grid>
+        <ScrollViewer Height="225" VerticalAlignment="Top">
+            <RichTextBox x:Name="Box" IsReadOnly="True"/>
+        </ScrollViewer>
+        <Button x:Name="ClearButton" HorizontalAlignment="Right" Margin="0,0,25,40" VerticalAlignment="Bottom" Width="30" Height="30" Background="{x:Null}" BorderBrush="{x:Null}" Click="ClearLog">
+            <Button.Content>
+                <Image Source="{StaticResource Error}" Margin="-5" ToolTip="清除Log"/>
+            </Button.Content>
+        </Button>
+        <TextBox x:Name="ConsoleText" Height="27" TextWrapping="Wrap" VerticalAlignment="Bottom" KeyDown="SendConsoleMessage"/>
+    </Grid>
+</Controls:MetroWindow>

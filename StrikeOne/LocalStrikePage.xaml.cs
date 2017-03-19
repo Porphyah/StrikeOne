@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 using StrikeOne.Components;
 using StrikeOne.Core;
+using GroupItem = StrikeOne.Components.GroupItem;
 
 namespace StrikeOne
 {
@@ -154,7 +155,27 @@ namespace StrikeOne
 
         private void Active_Click(object Sender, RoutedEventArgs E)
         {
-            
+            if (GroupStack.Children.OfType<GroupItem>()
+                .SelectMany(GroupItem => GroupItem.ParticipantStack.Children.OfType<ParticipantItem>())
+                .First(O => O.Participant.Id == App.CurrentUser.Id).SkillSelector.SelectedSkill == null
+                && MessageBox.Show("您还没有为自己选择技能，确定继续？", "开始对战",
+                    MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
+                return;
+            GroupStack.Children.OfType<GroupItem>()
+                .SelectMany(GroupItem => GroupItem.ParticipantStack.Children.OfType<ParticipantItem>())
+                .ToList().ForEach(O =>
+                {
+                    O.Participant.BattleData = new BattleData()
+                    { Skill = O.SkillSelector.SelectedSkill };
+                    O.Ready();
+                });
+            ActiveButton.IsEnabled = false;
+            LeaveAction = delegate
+            {
+                MainWindow.Instance.HideInfoGrid();
+                MainWindow.Instance.PrepareStrike(CurrentRoom);
+            };
+            this.PageLeave();
         }
 
         private void QuitRoom_Click(object Sender, RoutedEventArgs E)
@@ -174,7 +195,8 @@ namespace StrikeOne
             CurrentRoom = new Room()
             {
                 Id = Guid.NewGuid(),
-                BattleType = Item.BattleType
+                BattleType = Item.BattleType,
+                Host = App.CurrentUser
             };
             switch (Item.BattleType)
             {
@@ -203,28 +225,16 @@ namespace StrikeOne
                 var GroupItem = new Components.GroupItem();
                 GroupItem.JoinSyncAction = delegate (Player TargetUser)
                 {
-                    foreach (var TempGroupItem in GroupStack.Children.OfType<Components.GroupItem>())
-                        foreach (var ParticipantItem in TempGroupItem.ParticipantStack.Children.OfType<ParticipantItem>())
-                        {
-                            if ((ParticipantItem.Participant != null &&
-                                 ParticipantItem.Participant.Id != TargetUser.Id) ||
-                                (CurrentRoom.Host.Id == App.CurrentUser.Id && ParticipantItem.Participant == null))
-                                ParticipantItem.ActionButton.Visibility = Visibility.Hidden;
-                            else
-                                ParticipantItem.ActionButton.Visibility = Visibility.Visible;
-                        }
+                    if (GroupStack.Children.OfType<Components.GroupItem>()
+                        .All(O => O.ParticipantStack.Children.OfType<ParticipantItem>()
+                            .All(P => P.Participant != null)))
+                        ActiveButton.IsEnabled = true;
+                    else
+                        ActiveButton.IsEnabled = false;
                 };
                 GroupItem.QuitSyncAction = delegate
                 {
-                    foreach (var TempGroupItem in GroupStack.Children.OfType<Components.GroupItem>())
-                        foreach (var ParticipantItem in TempGroupItem.ParticipantStack.Children.OfType<ParticipantItem>())
-                        {
-                            if (ParticipantItem.Participant == null ||
-                                (ParticipantItem.Participant != null && CurrentRoom.Host.Id == App.CurrentUser.Id))
-                                ParticipantItem.ActionButton.Visibility = Visibility.Visible;
-                            else
-                                ParticipantItem.ActionButton.Visibility = Visibility.Hidden;
-                        }
+                    ActiveButton.IsEnabled = false;
                 };
                 GroupItem.LocalInit(Group, CurrentRoom);
                 GroupItem.Padding = new Thickness(0, 10, 0, 0);

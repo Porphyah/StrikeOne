@@ -30,7 +30,6 @@ namespace StrikeOne
     {
         public Action LeaveAction { set; private get; }
         public System.Drawing.Image Avator { set; get; }
-        public ImageFormat AvatorFormat { set; get; }
         private DispatcherTimer StatusTimer { set; get; }
 
         public SignupPage()
@@ -236,7 +235,6 @@ namespace StrikeOne
                         Id = Guid.NewGuid(),
                         Name = NameBox.Text,
                         Avator = Avator,
-                        AvatorFormat = AvatorFormat,
                         Introduction = DescriptionBox.Text,
                         LanIpAddress = App.LanIpAddress,
                         WanIpAddress = App.WanIpAddress
@@ -268,9 +266,10 @@ namespace StrikeOne
         {
             OpenFileDialog FileDialog = new OpenFileDialog()
             {
-                Filter = "图像文件|*.bmp;*.jpg;*.png;*.tif",
+                Filter = "图像文件|*.png",
                 CheckFileExists = true,
                 CheckPathExists = true,
+                Title = "选择头像图片",
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures)
             };
             bool? Result = FileDialog.ShowDialog();
@@ -283,11 +282,10 @@ namespace StrikeOne
             if (Dialog.Canceled) return;
 
             Avator = Dialog.Target;
-            AvatorFormat = Dialog.ImageFormat;
 
             using (MemoryStream Stream = new MemoryStream())
             {
-                Avator.Save(Stream, Dialog.ImageFormat);
+                Avator.Save(Stream, ImageFormat.Png);
                 BitmapImage Temp = new BitmapImage();
                 Temp.BeginInit();
                 Temp.CacheOption = BitmapCacheOption.OnLoad;

@@ -30,7 +30,6 @@ namespace StrikeOne.Core
             LanIpAddress = IPAddress.Parse(info.GetString("LanIp"));
 
             Avator = info.GetValue<Image>("Avator");
-            AvatorFormat = info.GetValue<ImageFormat>("AvatorFormat");
 
             Records = info.GetValue<List<Record>>("Records");
             Achievements = info.GetValue<List<Achievement>>("Achievements");
@@ -43,11 +42,15 @@ namespace StrikeOne.Core
             info.AddValue("LanIp", LanIpAddress.ToString());
             info.AddValue("WanIp", WanIpAddress.ToString());
 
-            MemoryStream Stream = new MemoryStream();
-            Avator.Save(Stream, AvatorFormat);
-            info.AddValue("Avator", Stream.GetBuffer());
-            info.AddValue("AvatorFormat", AvatorFormat.ToString());
-            Stream.Close();
+            if (Avator != null)
+            {
+                MemoryStream Stream = new MemoryStream();
+                Avator.Save(Stream, ImageFormat.Png);
+                info.AddValue("Avator", Stream.GetBuffer());
+                Stream.Close();
+            }
+            else
+                info.AddValue("Avator", Encoding.UTF8.GetBytes("NULL"));
 
             info.AddValue("Records", Records);
             info.AddValue("Achievements", Achievements);

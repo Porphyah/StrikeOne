@@ -13,6 +13,7 @@ using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Xml.Serialization;
 
 namespace StrikeOne.Components
 {
@@ -31,16 +32,22 @@ namespace StrikeOne.Components
             InitializeComponent();
         }
 
+        public void Adjust()
+        {
+            WrapPanel.Width = 0.8*this.Width;
+            ProbabilityText.Margin = new Thickness(0.8*this.Width + 10,
+                0, 0, 0);
+        }
         public void Init(int Denominator, bool CanSelect)
         {
             this.Denominator = Denominator;
-            double Width = Denominator > 10 ? 480.0 / Denominator : 240.0 / Denominator;
+            double Width = Denominator > 10 ? WrapPanel.Width * 2 / Denominator : WrapPanel.Width / Denominator;
             for (int i = 0; i < Denominator; i++)
             {
                 int Index = i;
                 Rectangle Rect = new Rectangle()
                 {
-                    Height = 15,
+                    Height = Width < 300 ? 10 : 15,
                     Width = Width,
                     Fill = new SolidColorBrush(Color.FromArgb(128, 0, 0, 0)),
                     Effect = new DropShadowEffect()

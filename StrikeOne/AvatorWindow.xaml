@@ -36,9 +36,9 @@
             </Path>
             <Components:Tailor x:Name="Tailor" Height="50" Width="50"/>
         </Canvas>
-        <Ellipse x:Name="AvatorDisplay" Stroke="DodgerBlue" StrokeThickness="3" Height="90" Margin="0,10,0,0" VerticalAlignment="Top" Grid.Column="1" HorizontalAlignment="Center" Width="90">
+        <Ellipse x:Name="AvatorDisplay" Stroke="DodgerBlue" StrokeThickness="1" Height="90" Margin="0,10,0,0" VerticalAlignment="Top" Grid.Column="1" HorizontalAlignment="Center" Width="90">
             <Ellipse.Effect>
-                <DropShadowEffect BlurRadius="8" ShadowDepth="0" Color="DodgerBlue"/>
+                <DropShadowEffect BlurRadius="5" ShadowDepth="0" Color="DodgerBlue"/>
             </Ellipse.Effect>
             <Ellipse.Fill>
                 <ImageBrush x:Name="AvatorImage"/>

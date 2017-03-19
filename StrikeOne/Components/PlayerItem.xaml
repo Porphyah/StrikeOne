@@ -1,0 +1,29 @@
+﻿<UserControl x:Class="StrikeOne.Components.PlayerItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:StrikeOne.Components"
+             xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="35" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ResourceDictionary Source="../Assets/Assets.xaml"/>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.Background>
+            <SolidColorBrush x:Name="GroupBrush" Color="DodgerBlue" Opacity="0.2"/>
+        </Grid.Background>
+        <Image x:Name="StatusImg" Source="{DynamicResource Joined}" HorizontalAlignment="Left" Width="25" Margin="5,5,0,5"/>
+        <Grid HorizontalAlignment="Left" VerticalAlignment="Center" Width="25" Height="25" Margin="35,5,0,5">
+            <Controls:MetroProgressBar x:Name="HpProgress" Style="{StaticResource CircleProgressBarStyle}" Height="25" Width="25" 
+                                       Maximum="10" Value="10" Tag="2" Foreground="LimeGreen"/>
+            <TextBlock x:Name="HpText" HorizontalAlignment="Center" VerticalAlignment="Center" Text="10" Foreground="LimeGreen" Margin="0"/>
+        </Grid>
+        <TextBlock x:Name="PlayerName" HorizontalAlignment="Left" Margin="65,0,0,0" VerticalAlignment="Center"
+                   Text="Player Name" FontSize="16" FontWeight="Light"/>
+        <TextBlock x:Name="GroupName" HorizontalAlignment="Right" Margin="0,0,5,0" VerticalAlignment="Center" 
+                   Text="GroupName" FontWeight="Light" Foreground="DodgerBlue"/>
+
+    </Grid>
+</UserControl>

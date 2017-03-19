@@ -53,6 +53,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.1.4.3\lib\net45\System.Windows.Interactivity.dll</HintPath>
       <Private>True</Private>
@@ -78,8 +79,17 @@
     <Compile Include="AiWindow.xaml.cs">
       <DependentUpon>AiWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="BattlefieldPage.xaml.cs">
+      <DependentUpon>BattlefieldPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ChatWindow.xaml.cs">
       <DependentUpon>ChatWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\ActionButton.xaml.cs">
+      <DependentUpon>ActionButton.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\ActionDescription.xaml.cs">
+      <DependentUpon>ActionDescription.xaml</DependentUpon>
     </Compile>
     <Compile Include="Components\AiItem.xaml.cs">
       <DependentUpon>AiItem.xaml</DependentUpon>
@@ -91,8 +101,15 @@
     <Compile Include="Components\ChatterItem.xaml.cs">
       <DependentUpon>ChatterItem.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Components\CircleProgressConverter.cs" />
+    <Compile Include="Components\DiceControl.xaml.cs">
+      <DependentUpon>DiceControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Components\GroupItem.xaml.cs">
       <DependentUpon>GroupItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\ParticipantDisplayLarge.xaml.cs">
+      <DependentUpon>ParticipantDisplayLarge.xaml</DependentUpon>
     </Compile>
     <Compile Include="Components\ParticipantDisplaySmall.xaml.cs">
       <DependentUpon>ParticipantDisplaySmall.xaml</DependentUpon>
@@ -100,14 +117,20 @@
     <Compile Include="Components\ParticipantItem.xaml.cs">
       <DependentUpon>ParticipantItem.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Components\PlayerCard.xaml.cs">
+      <DependentUpon>PlayerCard.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\PlayerItem.xaml.cs">
+      <DependentUpon>PlayerItem.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Components\ProbabilityControl.xaml.cs">
       <DependentUpon>ProbabilityControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Components\ProgressItem.xaml.cs">
       <DependentUpon>ProgressItem.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Components\SelectionItem.xaml.cs">
-      <DependentUpon>SelectionItem.xaml</DependentUpon>
+    <Compile Include="Components\SkillItem.xaml.cs">
+      <DependentUpon>SkillItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="Components\SkillSelector.xaml.cs">
       <DependentUpon>SkillSelector.xaml</DependentUpon>
@@ -123,11 +146,16 @@
       <DependentUpon>Tailor.xaml</DependentUpon>
     </Compile>
     <Compile Include="Core\AI.cs" />
+    <Compile Include="Core\BattleData.cs" />
     <Compile Include="Core\Battlefield.cs" />
     <Compile Include="Core\DiceRoll.cs" />
     <Compile Include="Core\Encryption.cs" />
     <Compile Include="Core\Group.cs" />
     <Compile Include="Core\IO.cs" />
+    <Compile Include="Core\Lua\LuaFramework.cs" />
+    <Compile Include="Core\Lua\LuaGeneric.cs" />
+    <Compile Include="Core\Lua\LuaMain.cs" />
+    <Compile Include="Core\Lua\LuaMath.cs" />
     <Compile Include="Core\Player.cs" />
     <Compile Include="Core\Network\ISocket.cs" />
     <Compile Include="Core\Network\ISocketHandler.cs" />
@@ -143,6 +171,15 @@
     <Compile Include="Core\Room.cs" />
     <Compile Include="Core\SerializableExtension.cs" />
     <Compile Include="Core\Skill.cs" />
+    <Compile Include="DebugWindow.xaml.cs">
+      <DependentUpon>DebugWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="EditAiPage.xaml.cs">
+      <DependentUpon>EditAiPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="EditAiSkillWindow.xaml.cs">
+      <DependentUpon>EditAiSkillWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="EditorPage.xaml.cs">
       <DependentUpon>EditorPage.xaml</DependentUpon>
     </Compile>
@@ -154,6 +191,9 @@
     </Compile>
     <Compile Include="LocalStrikePage.xaml.cs">
       <DependentUpon>LocalStrikePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="PrepareStrikePage.xaml.cs">
+      <DependentUpon>PrepareStrikePage.xaml</DependentUpon>
     </Compile>
     <Compile Include="RoomJoinPage.xaml.cs">
       <DependentUpon>RoomJoinPage.xaml</DependentUpon>
@@ -168,6 +208,9 @@
       <DependentUpon>SignupPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Core\User.cs" />
+    <Compile Include="SkillWindow.xaml.cs">
+      <DependentUpon>SkillWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserPage.xaml.cs">
       <DependentUpon>UserPage.xaml</DependentUpon>
     </Compile>
@@ -183,7 +226,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="BattlefieldPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ChatWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\ActionButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\ActionDescription.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -207,7 +262,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Components\DiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Components\GroupItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\ParticipantDisplayLarge.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -216,6 +279,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Components\ParticipantItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\PlayerCard.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\PlayerItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -231,7 +302,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Components\SelectionItem.xaml">
+    <Page Include="Components\SkillItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -252,6 +323,18 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Components\UserGrid.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DebugWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="EditAiPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="EditAiSkillWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -290,6 +373,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="PrepareStrikePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="RoomJoinPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -303,6 +390,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SignupPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SkillWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -401,17 +492,6 @@
     <Resource Include="Assets\ChatBackground.png" />
   </ItemGroup>
   <ItemGroup>
-    <COMReference Include="NATUPNPLib">
-      <Guid>{1C565858-F302-471E-B409-F180AA4ABEC6}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>0</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>tlbimp</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Assets\AI.png" />
     <Resource Include="Assets\OneVsOne.png" />
   </ItemGroup>
@@ -441,7 +521,8 @@
     <Resource Include="Assets\Remove.png" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Core\Lua\" />
+    <Resource Include="Assets\Health_grey.png" />
+    <Resource Include="Assets\Health_white.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\CoolDown_grey.png" />
@@ -455,6 +536,33 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\Back.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\LogoFragment_ArcNE.png" />
+    <Resource Include="Assets\LogoFragment_ArcSW.png" />
+    <Resource Include="Assets\LogoFragment_Ring.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\VS.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Attack.png" />
+    <Resource Include="Assets\Counter.png" />
+    <Resource Include="Assets\Defend.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Abondon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Five.png" />
+    <Resource Include="Assets\Four.png" />
+    <Resource Include="Assets\One.png" />
+    <Resource Include="Assets\Six.png" />
+    <Resource Include="Assets\Three.png" />
+    <Resource Include="Assets\Two.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\OK.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

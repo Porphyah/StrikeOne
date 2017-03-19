@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -34,8 +35,6 @@ namespace StrikeOne
 
         public void PageEnter()
         {
-            IO.LoadUsers();
-
             if (App.UserList.Any())
             {
                 NonUserText.Visibility = Visibility.Hidden;
@@ -174,7 +173,7 @@ namespace StrikeOne
             {
                 using (MemoryStream Stream = new MemoryStream())
                 {
-                    CurrentUser.Avator.Save(Stream, CurrentUser.AvatorFormat);
+                    CurrentUser.Avator.Save(Stream, ImageFormat.Png);
                     BitmapImage Temp = new BitmapImage();
                     Temp.BeginInit();
                     Temp.CacheOption = BitmapCacheOption.OnLoad;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -56,7 +57,7 @@ namespace StrikeOne.Components
                 if (Speaker.Avator != null)
                     using (MemoryStream Stream = new MemoryStream())
                     {
-                        Speaker.Avator.Save(Stream, Speaker.AvatorFormat);
+                        Speaker.Avator.Save(Stream, ImageFormat.Png);
                         BitmapImage Temp = new BitmapImage();
                         Temp.BeginInit();
                         Temp.CacheOption = BitmapCacheOption.OnLoad;

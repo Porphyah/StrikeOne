@@ -38,7 +38,6 @@ namespace StrikeOne
 
         public void PageEnter()
         {
-            IO.LoadSkills();
             SkillListBox.ItemsSource = App.SkillList;
             SkillTargetConverter.AddSkillTarget += AddSkillTarget_Click;
             SkillProbability.Init(6, true);
@@ -171,8 +170,8 @@ namespace StrikeOne
             CountText.Text = Skill.TotalCount.ToString();
             DurationCheckBox.IsChecked = Skill.Duration != 0;
             DurationText.Text = Skill.Duration.ToString();
-            CoolDownCheckBox.IsChecked = Skill.CoolDownDelay != 0;
-            CoolDownText.Text = Skill.CoolDownDelay.ToString();
+            CoolDownCheckBox.IsChecked = Skill.CoolDown != 0;
+            CoolDownText.Text = Skill.CoolDown.ToString();
             AffectScriptBox.Document.Blocks.Clear();
             AffectScriptBox.Document.Blocks.Add(new Paragraph(
                 new Run(Skill.AffectScript)));
@@ -250,9 +249,9 @@ namespace StrikeOne
 
             int CoolDown;
             if (CoolDownCheckBox.IsChecked.Value && int.TryParse(CoolDownText.Text, out CoolDown))
-                CurrentSkill.CoolDownDelay = CoolDown;
+                CurrentSkill.CoolDown = CoolDown;
             else
-                CurrentSkill.CoolDownDelay = 0;
+                CurrentSkill.CoolDown = 0;
 
             IO.SaveSkill(CurrentSkill);
             SkillListBox.Items.Refresh();

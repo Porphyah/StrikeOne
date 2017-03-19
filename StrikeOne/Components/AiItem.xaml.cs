@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using StrikeOne.Core;
 
 namespace StrikeOne.Components
@@ -27,6 +31,18 @@ namespace StrikeOne.Components
             AiName.Text = Ai.Name;
             RadicalText.Text = (Ai.RadicalRatio*100).ToString();
             AiDescription.Text = Ai.Introduction;
+
+            using (MemoryStream Stream = new MemoryStream())
+            {
+                Ai.Drawing.Save(Stream, ImageFormat.Png);
+                BitmapImage Temp = new BitmapImage();
+                Temp.BeginInit();
+                Temp.CacheOption = BitmapCacheOption.OnLoad;
+                Temp.StreamSource = Stream;
+                Temp.EndInit();
+                Drawing.Source = Temp;
+            }
+
             MatchesText.Text = "对战" + Ai.Records.Count + "场";
 
             double VictoryRatio = Ai.VictoryRatio;
@@ -82,18 +98,55 @@ namespace StrikeOne.Components
                 LuckRatioText.Foreground = Brushes.LimeGreen;
                 LuckRatioProgress.Foreground = Brushes.LimeGreen;
             }
+
+            foreach (var Skill in Ai.SkillPool.Keys)
+            {
+                BitmapSource Image;
+                if (Skill.Image != null)
+                    using (MemoryStream Stream = new MemoryStream())
+                    {
+                        Skill.Image.Save(Stream, ImageFormat.Png);
+                        BitmapImage Temp = new BitmapImage();
+                        Temp.BeginInit();
+                        Temp.CacheOption = BitmapCacheOption.OnLoad;
+                        Temp.StreamSource = Stream;
+                        Temp.EndInit();
+                        Image = Temp;
+                    }
+                else
+                    Image = null;
+                var WrapPanel = new WrapPanel()
+                {
+                    Children =
+                    {
+                        new Image
+                        {
+                            Height = 25,
+                            Width = 25,
+                            Source = Image
+                        },
+                        new TextBlock()
+                        {
+                            Text = Skill.Name,
+                            Foreground = Brushes.White,
+                            VerticalAlignment = VerticalAlignment.Center
+                        }
+                    }
+                };
+                SkillPool.Children.Add(WrapPanel);
+            }
         }
 
         private void OnMouseEnter(object Sender, MouseEventArgs E)
         {
             if (IsSelected) return;
-            FirstGradientStop.Color = Color.FromArgb(136, 15, 72, 128);
+            FirstGradientStop.Color = Color.FromArgb(255, 15, 72, 128);
             SecondGradientStop.Color = Color.FromArgb(21, 15, 72, 128);
         }
         private void OnMouseLeave(object Sender, MouseEventArgs E)
         {
             if (IsSelected) return;
-            FirstGradientStop.Color = Color.FromArgb(136, 0, 0, 0);
+            FirstGradientStop.Color = Colors.Gray;
             SecondGradientStop.Color = Color.FromArgb(21, 0, 0, 0);
         }
 
@@ -107,7 +160,7 @@ namespace StrikeOne.Components
             if (Flag)
             {
                 if (IsSelected) return;
-                FirstGradientStop.Color = Color.FromArgb(136, 30, 144, 255);
+                FirstGradientStop.Color = Color.FromArgb(255, 30, 144, 255);
                 SecondGradientStop.Color = Color.FromArgb(21, 30, 144, 255);
                 IsSelected = true;
                 SelectSyncAction?.Invoke(this.Ai);
@@ -115,7 +168,7 @@ namespace StrikeOne.Components
             else
             {
                 if (!IsSelected) return;
-                FirstGradientStop.Color = Color.FromArgb(136, 0, 0, 0);
+                FirstGradientStop.Color = Colors.Gray;
                 SecondGradientStop.Color = Color.FromArgb(21, 0, 0, 0);
                 IsSelected = false;
             }

@@ -27,7 +27,6 @@ namespace StrikeOne
         public bool Canceled { private set; get; } = true;
         public System.Drawing.Image Source { set; get; }
         public System.Drawing.Image Target { set; get; }
-        public ImageFormat ImageFormat { private set; get; }
 
         public AvatorWindow()
         {
@@ -52,17 +51,8 @@ namespace StrikeOne
 
             using (var Stream = new MemoryStream())
             {
-                if (ImagePath.EndsWith(".jpg", StringComparison.CurrentCultureIgnoreCase))
-                    ImageFormat = ImageFormat.Jpeg;
-                else if (ImagePath.EndsWith(".png", StringComparison.CurrentCultureIgnoreCase))
-                    ImageFormat = ImageFormat.Png;
-                else if (ImagePath.EndsWith(".tif", StringComparison.CurrentCultureIgnoreCase))
-                    ImageFormat = ImageFormat.Tiff;
-                else if(ImagePath.EndsWith(".bmp", StringComparison.CurrentCultureIgnoreCase))
-                    ImageFormat = ImageFormat.Bmp;
-
                 Stream.Seek(0, SeekOrigin.Begin);
-                Source.Save(Stream, ImageFormat);
+                Source.Save(Stream, Source.RawFormat);
                 BitmapImage ImageSource = new BitmapImage();
                 ImageSource.BeginInit();
                 ImageSource.CacheOption = BitmapCacheOption.OnLoad;
@@ -77,18 +67,19 @@ namespace StrikeOne
             Point MousePoint = E.GetPosition(Canvas);
             if (Tailor.Dragging)
             {
+                Mouse.SetCursor(Cursors.SizeNWSE);
                 double Left = Canvas.GetLeft(Tailor) + (MousePoint.X - Tailor.LastPoint.X);
                 double Top = Canvas.GetTop(Tailor) + (MousePoint.Y - Tailor.LastPoint.Y);
 
                 if (Left < Canvas.GetLeft(SourceImage))
                     Left = Canvas.GetLeft(SourceImage);
-                else if (Left + Canvas.GetLeft(Tailor) > Canvas.GetLeft(SourceImage) + SourceImage.Width)
-                    Left = Canvas.GetLeft(SourceImage) + SourceImage.Width - Canvas.GetLeft(Tailor);
+                else if (Left + Tailor.Width > Canvas.GetLeft(SourceImage) + SourceImage.Width)
+                    Left = Canvas.GetLeft(SourceImage) + SourceImage.Width - Tailor.Width;
 
                 if (Top < Canvas.GetTop(SourceImage))
                     Top = Canvas.GetTop(SourceImage);
-                else if (Top + Canvas.GetTop(Tailor) > Canvas.GetTop(SourceImage) + SourceImage.Height)
-                    Top = Canvas.GetTop(SourceImage) + SourceImage.Height - Canvas.GetTop(Tailor);
+                else if (Top + Tailor.Height > Canvas.GetTop(SourceImage) + SourceImage.Height)
+                    Top = Canvas.GetTop(SourceImage) + SourceImage.Height - Tailor.Height;
 
                 Canvas.SetLeft(Tailor, Left);
                 Canvas.SetTop(Tailor, Top);
@@ -99,6 +90,7 @@ namespace StrikeOne
             }
             else if (Tailor.Sizing)
             {
+                Mouse.SetCursor(Cursors.SizeAll);
                 double SizeWidth = Tailor.Width + (MousePoint.X - Tailor.LastPoint.X);
                 double SizeHeight = Tailor.Height + (MousePoint.Y - Tailor.LastPoint.Y);
 
@@ -120,13 +112,15 @@ namespace StrikeOne
                 Tailor.Width = SizeWidth;
                 Tailor.Height = SizeHeight;
 
-                FocusEllipse.Center = new Point(Canvas.GetLeft(Tailor) + Tailor.Width / 2, 
-                    Canvas.GetTop(Tailor) + Tailor.Height / 2);
+                FocusEllipse.Center = new Point(Canvas.GetLeft(Tailor) + Tailor.Width/2,
+                    Canvas.GetTop(Tailor) + Tailor.Height/2);
                 FocusEllipse.RadiusX = SizeWidth/2;
                 FocusEllipse.RadiusY = SizeHeight/2;
 
                 Tailor.LastPoint = MousePoint;
             }
+            else
+                Mouse.SetCursor(Cursors.Arrow);
         }
 
         private void RefreshAvator()
@@ -154,7 +148,7 @@ namespace StrikeOne
 
             using (MemoryStream Stream = new MemoryStream())
             {
-                Target.Save(Stream, ImageFormat);
+                Target.Save(Stream, Source.RawFormat);
                 BitmapImage Temp = new BitmapImage();
                 Temp.BeginInit();
                 Temp.CacheOption = BitmapCacheOption.OnLoad;

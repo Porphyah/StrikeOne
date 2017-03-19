@@ -16,7 +16,7 @@ namespace StrikeOne.Core
         public static T Deserialize<T>(this BinaryFormatter Formatter, Stream Stream)
         {
             if (IndirectTypes.Contains(typeof (T)))
-                return (T)DeserializeIndirectly<T>(Formatter, Stream);
+                return (T) GetIndirectValue<T>(Formatter, Stream);
 
             return (T)Formatter.Deserialize(Stream);
         }
@@ -53,12 +53,16 @@ namespace StrikeOne.Core
             if (typeof (T) == typeof (Room))
             {
                 Room TempRoom = (Room)info.GetValue(Name, typeof(Room));
-                TempRoom.Groups.ForEach(O => O.Room = TempRoom);
+                TempRoom.Groups.ForEach(O =>
+                {
+                    O.Room = TempRoom;
+                    O.InitParticipants();
+                });
                 return TempRoom;
             }
             return null;
         }
-        private static object DeserializeIndirectly<T>(BinaryFormatter Formatter, Stream Stream)
+        private static object GetIndirectValue<T>(BinaryFormatter Formatter, Stream Stream)
         {
             if (typeof(T) == typeof(Room))
             {
@@ -73,6 +77,7 @@ namespace StrikeOne.Core
             return null;
         }
 
+       
 
         private static readonly List<Type> IndirectTypes = new List<Type>()
         {

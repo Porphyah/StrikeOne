@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace StrikeOne.Components
 {
     /// <summary>
-    /// SelectionItem.xaml 的交互逻辑
+    /// ParticipantDisplayLarge.xaml 的交互逻辑
     /// </summary>
-    public partial class SelectionItem : UserControl
+    public partial class ParticipantDisplayLarge : UserControl
     {
-        public SelectionItem()
+        public ParticipantDisplayLarge()
         {
             InitializeComponent();
         }

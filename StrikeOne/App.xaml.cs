@@ -28,11 +28,18 @@ namespace StrikeOne
         public static TcpListener Server { set; get; }
 
         public static bool EditorMode { private set; get; } = false;
+        public static bool DebugMode { private set; get; } = false;
         private void AppStartup(object sender, StartupEventArgs e)
         {
-            if (e.Args.Length != 0 && e.Args[0].Equals("EditorMode",
-                StringComparison.CurrentCultureIgnoreCase))
-                EditorMode = true;
+            if (e.Args.Length != 0)
+            {
+                if (e.Args[0].Equals("EditorMode", 
+                    StringComparison.CurrentCultureIgnoreCase))
+                    EditorMode = true;
+                else if (e.Args[0].Equals("DebugMode",
+                    StringComparison.CurrentCultureIgnoreCase))
+                    DebugMode = true;
+            }
         }
     }
 }

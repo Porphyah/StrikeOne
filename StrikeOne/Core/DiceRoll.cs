@@ -21,7 +21,7 @@ namespace StrikeOne.Core
         public bool Success { set; get; }
         public KeyValuePair<int, int> Probability { set; get; }
         public RollType Type { set; get; }
-        public int SkillId { set; get; } = -1;
+        public Guid? SkillId { set; get; } = null;
         public DateTime Time { set; get; }
     }
 }

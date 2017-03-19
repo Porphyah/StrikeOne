@@ -1,0 +1,83 @@
+﻿<UserControl x:Class="StrikeOne.BattlefieldPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:StrikeOne"
+             xmlns:Components="clr-namespace:StrikeOne.Components"
+             mc:Ignorable="d" 
+             d:DesignHeight="640" d:DesignWidth="1080">
+    <UserControl.Resources>
+        <ResourceDictionary Source="Assets/Assets.xaml"/>
+    </UserControl.Resources>
+    <Grid>
+        <Canvas x:Name="PathCanvas" Margin="0,80,0,0"/>
+        <Canvas x:Name="CardCanvas" Margin="0,80,0,0"/>
+        <Grid x:Name="TitleGrid" Height="75" Width="400" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,-75,0,0">
+            <Border x:Name="StatusBorder" Margin="40,50,40,0" Height="25" VerticalAlignment="Top" Background="DodgerBlue" CornerRadius="0,0,10,10">
+                <TextBlock Name="StatusText" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center"
+                           Text="Current Status Text" Foreground="White"/>
+            </Border>
+            <Path Height="50" VerticalAlignment="Top" Fill="White">
+                <Path.Effect>
+                    <DropShadowEffect Color="DodgerBlue" ShadowDepth="0" BlurRadius="10"/>
+                </Path.Effect>
+                <Path.Data>
+                    <PathGeometry>
+                        <PathFigure StartPoint="0,0" IsClosed="True">
+                            <BezierSegment Point1="0,0" Point2="15,12.5" Point3="20,25"/>
+                            <BezierSegment Point1="20,25" Point2="25,37.5" Point3="40,50"/>
+                            <LineSegment Point="360,50"/>
+                            <BezierSegment Point1="360,50" Point2="375,37.5" Point3="380,25"/>
+                            <BezierSegment Point1="380,25" Point2="385,12.5" Point3="400,0"/>
+                        </PathFigure>
+                    </PathGeometry>
+                </Path.Data>
+            </Path>
+            <TextBlock x:Name="RoundText" HorizontalAlignment="Center" Margin="0,5,0,0" VerticalAlignment="Top" 
+                       Foreground="DodgerBlue" Text="Round 0" FontSize="30" FontWeight="Light"/>
+        </Grid>
+        <ScrollViewer HorizontalAlignment="Left" Height="80" VerticalAlignment="Top" Width="300" VerticalScrollBarVisibility="Auto" Margin="0,0,0,0">
+            <StackPanel x:Name="PlayerItemStack"/>
+        </ScrollViewer>
+        <Border x:Name="CenterBorder" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,80,0,0" Height="0" Background="#88000000">
+            <Grid>
+                <Grid x:Name="CenterGrid" Visibility="Hidden"/>
+                <TextBlock x:Name="CenterText" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White"
+                           Text="This is the Center Text" FontSize="45" FontWeight="Light" Visibility="Hidden"/>
+            </Grid>
+        </Border>
+        <Components:DiceControl x:Name="DiceControl" VerticalAlignment="Center" HorizontalAlignment="Center"
+                                Margin="0,80,0,0" Width="200" Height="200"/>
+        <Button HorizontalAlignment="Right" VerticalAlignment="Top" Width="50" Height="50" Click="Close_Click">
+            <Button.Template>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid>
+                        <Path Fill="#88000000">
+                            <Path.Data>
+                                <PathGeometry>
+                                    <PathFigure StartPoint="0,0" IsClosed="True">
+                                        <ArcSegment Point="50,50" Size="50,50"/>
+                                        <LineSegment Point="50,0"/>
+                                    </PathFigure>
+                                </PathGeometry>
+                            </Path.Data>
+                        </Path>
+                        <TextBlock x:Name="ButtonText" Text="×" FontSize="30" Foreground="White" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-15,-10,0" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Trigger.Setters>
+                                <Setter TargetName="ButtonText" Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect Color="White" ShadowDepth="0"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger.Setters>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
+    </Grid>
+</UserControl>

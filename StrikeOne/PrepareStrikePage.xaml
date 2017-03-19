@@ -1,0 +1,30 @@
+﻿<UserControl x:Class="StrikeOne.PrepareStrikePage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:StrikeOne"
+             xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="640" d:DesignWidth="1080">
+    <Grid>
+        <Canvas>
+            <Canvas.RenderTransform>
+                <RotateTransform x:Name="RotateTransform" CenterX="540" CenterY="320"/>
+            </Canvas.RenderTransform>
+            <Image x:Name="Ring1" Source="{StaticResource LogoFragment_Ring}" Height="200" Width="200" Canvas.Left="235" Canvas.Top="35" Visibility="Hidden"/>
+            <Image x:Name="Ring2" Source="{StaticResource LogoFragment_Ring}" Height="200" Width="200" Canvas.Right="235" Canvas.Bottom="35" Visibility="Hidden"/>
+            <Image x:Name="Arc1" Source="{StaticResource LogoFragment_ArcNE}" Height="400" Width="440" Canvas.Right="235" Canvas.Top="35" Visibility="Hidden"/>
+            <Image x:Name="Arc2" Source="{StaticResource LogoFragment_ArcSW}" Height="400" Width="440" Canvas.Left="235" Canvas.Bottom="35" Visibility="Hidden"/>
+        </Canvas>
+        <Grid x:Name="DisplayGrid" Background="#88000000">
+            <Image Source="{StaticResource Vs}" HorizontalAlignment="Center" VerticalAlignment="Center" Height="250" Width="170" Margin="-10,0,10,0"/>
+            <TextBlock x:Name="TypeName" HorizontalAlignment="Center" Margin="0,50,0,0" VerticalAlignment="Top"
+                       Text="Type Name" FontWeight="Light" Foreground="White" FontSize="50"/>
+            <TextBlock HorizontalAlignment="Left" Margin="10,0,0,15" VerticalAlignment="Bottom"
+                Text="Loading..." FontWeight="Light" Foreground="White" FontSize="35"/>
+            <Controls:MetroProgressBar x:Name="Progress" Foreground="Orange" Value="0" VerticalAlignment="Bottom"/>
+
+        </Grid>
+    </Grid>
+</UserControl>

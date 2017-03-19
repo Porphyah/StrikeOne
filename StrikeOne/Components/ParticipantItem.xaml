@@ -22,7 +22,7 @@
                     <ImageBrush x:Name="AvatorImage" ImageSource="{DynamicResource Icon_empty}"/>
                 </Ellipse.Fill>
             </Ellipse>
-            <Image x:Name="HostImg" Source="{StaticResource Host}" HorizontalAlignment="Left" Height="23" Margin="83,0,0,3" VerticalAlignment="Bottom" Width="20" Visibility="Hidden" ToolTip="房主Sama"/>
+            <Image x:Name="HostImg" Source="{DynamicResource Host}" HorizontalAlignment="Left" Height="23" Margin="83,0,0,3" VerticalAlignment="Bottom" Width="20" Visibility="Hidden" ToolTip="房主Sama"/>
             <TextBlock x:Name="NameBox" FontSize="18" FontWeight="Light" Margin="115,14,410,14" Text="User Name"/>
             <local:SkillSelector x:Name="SkillSelector" Margin="0,5,160,5" HorizontalAlignment="Right" Width="235"/>
             <Image Source="{StaticResource Matches}" HorizontalAlignment="Right" Margin="0,5,125,0" Width="25" Height="25" VerticalAlignment="Top" ToolTip="历史对战场数"/>

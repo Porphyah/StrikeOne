@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -551,7 +552,7 @@ namespace StrikeOne
                     if (CurrentRoom.Host.Avator != null)
                         using (MemoryStream Stream = new MemoryStream())
                         {
-                            CurrentRoom.Host.Avator.Save(Stream, CurrentRoom.Host.AvatorFormat);
+                            CurrentRoom.Host.Avator.Save(Stream, ImageFormat.Png);
                             BitmapImage Temp = new BitmapImage();
                             Temp.BeginInit();
                             Temp.CacheOption = BitmapCacheOption.OnLoad;
@@ -574,7 +575,7 @@ namespace StrikeOne
                         if (Participant.Avator != null)
                             using (MemoryStream Stream = new MemoryStream())
                             {
-                                Participant.Avator.Save(Stream, Participant.AvatorFormat);
+                                Participant.Avator.Save(Stream, ImageFormat.Png);
                                 BitmapImage Temp = new BitmapImage();
                                 Temp.BeginInit();
                                 Temp.CacheOption = BitmapCacheOption.OnLoad;

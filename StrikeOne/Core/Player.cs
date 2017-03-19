@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StrikeOne.Core
 {
@@ -13,7 +10,6 @@ namespace StrikeOne.Core
         public Guid Id { set; get; }
         public string Name { set; get; }
         public Image Avator { set; get; }
-        public ImageFormat AvatorFormat { set; get; }
         public string Introduction { set; get; }
         public List<Record> Records { set; get; } = new List<Record>();
 
@@ -44,12 +40,7 @@ namespace StrikeOne.Core
             }
         }
 
-        public Group Group { set; get; } = null;
-        public Battlefield Battlefield { set; get; } = null;
-        public Skill Skill { set; get; } = null;
-        public int TotalHp { set; get; } = 10;
-        public int CurrentHp { set; get; } = 0;
+        public BattleData BattleData { set; get; }
 
-        
     }
 }

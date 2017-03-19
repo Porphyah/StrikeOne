@@ -7,11 +7,15 @@
         xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:Components="clr-namespace:StrikeOne.Components"
         mc:Ignorable="d"
-        Title="选择加入者..." Height="400" Width="750" ResizeMode="NoResize" ShowInTaskbar="False" WindowStyle="ToolWindow"
+        Title="选择加入者..." Height="428" Width="756" ResizeMode="NoResize" ShowInTaskbar="False" WindowStyle="ToolWindow"
         GlowBrush="DodgerBlue" BorderBrush="DodgerBlue" WindowStartupLocation="CenterScreen">
     <Grid>
-        <Grid x:Name="FirstGrid" Visibility="Hidden">
-            <Grid x:Name="UserGrid" Background="#88000000" Margin="0,0,0,50" HorizontalAlignment="Left" Width="375"
+        <Grid x:Name="FirstGrid" Visibility="Visible">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid x:Name="UserGrid" Background="#88000000" Margin="0,0,0,50"
                   MouseEnter="MouseEnterGrid" MouseLeave="MouseLeaveGrid" MouseDown="UserGrid_Click">
                 <Ellipse HorizontalAlignment="Center" Height="100" Margin="0,50,0,0" VerticalAlignment="Top" Width="100">
                     <Ellipse.Effect>
@@ -24,8 +28,8 @@
                 <TextBlock x:Name="UserName" FontSize="25" Foreground="White" FontWeight="Light" HorizontalAlignment="Center" Margin="0,170,0,0" Text="User Name" VerticalAlignment="Top"/>
                 <TextBlock HorizontalAlignment="Center" Foreground="White" Margin="0,240,0,0" Text="将您自己添加到这个位置。" VerticalAlignment="Top"/>
             </Grid>
-            <Grid x:Name="AiGrid" Background="#88000000" Margin="0,0,0,50" HorizontalAlignment="Right" Width="375"
-                  MouseEnter="MouseEnterGrid" MouseLeave="MouseLeaveGrid" MouseDown="AiGrid_Click">
+            <Grid x:Name="AiGrid" Background="#88000000" Margin="0,0,0,50"
+                  MouseEnter="MouseEnterGrid" MouseLeave="MouseLeaveGrid" MouseDown="AiGrid_Click" Grid.Column="1">
                 <Ellipse HorizontalAlignment="Center" Height="100" Margin="0,50,0,0" VerticalAlignment="Top" Width="100">
                     <Ellipse.Effect>
                         <DropShadowEffect ShadowDepth="0" BlurRadius="8"/>
@@ -34,23 +38,23 @@
                         <ImageBrush ImageSource="{StaticResource Ai_white}" Stretch="UniformToFill" />
                     </Ellipse.Fill>
                 </Ellipse>
-                <TextBlock FontSize="25" Foreground="White" FontWeight="Light" HorizontalAlignment="Center" Margin="0,170,0,0" Text="人工智能" VerticalAlignment="Top"/>
+                <TextBlock FontSize="25" Foreground="White" FontWeight="Light" HorizontalAlignment="Center" Margin="0,170,0,0" Text="AI角色" VerticalAlignment="Top"/>
                 <TextBlock HorizontalAlignment="Center" Foreground="White" Margin="0,240,0,0" Text="将一个AI角色添加到这个位置。" VerticalAlignment="Top"/>
             </Grid>
         </Grid>
-        <Grid x:Name="SecondGrid">
+        <Grid x:Name="SecondGrid" Visibility="Hidden">
             <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Hidden" 
                           Margin="0,0,0,50" Background="#88000000">
                 <StackPanel x:Name="AiStack" Orientation="Horizontal" HorizontalAlignment="Center"/>
             </ScrollViewer>
         </Grid>
         <Rectangle Fill="#AA000000" Height="50" VerticalAlignment="Bottom"/>
-        <Button x:Name="AcceptButton" Content="确认" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="100" Height="50" Visibility="Hidden">
+        <Button x:Name="AcceptButton" Content="确认" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="100" Height="50" Visibility="Hidden" Click="Confirm_Click">
             <Button.Template>
                 <ControlTemplate TargetType="{x:Type Button}">
                     <Grid x:Name="Container">
-                        <Image HorizontalAlignment="Left" Margin="5" Width="40" Source="{StaticResource Confirm}"/>
-                        <TextBlock Text="继续" Foreground="White" FontSize="18" FontFamily="Microsoft YaHei UI Light" Margin="50,0,0,0" VerticalAlignment="Center"/>
+                        <Image HorizontalAlignment="Right" Margin="0,5,50,5" Width="40" Source="{StaticResource Confirm}"/>
+                        <TextBlock Text="继续" Foreground="White" FontSize="18" FontFamily="Microsoft YaHei UI Light" Margin="0,0" VerticalAlignment="Center" HorizontalAlignment="Right" Width="45"/>
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">

@@ -15,9 +15,9 @@ namespace StrikeOne.Core
         public Room Room { set; get; }
         public Color Color { set; get; }
         public int Capacity {
-            set { Participants = new User[value]; }
+            set { Participants = new Player[value]; }
             get { return Participants.Length; } }
-        public Player[] Participants { set; get; }
+        public Player[] Participants { private set; get; }
 
         private readonly Guid?[] ParticipantIds;
 
