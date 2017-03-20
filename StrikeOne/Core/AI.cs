@@ -86,15 +86,48 @@ namespace StrikeOne.Core
             return SkillPool.Count == 0 ? null : 
                 SkillPool.Keys.ToArray()[Temp.Next(SkillPool.Count)];
         }
-        public bool JudgeSkillCondition(Skill TargetSkill)
+
+        public string ChooseAttackChoice()
         {
-            return (bool)((NLua.LuaFunction)LuaMain.LuaState.ExecuteString("return function(Skill)\n" +
-                SkillPool[TargetSkill][0] + "\nend")[0]).Call(TargetSkill)[0];
+            if (BattleData.Skill.Occasion == SkillOccasion.BeforeAttacking &&
+                BattleData.Skill.Enable && JudgeSkillCondition(BattleData.Skill))
+                return "Skill";
+            else
+            {
+                long Tick = DateTime.Now.Ticks;
+                Random Temp = new Random(
+                    (int) (Tick & 0xffffffffL) | (int) (Tick >> 32));
+                if (BattleData.CurrentHp/BattleData.TotalHp > 0.25 && Temp.NextDouble() >= RadicalRatio)
+                    return "Abondon";
+                else
+                    return "Attack";
+            }
+        }
+        public string ChooseDefendChoice()
+        {
+            if (BattleData.Skill.Occasion == SkillOccasion.UnderAttack &&
+                BattleData.Skill.Enable && JudgeSkillCondition(BattleData.Skill))
+                return "Skill";
+            else
+                return BattleData.CurrentHp/BattleData.TotalHp >= RadicalRatio ? "Defend" : "Counter";
+        }
+
+        public Player GetAttackTarget()
+        {
+            return BattleData.Battlefield.PlayerList.Where(O => O.BattleData.Group.Name != 
+                this.BattleData.Group.Name).OrderBy(O => O.BattleData.CurrentHp).First();
+        }
+        private bool JudgeSkillCondition(Skill TargetSkill)
+        {
+            return false;
+            //return (bool)((NLua.LuaFunction)LuaMain.LuaState.ExecuteString("return function(Skill)\n" +
+            //    SkillPool[TargetSkill][0] + "\nend")[0]).Call(TargetSkill)[0];
         }
         public List<Player> GetSkillTargets(Skill TargetSkill)
         {
-            return (((NLua.LuaFunction)LuaMain.LuaState.ExecuteString("return function(Skill)\n" +
-                SkillPool[TargetSkill][1] + "\nend")[0]).Call(TargetSkill)).Cast<Player>().ToList();
+            return new List<Player>();
+            //return (((NLua.LuaFunction)LuaMain.LuaState.ExecuteString("return function(Skill)\n" +
+            //    SkillPool[TargetSkill][1] + "\nend")[0]).Call(TargetSkill)).Cast<Player>().ToList();
         }
     }
 }

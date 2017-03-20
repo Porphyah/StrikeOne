@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:StrikeOne.Components"
              mc:Ignorable="d" 
-             d:DesignHeight="100" d:DesignWidth="300">
+             d:DesignHeight="120" d:DesignWidth="300">
     <Grid>
         <Path Fill="DimGray">
             <Path.Effect>
@@ -18,16 +18,16 @@
                         <LineSegment Point="150,0"/>
                         <LineSegment Point="165,10"/>
                         <LineSegment Point="300,10"/>
-                        <LineSegment Point="300,100"/>
-                        <LineSegment Point="0,100"/>
+                        <LineSegment Point="300,120"/>
+                        <LineSegment Point="0,120"/>
                     </PathFigure>
                 </PathGeometry>
             </Path.Data>
         </Path>
-        <Image x:Name="ActionImage" HorizontalAlignment="Left" Margin="10,20,0,10" Width="70"/>
+        <Image x:Name="ActionImage" HorizontalAlignment="Left" Margin="10,20,0,0" Width="70" Height="70" VerticalAlignment="Top"/>
         <TextBlock x:Name="ActionName" HorizontalAlignment="Left" Margin="85,20,0,0" VerticalAlignment="Top"
                    Text="Action Name" FontSize="15" FontWeight="Light" Foreground="White"/>
-        <TextBlock x:Name="Description" Margin="85,40,10,0" TextWrapping="Wrap" Text="Description" Foreground="White" VerticalAlignment="Top" Height="30" Width="205"/>
-        <local:ProbabilityControl x:Name="ActionProbability" HorizontalAlignment="Left" Height="20" Margin="85,0,0,10" VerticalAlignment="Bottom" Width="200"/>
+        <TextBlock x:Name="Description" Margin="85,40,10,0" TextWrapping="Wrap" Text="Description" Foreground="White" VerticalAlignment="Top" Height="50" Width="205"/>
+        <local:ProbabilityControl x:Name="ActionProbability" HorizontalAlignment="Left" Height="20" Margin="85,0,0,5" VerticalAlignment="Bottom" Width="200"/>
     </Grid>
 </UserControl>

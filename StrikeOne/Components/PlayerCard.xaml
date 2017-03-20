@@ -45,6 +45,13 @@
                 <WrapPanel Height="20" Margin="40,0,45,5" VerticalAlignment="Bottom"/>
             </Grid>
         </Border>
+        <Border x:Name="ActionBorder" Margin="0,0,200,0" Background="Gray" CornerRadius="50,50,50,50">
+            <Border.Effect>
+                <DropShadowEffect Color="Gray" ShadowDepth="1"/>
+            </Border.Effect>
+            <local:ActionButton x:Name="CurrentAction" HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                Margin="30,0,-30,0" Height="100" Width="85" Opacity="0" Visibility="Hidden" IsEnabled="False"/>
+        </Border>
         <Controls:MetroProgressBar x:Name="Hp" Style="{StaticResource CircleProgressBarStyle}" Tag="10"
                                    Foreground="LimeGreen" Background="#88000000" Maximum="10" Value="10"
                                    HorizontalAlignment="Left" Width="100" VerticalAlignment="Stretch" Height="100"/>

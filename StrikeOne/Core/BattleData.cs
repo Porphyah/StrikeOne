@@ -10,7 +10,6 @@ namespace StrikeOne.Core
     public class BattleData
     {
         private double _Hp = 0;
-        private double _Luck = 0;
 
         public Room Room { set; get; } = null;
         public Group Group { set; get; } = null;
@@ -28,12 +27,13 @@ namespace StrikeOne.Core
         }
         public double Luck
         {
-            set
-            {
-                _Luck = value;
-                UpdateLuck?.Invoke();
-            }
-            get { return _Luck; }
+             get
+             {
+                var DiceRolls = Battlefield.Record.Participants[Owner.Id].Rolls.ToList();
+                return DiceRolls.Count == 0 ? 0
+                    : DiceRolls.Where(O => O.Success).Sum(O => (O.Probability.Value - O.Probability.Key) / (double)O.Probability.Value)
+                      / DiceRolls.Sum(O => (O.Probability.Value - O.Probability.Key) / (double)O.Probability.Value);
+             }
         }
 
         public int AttackSuccessRatio { set; get; } = 2;
@@ -56,19 +56,24 @@ namespace StrikeOne.Core
             this.TotalHp = 10;
             this._Hp = 10;
             this.Group = Group;
-            this.Skill.Init(Owner);
-            this._Luck = 0.0;
+            if (Skill != null) this.Skill.Init(Owner);
+
+            AttackSuccessRatio = 2;
+            DefendSuccessRatio = 2;
+            CounterSuccessRatio = 2;
+
+            AttackDamage = 2;
+            DefenceCapacity = 1;
+            CounterDamage = 2;
+            CounterPunishment = 3;
         }
+
         public void SetupUiConnection()
         {
             UpdateHp += delegate
             {
                 PlayerCard.UpdateHp();
                 PlayerItem.UpdateHp();
-            };
-            UpdateLuck += delegate
-            {
-                PlayerCard.UpdateLuck();
             };
         }
         public void SetStatus(string Status)
@@ -78,7 +83,6 @@ namespace StrikeOne.Core
         }
 
         public event Action UpdateHp;
-        public event Action UpdateLuck;
 
         public event EventHandler<UnderAttackEventArgs> UnderAttack;
         public event EventHandler<DoingEventArgs> Defending;
@@ -87,6 +91,8 @@ namespace StrikeOne.Core
         public event EventHandler<DoneEventArgs> CounterAttacked;
         public event EventHandler<DoingEventArgs> Attacking;
         public event EventHandler<DoneEventArgs> Attacked;
+
+        //private Dictionary<>
 
         public void OnUnderAttack(UnderAttackEventArgs Args)
         {
@@ -116,6 +122,8 @@ namespace StrikeOne.Core
         {
             Attacked?.Invoke(this, Args);
         }
+
+
     }
 
     public class UnderAttackEventArgs : EventArgs

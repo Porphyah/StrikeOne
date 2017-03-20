@@ -23,6 +23,8 @@ namespace StrikeOne.Components
         public ActionDescription()
         {
             InitializeComponent();
+            ActionProbability.Adjust();
+            ActionProbability.Init(6, false);
         }
 
         public void Init(string Name, BitmapImage Image, string Description, int? Probability = null)
@@ -34,8 +36,7 @@ namespace StrikeOne.Components
                 ActionProbability.Visibility = Visibility.Hidden;
             else
             {
-                ActionProbability.Adjust();
-                ActionProbability.Init(6, false);
+                ActionProbability.Visibility = Visibility.Visible;
                 ActionProbability.SetValue(Probability.Value);
             }
         }

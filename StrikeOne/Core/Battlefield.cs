@@ -16,6 +16,8 @@ namespace StrikeOne.Core
         public Record Record { set; get; }
         private Queue<Player> PlayerQueue { set; get; }
 
+        //public Player CurrentAttacker { set; get; }
+
         public void Init(Room ParentRoom)
         {
             Room = ParentRoom;
@@ -25,7 +27,22 @@ namespace StrikeOne.Core
             PlayerList.ForEach(Player => Player.BattleData.Init(Player, this,
                 Room.Groups.First(O => O.Participants.Contains(Player))));
             LuaMain.LuaState["Battlefield"] = this;
-            Record = new Record();
+            Record = new Record()
+            {
+                Id = Guid.NewGuid(),
+                Participants = PlayerList.Select(O =>
+                    new Participant()
+                    {
+                        Id = O.Id,
+                        Name = O.Name,
+                        Avator = O.Avator,
+                        Group = O.BattleData.Group.Name,
+                        TotalDamage = 0,
+                        TotalInjured = 0
+                    }).ToDictionary(O => O.Id, P => P),
+                Time = DateTime.Now,
+                Type = ParentRoom.BattleType
+            };
 
             Round = 0;
         }
@@ -49,9 +66,11 @@ namespace StrikeOne.Core
             Round++;
             PlayerQueue = new Queue<Player>(PlayerList);
         }
-        public void NextPlayer()
+        public bool NextPlayer()
         {
             PlayerQueue.Dequeue();
+            if (PlayerQueue.Count == 0) return false;
+            return true;
         }
     }
 }

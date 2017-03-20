@@ -24,13 +24,18 @@ namespace StrikeOne
         public BattlefieldPage()
         {
             InitializeComponent();
-            DiceControl.Collapse();
         }
         public Battlefield Battlefield { private set; get; }
 
         public void PageEnter(Battlefield Source)
         {
             Battlefield = Source;
+
+            DiceControl.Height = 0;
+            DiceControl.Width = 0;
+            DiceControl.ContentGrid.Visibility = Visibility.Hidden;
+            DiceControl.ContentGrid.Opacity = 0;
+
             StatusText.Text = "Initalizing...";
             for (int i = 0; i < Battlefield.Room.Groups.Count; i++)
             {
@@ -95,7 +100,7 @@ namespace StrikeOne
                                 SetStatus("Ready", Colors.LimeGreen);
                                 break;
                             case 6:
-                                StartBattle();
+                                NextRound();
                                 Timer.Stop();
                                 break;
                         }
@@ -106,7 +111,7 @@ namespace StrikeOne
             }
         }
 
-        private void StartBattle()
+        private void NextRound()
         {
             Battlefield.NextRound();
             RoundText.Text = "Round " + Battlefield.Round;
@@ -121,21 +126,32 @@ namespace StrikeOne
             });
         }
 
+        private void NextPlayer()
+        {
+            Battlefield.CurrentPlayer.BattleData.SetStatus("Joined");
+            if (!Battlefield.NextPlayer())
+                NextRound();
+            else
+                SetCurrentPlayer();
+        }
+
         private void SetCurrentPlayer()
         {
             var Player = Battlefield.CurrentPlayer;
             Player.BattleData.SetStatus("Ready");
             SetStatus("角色：" + Player.Name + "的回合", Player.Id == App.CurrentUser.Id
                 ? Colors.LimeGreen : Colors.DodgerBlue);
-            //if (Player is AI)
-            //{ }
-            //else if (Player.Id == App.CurrentUser.Id)
+            if (Player is AI)
+                SetAiAttackOptions((AI)Player);
+            else if (Player.Id == App.CurrentUser.Id)
                 OpenAttackOptions();
             //else
             //{ }
         }
+
+        
     
-        private void OpenAttackOptions()
+        private void OpenAttackOptions(bool Back = false)
         {
             CenterGrid.Children.Clear();
 
@@ -148,13 +164,7 @@ namespace StrikeOne
 
             var AbondonButton = new ActionButton() { Height = 100, Width = 85 };
             AbondonButton.Init("放弃", "Abondon", "该回合不做任何行动，并使下一回合攻击成功的概率增加1/6。");
-            //AbondonButton.MouseUp += delegate
-            //{
-            //    CenterBorderCommand(new List<KeyValuePair<string, Action>>()
-            //    {
-            //        new KeyValuePair<string, Action>("HideCenterGrid", null)
-            //    });
-            //};
+            AbondonButton.MouseUp += AttackAbondon_Click;
             CenterGrid.Children.Add(AbondonButton);
 
             if (App.CurrentUser.BattleData.Skill != null &&
@@ -200,16 +210,205 @@ namespace StrikeOne
                 SetActionButtonPosition(AbondonButton, 2, 1);
             }
 
-            CenterBorderCommand(new List<KeyValuePair<string, Action>>()
-            {
-                new KeyValuePair<string, Action>("ShowCenterBorder", null),
-                new KeyValuePair<string, Action>("ShowCenterText;Your Turn", null),
-                new KeyValuePair<string, Action>("Wait;0.5", null),
-                new KeyValuePair<string, Action>("HideCenterText", null),
-                new KeyValuePair<string, Action>("ShowCenterGrid", null)
-            });
+            if (Back)
+                CenterBorderCommand(new List<KeyValuePair<string, Action>>()
+                {
+                    new KeyValuePair<string, Action>("ShowCenterBorder", null),
+                    new KeyValuePair<string, Action>("ShowCenterGrid", null)
+                });
+            else
+                CenterBorderCommand(new List<KeyValuePair<string, Action>>()
+                {
+                    new KeyValuePair<string, Action>("ShowCenterBorder", null),
+                    new KeyValuePair<string, Action>("ShowCenterText;Your Turn", null),
+                    new KeyValuePair<string, Action>("Wait;0.5", null),
+                    new KeyValuePair<string, Action>("HideCenterText", null),
+                    new KeyValuePair<string, Action>("ShowCenterGrid", null)
+                });
         }
-        
+        private void OpenDefendOptions(bool Back = false)
+        {
+            CenterGrid.Children.Clear();
+
+            var DefendButton = new ActionButton() { Height = 100, Width = 85 };
+            DefendButton.Init("防御", "Defend", "使用防御来削减来自对方的伤害，当前可降低" +
+                App.CurrentUser.BattleData.DefenceCapacity + "点伤害。",
+                App.CurrentUser.BattleData.DefendSuccessRatio);
+            DefendButton.MouseUp += Defend_Click;
+            CenterGrid.Children.Add(DefendButton);
+
+            var CounterButton = new ActionButton() { Height = 100, Width = 85 };
+            CounterButton.Init("反击", "Counter", "是时候反击了！反击可使本次攻击无效并给予对方" +
+                App.CurrentUser.BattleData.CounterDamage + "点伤害，但一旦失败则会给自己造成额外伤害。",
+                App.CurrentUser.BattleData.CounterSuccessRatio);
+            CounterButton.MouseUp += Counter_Click;
+            CenterGrid.Children.Add(CounterButton);
+
+            var AbondonButton = new ActionButton() { Height = 100, Width = 85 };
+            AbondonButton.Init("放弃", "Abondon", "默默忍受本次攻击，并使下一回合防御成功的概率增加1/3。");
+            AbondonButton.MouseUp += DefendAbondon_Click;
+            CenterGrid.Children.Add(AbondonButton);
+
+            if (App.CurrentUser.BattleData.Skill != null &&
+               App.CurrentUser.BattleData.Skill.Occasion == SkillOccasion.UnderAttack)
+            {
+                var SkillButton = new ActionButton() { Height = 100, Width = 85 };
+                if (App.CurrentUser.BattleData.Skill.Enable)
+                    SkillButton.Init("使用技能", "Skill_white",
+                        "使用您的技能：" + App.CurrentUser.BattleData.Skill.Name + "。",
+                        App.CurrentUser.BattleData.Skill.Probability);
+                else
+                {
+                    if (!App.CurrentUser.BattleData.Skill.IsRemainingCount())
+                    {
+                        SkillButton.ButtonName.Foreground = Brushes.DarkGray;
+                        SkillButton.Init("次数已用尽", "Skill_grey",
+                            "当前由于技能次数用尽而无法使用技能：" + App.CurrentUser.BattleData.Skill.Name + "。");
+                        SkillButton.IsEnabled = false;
+                    }
+                    else if (App.CurrentUser.BattleData.Skill.IsAffecting())
+                    {
+                        SkillButton.ButtonName.Foreground = Brushes.DarkGray;
+                        SkillButton.Init("技能起效中", "Skill_grey",
+                            "当前由于技能正在生效中而无法使用技能：" + App.CurrentUser.BattleData.Skill.Name + "。");
+                        SkillButton.IsEnabled = false;
+                    }
+                    else if (App.CurrentUser.BattleData.Skill.IsCoolingDown())
+                    {
+                        SkillButton.ButtonName.Foreground = Brushes.DarkGray;
+                        SkillButton.Init("技能冷却中", "Skill_grey",
+                            "当前由于技能正在冷却中而无法使用技能：" + App.CurrentUser.BattleData.Skill.Name + "。");
+                        SkillButton.IsEnabled = false;
+                    }
+                }
+                CenterGrid.Children.Add(SkillButton);
+                SetActionButtonPosition(DefendButton, 4, 0);
+                SetActionButtonPosition(CounterButton, 4, 1);
+                SetActionButtonPosition(SkillButton, 4, 2);
+                SetActionButtonPosition(AbondonButton, 4, 3);
+            }
+            else
+            {
+                SetActionButtonPosition(DefendButton, 3, 0);
+                SetActionButtonPosition(CounterButton, 3, 1);
+                SetActionButtonPosition(AbondonButton, 3, 2);
+            }
+
+            if (Back)
+                CenterBorderCommand(new List<KeyValuePair<string, Action>>()
+                {
+                    new KeyValuePair<string, Action>("ShowCenterBorder", null),
+                    new KeyValuePair<string, Action>("ShowCenterGrid", null)
+                });
+            else
+                CenterBorderCommand(new List<KeyValuePair<string, Action>>()
+                {
+                    new KeyValuePair<string, Action>("ShowCenterBorder", null),
+                    new KeyValuePair<string, Action>("ShowCenterText;Under Attack!", null),
+                    new KeyValuePair<string, Action>("Wait;0.5", null),
+                    new KeyValuePair<string, Action>("HideCenterText", null),
+                    new KeyValuePair<string, Action>("ShowCenterGrid", null)
+                });
+        }
+
+        private void SetAiAttackOptions(AI Player)
+        {
+            string Choice = Player.ChooseAttackChoice();
+            switch (Choice)
+            {
+                case "Attack":
+                    Player Target = Player.GetAttackTarget();
+
+                    var SelfCard = Player.BattleData.PlayerCard;
+                    var PlayerCard = Target.BattleData.PlayerCard;
+                    ActionLineAnimation(
+                        new Point(Canvas.GetLeft((StackPanel)SelfCard.Parent) + SelfCard.ActualWidth / 2,
+                            Canvas.GetTop((StackPanel)SelfCard.Parent) + ((StackPanel)SelfCard.Parent).Children.IndexOf(SelfCard) * 100 + SelfCard.ActualHeight / 2),
+                        new Point(Canvas.GetLeft((StackPanel)PlayerCard.Parent) + PlayerCard.ActualWidth / 2,
+                            Canvas.GetTop((StackPanel)PlayerCard.Parent) + ((StackPanel)PlayerCard.Parent).Children.IndexOf(PlayerCard) * 100 + PlayerCard.ActualHeight / 2),
+                        Colors.Red, delegate (Line ActionLine)
+                        {
+                            DiceControl.Expected = 6 - Player.BattleData.AttackSuccessRatio;
+                            DiceControl.EndAction = delegate
+                            { AttackAction(Player, Target, ActionLine, DiceControl.Success); };
+                            DiceControl.Expand();
+                        });
+                    PlayerCard.Player.BattleData.SetStatus("Breakdown");
+                    SelfCard.SetAction("攻击", "Attack", "选择一个目标进行常规攻击，攻击成功将能造成" +
+                        Player.BattleData.AttackDamage + "点伤害。", Player.BattleData.AttackSuccessRatio);
+                    SetStatus(Target.Name + "正遭受攻击！", Colors.OrangeRed);
+                    break;
+                case "Abondon":
+                    SetStatus(Player.Name + "放弃了本次攻击机会。", Colors.Gray);
+                    Player.BattleData.AttackSuccessRatio += 1;
+                    if (Player.BattleData.AttackSuccessRatio > 6)
+                        Player.BattleData.AttackSuccessRatio = 6;
+                    Player.BattleData.PlayerCard.SetAction("放弃", "Abondon",
+                        Player.Name + "放弃了本次攻击机会，下回合" + Player.Name +
+                        "的攻击成功率变为：" + Player.BattleData.AttackSuccessRatio + "/6。", null);
+
+                    DispatcherTimer AbondonTimer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(1) };
+                    AbondonTimer.Tick += delegate
+                    { NextPlayer(); AbondonTimer.Stop(); };
+                    AbondonTimer.Start();
+                    break;
+            }
+        }
+        private void SetAiDefendOptions(AI Player)
+        {
+            string Choice = Player.ChooseDefendChoice();
+            var SelfCard = Player.BattleData.PlayerCard;
+            switch (Choice)
+            {
+                case "Defend":
+                    SelfCard.SetAction("防御", "Defend", "使用防御来削减来自对方的伤害，当前可降低" +
+                        Player.BattleData.DefenceCapacity + "点伤害。", Player.BattleData.DefendSuccessRatio);
+                    SetStatus(Player.Name + "选择防御！", Colors.OrangeRed);
+
+                    DiceControl.Expected = 6 - App.CurrentUser.BattleData.DefendSuccessRatio;
+                    DiceControl.EndAction = delegate
+                    { DefendAction(Battlefield.CurrentPlayer, Player, DiceControl.Success); };
+                    DiceControl.Expand();
+                    break;
+                case "Counter":
+                    var PlayerCard = Battlefield.CurrentPlayer.BattleData.PlayerCard;
+                    ActionLineAnimation(
+                        new Point(Canvas.GetLeft((StackPanel)SelfCard.Parent) + SelfCard.ActualWidth / 2,
+                            Canvas.GetTop((StackPanel)SelfCard.Parent) + ((StackPanel)SelfCard.Parent).Children.IndexOf(SelfCard) * 100 + SelfCard.ActualHeight / 2),
+                        new Point(Canvas.GetLeft((StackPanel)PlayerCard.Parent) + PlayerCard.ActualWidth / 2,
+                            Canvas.GetTop((StackPanel)PlayerCard.Parent) + ((StackPanel)PlayerCard.Parent).Children.IndexOf(PlayerCard) * 100 + PlayerCard.ActualHeight / 2),
+                        Colors.Red, delegate (Line ActionLine)
+                        {
+                            DiceControl.Expected = 6 - App.CurrentUser.BattleData.CounterSuccessRatio;
+                            DiceControl.EndAction = delegate
+                            { CounterAction(Player, Battlefield.CurrentPlayer, ActionLine, DiceControl.Success); };
+                            DiceControl.Expand();
+                        });
+
+                    Player.BattleData.PlayerCard.SetAction("反击", "Counter", "该角色正在进行反击，反击成功将能造成" +
+                        Player.BattleData.CounterDamage + "点伤害，若失败自己将遭受" +
+                        Battlefield.CurrentPlayer.BattleData.CounterPunishment + "点伤害。",
+                        Player.BattleData.CounterSuccessRatio);
+                    SetStatus(Player.Name + "选择反击！", Colors.OrangeRed);
+                    Battlefield.CurrentPlayer.BattleData.SetStatus("Breakdown");
+                    break;
+                case "Abondon":
+                    SetStatus(Player.Name + "放弃了本次防御机会。", Colors.Gray);
+                    Player.BattleData.DefendSuccessRatio += 2;
+                    if (Player.BattleData.DefendSuccessRatio > 6)
+                        Player.BattleData.DefendSuccessRatio = 6;
+                    Player.BattleData.PlayerCard.SetAction("放弃", "Abondon",
+                        Player.Name + "放弃了本次防御机会，下回合" + Player.Name +
+                        "的防御成功率变为：" + Player.BattleData.DefendSuccessRatio + "/6。", null);
+
+                    DispatcherTimer AbondonTimer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(1) };
+                    AbondonTimer.Tick += delegate
+                    { NextPlayer(); AbondonTimer.Stop(); };
+                    AbondonTimer.Start();
+                    break;
+            }
+        }
+
         private void SetItemPosition(FrameworkElement Item, BattleType BattleType, int GroupIndex)
         {
             switch (BattleType)
@@ -290,13 +489,13 @@ namespace StrikeOne
                 Height = PathCanvas.ActualHeight,
                 Width = PathCanvas.ActualWidth,
                 Stroke = new SolidColorBrush(Color.FromArgb(255, 0, 220, 220)),
-                StrokeThickness = 2,
-                //Effect = new DropShadowEffect()
-                //{
-                //    BlurRadius = 3,
-                //    Color = Colors.Gray,
-                //    ShadowDepth = 1
-                //},
+                StrokeThickness = 3.5,
+                Effect = new DropShadowEffect()
+                {
+                    BlurRadius = 3,
+                    Color = Colors.Gray,
+                    ShadowDepth = 0
+                },
                 Data = new PathGeometry()
                 {
                     Figures = new PathFigureCollection()
@@ -339,7 +538,7 @@ namespace StrikeOne
             foreach (var PlayerCard in GroupPanel.Children.OfType<PlayerCard>())
                 PlayerCard.Expand();
         }
-        private void ActionLineAnimation(Point From, Point To, Color Color, Action Action)
+        private void ActionLineAnimation(Point From, Point To, Color Color, Action<Line> Action)
         {
             Line ActionLine = new Line()
             {
@@ -362,7 +561,7 @@ namespace StrikeOne
             DispatcherTimer Timer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(1.5) };
             Timer.Tick += delegate
             {
-                Action?.Invoke();
+                Action?.Invoke(ActionLine);
                 Timer.Stop();
             };
 
@@ -607,8 +806,9 @@ namespace StrikeOne
                     {
                         PlayerCard.MouseEnter += AttackTarget_MouseEnter;
                         PlayerCard.MouseLeave += AttackTarget_MouseLeave;
-                        PlayerCard.MouseUp += AttackTarget_MouseClick;
+                        PlayerCard.MouseLeftButtonUp += AttackTarget_MouseClick;
                     }
+                    this.MouseRightButtonUp += AttackCancel_Click;
                 }),
                 new KeyValuePair<string, Action>("HideCenterBorder", null)
             });
@@ -698,6 +898,10 @@ namespace StrikeOne
         private void AttackTarget_MouseClick(object sender, MouseButtonEventArgs e)
         {
             PlayerCard PlayerCard = (PlayerCard)sender;
+            if (PlayerCard.Player.BattleData.Group.Name ==
+                App.CurrentUser.BattleData.Group.Name ||
+                !(PlayerCard.Player.BattleData.CurrentHp > 0))
+                return;
             PlayerCard.ToolTip = null;
             PlayerCard.InfoBorder.Background = PlayerCard.InfoBorder.Background.Clone();
             ((SolidColorBrush)PlayerCard.InfoBorder.Background).BeginAnimation(
@@ -712,8 +916,9 @@ namespace StrikeOne
             {
                 EachPlayerCard.MouseEnter -= AttackTarget_MouseEnter;
                 EachPlayerCard.MouseLeave -= AttackTarget_MouseLeave;
-                EachPlayerCard.MouseUp -= AttackTarget_MouseClick;
+                EachPlayerCard.MouseLeftButtonUp -= AttackTarget_MouseClick;
             }
+            this.MouseRightButtonUp -= AttackCancel_Click;
 
             var SelfCard = App.CurrentUser.BattleData.PlayerCard;
             ActionLineAnimation(
@@ -721,13 +926,397 @@ namespace StrikeOne
                     Canvas.GetTop((StackPanel)SelfCard.Parent) + ((StackPanel)SelfCard.Parent).Children.IndexOf(SelfCard) * 100 + SelfCard.ActualHeight / 2),
                 new Point(Canvas.GetLeft((StackPanel)PlayerCard.Parent) + PlayerCard.ActualWidth / 2, 
                     Canvas.GetTop((StackPanel)PlayerCard.Parent) + ((StackPanel)PlayerCard.Parent).Children.IndexOf(PlayerCard) * 100 + PlayerCard.ActualHeight / 2),
-                Colors.Red, delegate
+                Colors.Red, delegate(Line ActionLine)
                 {
                     DiceControl.Expected = 6 - App.CurrentUser.BattleData.AttackSuccessRatio;
+                    DiceControl.EndAction = delegate
+                    { AttackAction(App.CurrentUser, PlayerCard.Player, ActionLine, DiceControl.Success); };
                     DiceControl.Expand();
                 });
             PlayerCard.Player.BattleData.SetStatus("Breakdown");
+            App.CurrentUser.BattleData.PlayerCard.SetAction("攻击", "Attack", "选择一个目标进行常规攻击，攻击成功将能造成" +
+                App.CurrentUser.BattleData.AttackDamage + "点伤害。",
+                App.CurrentUser.BattleData.AttackSuccessRatio);
             SetStatus(PlayerCard.Player.Name + "正遭受攻击！", Colors.OrangeRed);
+        }
+        private void AttackCancel_Click(object sender, MouseButtonEventArgs e)
+        {
+            foreach (var EachPlayerCard in Battlefield.PlayerList.Select(O => O.BattleData.PlayerCard))
+            {
+                EachPlayerCard.MouseEnter -= AttackTarget_MouseEnter;
+                EachPlayerCard.MouseLeave -= AttackTarget_MouseLeave;
+                EachPlayerCard.MouseLeftButtonUp -= AttackTarget_MouseClick;
+                if (EachPlayerCard.IsMouseOver)
+                {
+                    EachPlayerCard.ToolTip = null;
+                    EachPlayerCard.InfoBorder.Background = EachPlayerCard.InfoBorder.Background.Clone();
+                    ((SolidColorBrush)EachPlayerCard.InfoBorder.Background).BeginAnimation(
+                        SolidColorBrush.ColorProperty, new ColorAnimation()
+                        {
+                            From = ((SolidColorBrush)EachPlayerCard.InfoBorder.Background).Color,
+                            To = Colors.White,
+                            Duration = TimeSpan.FromSeconds(0.3),
+                            EasingFunction = new ExponentialEase() { EasingMode = EasingMode.EaseIn }
+                        });
+                }
+            }
+            this.MouseRightButtonUp -= AttackCancel_Click;
+
+            SetStatus("角色：" + App.CurrentUser.Name + "的回合", Colors.LimeGreen);
+            OpenAttackOptions(true);
+        }
+        private void AttackAbondon_Click(object sender, MouseButtonEventArgs e)
+        {
+            CenterBorderCommand(new List<KeyValuePair<string, Action>>()
+            {
+                new KeyValuePair<string, Action>("HideCenterGrid", delegate
+                {
+                    SetStatus(App.CurrentUser.Name + "放弃了本次攻击机会。", Colors.Gray);
+                    App.CurrentUser.BattleData.AttackSuccessRatio += 1;
+                    if (App.CurrentUser.BattleData.AttackSuccessRatio > 6)
+                        App.CurrentUser.BattleData.AttackSuccessRatio = 6;
+                    App.CurrentUser.BattleData.PlayerCard.SetAction("放弃", "Abondon",
+                        App.CurrentUser.Name + "放弃了本次攻击机会，下回合" + App.CurrentUser.Name +
+                        "的攻击成功率变为：" + App.CurrentUser.BattleData.AttackSuccessRatio + "/6。", null);
+                }),
+                new KeyValuePair<string, Action>("HideCenterBorder", NextPlayer)
+            });
+        }
+        private void Defend_Click(object sender, MouseButtonEventArgs e)
+        {
+            CenterBorderCommand(new List<KeyValuePair<string, Action>>()
+            {
+                new KeyValuePair<string, Action>("HideCenterGrid", delegate
+                {
+                    var SelfCard = App.CurrentUser.BattleData.PlayerCard;
+                    SelfCard.SetAction("防御", "Defend", "使用防御来削减来自对方的伤害，当前可降低" +
+                        App.CurrentUser.BattleData.DefenceCapacity + "点伤害。", App.CurrentUser.BattleData.DefendSuccessRatio);
+                    SetStatus(App.CurrentUser.Name + "选择防御！", Colors.OrangeRed);
+                }),
+                new KeyValuePair<string, Action>("HideCenterBorder", delegate
+                {
+                    DiceControl.Expected = 6 - App.CurrentUser.BattleData.DefendSuccessRatio;
+                    DiceControl.EndAction = delegate
+                    { DefendAction(Battlefield.CurrentPlayer, App.CurrentUser, DiceControl.Success); };
+                    DiceControl.Expand();
+                })
+            });
+        }
+        private void DefendAbondon_Click(object sender, MouseButtonEventArgs e)
+        {
+            CenterBorderCommand(new List<KeyValuePair<string, Action>>()
+            {
+                new KeyValuePair<string, Action>("HideCenterGrid", delegate
+                {
+                    SetStatus(App.CurrentUser.Name + "放弃了本次防御机会。", Colors.Gray);
+                    App.CurrentUser.BattleData.DefendSuccessRatio += 2;
+                    if (App.CurrentUser.BattleData.DefendSuccessRatio > 6)
+                        App.CurrentUser.BattleData.DefendSuccessRatio = 6;
+                    App.CurrentUser.BattleData.PlayerCard.SetAction("放弃", "Abondon",
+                        App.CurrentUser.Name + "放弃了本次防御机会，下回合" + App.CurrentUser.Name +
+                        "的防御成功率变为：" + App.CurrentUser.BattleData.DefendSuccessRatio + "/6。", null);
+                }),
+                new KeyValuePair<string, Action>("HideCenterBorder", delegate
+                {
+                    App.CurrentUser.BattleData.CurrentHp -=
+                        Battlefield.CurrentPlayer.BattleData.AttackDamage;
+                    NextPlayer();
+                })
+            });
+        }
+        private void Counter_Click(object sender, MouseButtonEventArgs e)
+        {
+            CenterBorderCommand(new List<KeyValuePair<string, Action>>()
+            {
+                new KeyValuePair<string, Action>("HideCenterGrid", delegate
+                {
+                    Battlefield.CurrentPlayer.BattleData.SetStatus("Breakdown");
+                    
+                    App.CurrentUser.BattleData.PlayerCard.SetAction("反击", "Counter", "该角色正在进行反击，反击成功将能造成" +
+                        App.CurrentUser.BattleData.CounterDamage + "点伤害，若失败自己将遭受" +
+                        Battlefield.CurrentPlayer.BattleData.CounterPunishment + "点伤害。",
+                        App.CurrentUser.BattleData.CounterSuccessRatio);
+                    SetStatus(App.CurrentUser.Name + "选择反击！", Colors.OrangeRed);
+                }),
+                new KeyValuePair<string, Action>("HideCenterBorder", delegate
+                {
+                    var SelfCard = App.CurrentUser.BattleData.PlayerCard;
+                    var TargetCard = Battlefield.CurrentPlayer.BattleData.PlayerCard;
+                    ActionLineAnimation(
+                        new Point(Canvas.GetLeft((StackPanel)SelfCard.Parent) + SelfCard.ActualWidth / 2,
+                            Canvas.GetTop((StackPanel)SelfCard.Parent) + ((StackPanel)SelfCard.Parent).Children.IndexOf(SelfCard) * 100 + SelfCard.ActualHeight / 2),
+                        new Point(Canvas.GetLeft((StackPanel)TargetCard.Parent) + TargetCard.ActualWidth / 2,
+                            Canvas.GetTop((StackPanel)TargetCard.Parent) + ((StackPanel)TargetCard.Parent).Children.IndexOf(TargetCard) * 100 + TargetCard.ActualHeight / 2),
+                        Colors.OrangeRed, delegate(Line ActionLine)
+                        {
+                            DiceControl.Expected = 6 - App.CurrentUser.BattleData.CounterSuccessRatio;
+                            DiceControl.EndAction = delegate
+                            { CounterAction(App.CurrentUser, Battlefield.CurrentPlayer, ActionLine, DiceControl.Success); };
+                            DiceControl.Expand();
+                        });
+                    //Battlefield.CurrentAttacker = App.CurrentUser;
+                })
+            });
+        }
+
+        private void AttackAction(Player Attacker, Player Defender, Line ActionLine, bool Success)
+        {
+            if (Success)
+            {
+                DispatcherTimer Timer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(0.5) };
+                Timer.Tick += delegate
+                {
+                    SetStatus(Defender.Name + "正在做出防御选项...", Colors.OrangeRed);
+                    PathCanvas.Children.Remove(ActionLine);
+
+                    if (Defender is AI)
+                        SetAiDefendOptions((AI)Defender);
+                    else if (Defender.Id == App.CurrentUser.Id)
+                        OpenDefendOptions();
+                    else
+                    { }
+
+                    Timer.Stop();
+                };
+
+                Battlefield.Record.Participants[Attacker.Id].Rolls.Add(
+                    new DiceRoll()
+                    {
+                        Probability = new KeyValuePair<int, int>(Attacker.BattleData.AttackSuccessRatio, 6),
+                        Type = DiceRoll.RollType.Attack,
+                        Success = true,
+                        Time = DateTime.Now,
+                    });
+                Attacker.BattleData.PlayerCard.UpdateLuck();
+                Attacker.BattleData.AttackSuccessRatio = 2;
+
+                ActionLine.BeginAnimation(Line.X1Property, new DoubleAnimation()
+                {
+                    From = ActionLine.X1,
+                    To = ActionLine.X2,
+                    Duration = TimeSpan.FromSeconds(0.5),
+                    EasingFunction = new ExponentialEase() { EasingMode = EasingMode.EaseIn }
+                });
+                ActionLine.BeginAnimation(Line.Y1Property, new DoubleAnimation()
+                {
+                    From = ActionLine.Y1,
+                    To = ActionLine.Y2,
+                    Duration = TimeSpan.FromSeconds(0.5),
+                    EasingFunction = new ExponentialEase() { EasingMode = EasingMode.EaseIn }
+                });
+                ActionLine.BeginAnimation(Line.StrokeThicknessProperty, new DoubleAnimation()
+                {
+                    From = 5,
+                    To = 0,
+                    Duration = TimeSpan.FromSeconds(0.5),
+                });
+                Timer.Start();
+            }
+            else
+            {
+                SetStatus(Attacker.Name + "攻击失败。", Colors.Gray);
+
+                DispatcherTimer Timer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(1) };
+                Timer.Tick += delegate
+                {
+                    PathCanvas.Children.Remove(ActionLine);
+                    NextPlayer();
+                    Timer.Stop();
+                };
+
+                Battlefield.Record.Participants[Attacker.Id].Rolls.Add(
+                    new DiceRoll()
+                    {
+                        Probability = new KeyValuePair<int, int>(Attacker.BattleData.AttackSuccessRatio, 6),
+                        Type = DiceRoll.RollType.Attack,
+                        Success = false,
+                        Time = DateTime.Now,
+                    }); 
+                Attacker.BattleData.PlayerCard.UpdateLuck();
+                Attacker.BattleData.AttackSuccessRatio = 2;
+
+                Defender.BattleData.SetStatus("Joined");
+
+                ActionLine.BeginAnimation(Line.X2Property, new DoubleAnimation()
+                {
+                    From = ActionLine.X2,
+                    To = ActionLine.X1,
+                    Duration = TimeSpan.FromSeconds(0.5),
+                    EasingFunction = new ExponentialEase() { EasingMode = EasingMode.EaseIn }
+                });
+                ActionLine.BeginAnimation(Line.Y2Property, new DoubleAnimation()
+                {
+                    From = ActionLine.Y2,
+                    To = ActionLine.Y1,
+                    Duration = TimeSpan.FromSeconds(0.5),
+                    EasingFunction = new ExponentialEase() { EasingMode = EasingMode.EaseIn }
+                });
+                ActionLine.BeginAnimation(Line.StrokeThicknessProperty, new DoubleAnimation()
+                {
+                    From = 5,
+                    To = 0,
+                    Duration = TimeSpan.FromSeconds(0.5),
+                });
+                Timer.Start();
+            }
+        }
+        private void DefendAction(Player Attacker, Player Defender, bool Success)
+        {
+            if (Success)
+            {
+                SetStatus(Defender.Name + "防御成功！", Colors.LimeGreen);
+
+                DispatcherTimer Timer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(0.5) };
+                Timer.Tick += delegate
+                {
+                    Defender.BattleData.SetStatus("Joined");
+                    NextPlayer();
+
+                    Timer.Stop();
+                };
+
+                Battlefield.Record.Participants[Defender.Id].Rolls.Add(
+                    new DiceRoll()
+                    {
+                        Probability = new KeyValuePair<int, int>(Defender.BattleData.DefendSuccessRatio, 6),
+                        Type = DiceRoll.RollType.Defense,
+                        Success = true,
+                        Time = DateTime.Now,
+                    });
+                Defender.BattleData.PlayerCard.UpdateLuck();
+                Defender.BattleData.CurrentHp -= 
+                    Attacker.BattleData.AttackDamage - Defender.BattleData.DefenceCapacity;
+                Defender.BattleData.DefendSuccessRatio = 2;
+
+                Timer.Start();
+            }
+            else
+            {
+                SetStatus(Defender.Name + "防御失败。", Colors.Gray);
+
+                DispatcherTimer Timer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(1) };
+                Timer.Tick += delegate
+                {
+                    Defender.BattleData.SetStatus("Joined");
+                    NextPlayer();
+
+                    Timer.Stop();
+                };
+
+                Battlefield.Record.Participants[Defender.Id].Rolls.Add(
+                    new DiceRoll()
+                    {
+                        Probability = new KeyValuePair<int, int>(Defender.BattleData.DefendSuccessRatio, 6),
+                        Type = DiceRoll.RollType.Defense,
+                        Success = false,
+                        Time = DateTime.Now
+                    });
+                Defender.BattleData.PlayerCard.UpdateLuck();
+                Defender.BattleData.CurrentHp -= Attacker.BattleData.AttackDamage;
+                Defender.BattleData.DefendSuccessRatio = 2;
+
+                Timer.Start();
+            }
+        }
+        private void CounterAction(Player Attacker, Player Defender, Line ActionLine, bool Success)
+        {
+            if (Success)
+            {
+                SetStatus(Attacker.Name + "反击成功！", Colors.LimeGreen);
+
+                DispatcherTimer Timer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(0.5) };
+                Timer.Tick += delegate
+                {
+                    Attacker.BattleData.SetStatus("Joined");
+                    Defender.BattleData.SetStatus("Ready");
+                    PathCanvas.Children.Remove(ActionLine);
+
+                    NextPlayer();
+
+                    Timer.Stop();
+                };
+
+                Battlefield.Record.Participants[Attacker.Id].Rolls.Add(
+                    new DiceRoll()
+                    {
+                        Probability = new KeyValuePair<int, int>(Attacker.BattleData.CounterSuccessRatio, 6),
+                        Type = DiceRoll.RollType.Counter,
+                        Success = true,
+                        Time = DateTime.Now,
+                    });
+                Attacker.BattleData.PlayerCard.UpdateLuck();
+                Defender.BattleData.CurrentHp -= Attacker.BattleData.CounterDamage;
+
+                ActionLine.BeginAnimation(Line.X1Property, new DoubleAnimation()
+                {
+                    From = ActionLine.X1,
+                    To = ActionLine.X2,
+                    Duration = TimeSpan.FromSeconds(0.5),
+                    EasingFunction = new ExponentialEase() { EasingMode = EasingMode.EaseIn }
+                });
+                ActionLine.BeginAnimation(Line.Y1Property, new DoubleAnimation()
+                {
+                    From = ActionLine.Y1,
+                    To = ActionLine.Y2,
+                    Duration = TimeSpan.FromSeconds(0.5),
+                    EasingFunction = new ExponentialEase() { EasingMode = EasingMode.EaseIn }
+                });
+                ActionLine.BeginAnimation(Line.StrokeThicknessProperty, new DoubleAnimation()
+                {
+                    From = 5,
+                    To = 0,
+                    Duration = TimeSpan.FromSeconds(0.5),
+                });
+                Timer.Start();
+            }
+            else
+            {
+                SetStatus(Attacker.Name + "反击失败。", Colors.Gray);
+
+                DispatcherTimer Timer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(1) };
+                Timer.Tick += delegate
+                {
+                    Attacker.BattleData.SetStatus("Joined");
+                    Defender.BattleData.SetStatus("Ready");
+                    PathCanvas.Children.Remove(ActionLine);
+
+                    NextPlayer();
+                    Timer.Stop();
+                };
+
+                Battlefield.Record.Participants[Attacker.Id].Rolls.Add(
+                    new DiceRoll()
+                    {
+                        Probability = new KeyValuePair<int, int>(Attacker.BattleData.CounterSuccessRatio, 6),
+                        Type = DiceRoll.RollType.Counter,
+                        Success = false,
+                        Time = DateTime.Now,
+                    });
+                Attacker.BattleData.PlayerCard.UpdateLuck();
+                Attacker.BattleData.CurrentHp -= Defender.BattleData.CounterPunishment;
+
+                ActionLine.BeginAnimation(Line.X2Property, new DoubleAnimation()
+                {
+                    From = ActionLine.X2,
+                    To = ActionLine.X1,
+                    Duration = TimeSpan.FromSeconds(0.5),
+                    EasingFunction = new ExponentialEase() { EasingMode = EasingMode.EaseIn }
+                });
+                ActionLine.BeginAnimation(Line.Y2Property, new DoubleAnimation()
+                {
+                    From = ActionLine.Y2,
+                    To = ActionLine.Y1,
+                    Duration = TimeSpan.FromSeconds(0.5),
+                    EasingFunction = new ExponentialEase() { EasingMode = EasingMode.EaseIn }
+                });
+                ActionLine.BeginAnimation(Line.StrokeThicknessProperty, new DoubleAnimation()
+                {
+                    From = 5,
+                    To = 0,
+                    Duration = TimeSpan.FromSeconds(0.5),
+                });
+                Timer.Start();
+            }
         }
 
         private void Close_Click(object Sender, RoutedEventArgs E)

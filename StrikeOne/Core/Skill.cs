@@ -36,6 +36,21 @@ namespace StrikeOne.Core
         public event EventHandler<SkillLaunchEventArgs> SkillAffect; 
 
         public Skill() { }
+
+        public override string ToString()
+        {
+            return Name;
+        }
+        public override bool Equals(object obj)
+        {
+            if (!(obj is Skill)) return false;
+            return this.Id == ((Skill) obj).Id;
+        }
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode();
+        }
+
         public void Init(Player Player)
         {
             Owner = Player;

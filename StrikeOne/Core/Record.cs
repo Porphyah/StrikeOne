@@ -14,10 +14,10 @@ namespace StrikeOne.Core
         public BattleType Type { set; get; }
         public bool Win { set; get; }
         public DateTime Time { set; get; }
-        public List<Participant> Participants { set; get; } = new List<Participant>();
+        public TimeSpan Duration { set; get; }
+        public Dictionary<Guid, Participant> Participants { set; get; } = new Dictionary<Guid, Participant>();
         public int Rounds { set; get; }
 
-        
     }
 
     [Serializable]
@@ -25,7 +25,7 @@ namespace StrikeOne.Core
     {
         public Guid Id { set; get; }
         public string Name { set; get; }
-        public Bitmap Avator { set; get; }
+        public Image Avator { set; get; }
         public string Group { set; get; }
         public int Rounds { set; get; }
         public int TotalDamage { set; get; }

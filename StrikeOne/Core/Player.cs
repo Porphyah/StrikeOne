@@ -33,7 +33,7 @@ namespace StrikeOne.Core
         {
             get
             {
-                var DiceRolls = Records.SelectMany(O => O.Participants.Find(P => P.Id == Id).Rolls).ToList();
+                var DiceRolls = Records.SelectMany(O => O.Participants[Id].Rolls).ToList();
                 return DiceRolls.Count == 0 ? 0
                     : DiceRolls.Where(O => O.Success).Sum(O => (O.Probability.Value - O.Probability.Key) / (double)O.Probability.Value)
                       / DiceRolls.Sum(O => (O.Probability.Value - O.Probability.Key) / (double)O.Probability.Value);

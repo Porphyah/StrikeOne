@@ -16,6 +16,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using StrikeOne.Core;
 
 namespace StrikeOne.Components
@@ -122,6 +123,54 @@ namespace StrikeOne.Components
                     StatusImage.ToolTip = "该角色已阵亡。";
                     break;
             }
+        }
+        public void SetAction(string Name, string Image, string Description, int? Probability)
+        {
+            CurrentAction.Init(Name, Image, Description, Probability);
+            ThicknessAnimation ShowActionBorderAnimation = new ThicknessAnimation()
+            {
+                From = ActionBorder.Margin,
+                To = new Thickness(0, 0, 0, 0),
+                Duration = TimeSpan.FromSeconds(0.5),
+                EasingFunction = new ExponentialEase() { EasingMode = EasingMode.EaseOut }
+            };
+            ShowActionBorderAnimation.Completed += delegate
+            {
+                DispatcherTimer Timer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(3) };
+                Timer.Tick += delegate
+                {
+                    DoubleAnimation OpacityAnimation = new DoubleAnimation()
+                    {
+                        From = CurrentAction.Opacity,
+                        To = 0,
+                        Duration = TimeSpan.FromSeconds(0.3),
+                        EasingFunction = new ExponentialEase() {EasingMode = EasingMode.EaseIn}
+                    };
+                    OpacityAnimation.Completed += delegate
+                    {
+                        CurrentAction.Visibility = Visibility.Hidden;
+                        ActionBorder.BeginAnimation(MarginProperty, new ThicknessAnimation()
+                        {
+                            From = ActionBorder.Margin,
+                            To = new Thickness(0, 0, 200, 0),
+                            Duration = TimeSpan.FromSeconds(0.5),
+                            EasingFunction = new ExponentialEase() { EasingMode = EasingMode.EaseIn }
+                        });
+                    };
+                    CurrentAction.BeginAnimation(OpacityProperty, OpacityAnimation);
+                    Timer.Stop();
+                };
+                CurrentAction.Visibility = Visibility.Visible;
+                CurrentAction.BeginAnimation(OpacityProperty, new DoubleAnimation()
+                {
+                    From = CurrentAction.Opacity,
+                    To = 1,
+                    Duration = TimeSpan.FromSeconds(0.3),
+                    EasingFunction = new ExponentialEase() { EasingMode = EasingMode.EaseOut }
+                });
+                Timer.Start();
+            };
+            ActionBorder.BeginAnimation(MarginProperty, ShowActionBorderAnimation);
         }
         public void UpdateHp()
         {

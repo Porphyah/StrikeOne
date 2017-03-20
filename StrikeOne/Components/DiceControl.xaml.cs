@@ -36,13 +36,35 @@ namespace StrikeOne.Components
 
         public void Collapse()
         {
-            Height = 0;
-            Width = 0;
-            ContentGrid.Visibility = Visibility.Hidden;
-            ContentGrid.Opacity = 0;
+            this.BeginAnimation(HeightProperty, new DoubleAnimation()
+            {
+                From = 200,
+                To = 0,
+                Duration = TimeSpan.FromSeconds(0.3),
+                EasingFunction = new ExponentialEase() { EasingMode = EasingMode.EaseIn }
+            });
+            this.BeginAnimation(WidthProperty, new DoubleAnimation()
+            {
+                From = 200,
+                To = 0,
+                Duration = TimeSpan.FromSeconds(0.3),
+                EasingFunction = new ExponentialEase() { EasingMode = EasingMode.EaseIn }
+            });
+
+            DoubleAnimation OpacityAnimation = new DoubleAnimation()
+            {
+                From = 1,
+                To = 0,
+                Duration = TimeSpan.FromSeconds(0.3),
+                EasingFunction = new ExponentialEase() { EasingMode = EasingMode.EaseIn }
+            };
+            OpacityAnimation.Completed += delegate { ContentGrid.Visibility = Visibility.Hidden; };
+            ContentGrid.BeginAnimation(OpacityProperty, OpacityAnimation);
         }
         public void Expand()
         {
+            ((SolidColorBrush) EllipseBackground.Fill).Color = Colors.Black;
+            DiceText.Visibility = Visibility.Hidden;
             DispatcherTimer Timer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(0.3) };
             Timer.Tick += delegate
             {
@@ -362,13 +384,27 @@ namespace StrikeOne.Components
                     DiceCanvas.Children.Remove(FinalDiceImage);
                     DiceText.Text = "Succeeded";
                     DiceText.Visibility = Visibility.Visible;
-                    DiceText.BeginAnimation(OpacityProperty, new DoubleAnimation()
+
+                    DoubleAnimation OpacityAnimation = new DoubleAnimation()
                     {
                         From = 0,
                         To = 1,
                         Duration = TimeSpan.FromSeconds(0.5),
                         EasingFunction = new ExponentialEase() { EasingMode = EasingMode.EaseOut }
-                    });
+                    };
+                    OpacityAnimation.Completed += delegate
+                    {
+                        DispatcherTimer Timer = new DispatcherTimer()
+                        { Interval = TimeSpan.FromSeconds(1) };
+                        Timer.Tick += delegate
+                        {
+                            this.Collapse();
+                            EndAction?.Invoke();
+                            Timer.Stop();
+                        };
+                        Timer.Start();
+                    };
+                    DiceText.BeginAnimation(OpacityProperty, OpacityAnimation);
                 };
             }
             else
@@ -417,13 +453,27 @@ namespace StrikeOne.Components
                     DiceCanvas.Children.Remove(FinalDiceImage);
                     DiceText.Text = "Failed";
                     DiceText.Visibility = Visibility.Visible;
-                    DiceText.BeginAnimation(OpacityProperty, new DoubleAnimation()
+
+                    DoubleAnimation OpacityAnimation = new DoubleAnimation()
                     {
                         From = 0,
                         To = 1,
                         Duration = TimeSpan.FromSeconds(0.5),
                         EasingFunction = new ExponentialEase() { EasingMode = EasingMode.EaseOut }
-                    });
+                    };
+                    OpacityAnimation.Completed += delegate
+                    {
+                        DispatcherTimer Timer = new DispatcherTimer()
+                        { Interval = TimeSpan.FromSeconds(1) };
+                        Timer.Tick += delegate
+                        {
+                            this.Collapse();
+                            EndAction?.Invoke();
+                            Timer.Stop();
+                        };
+                        Timer.Start();
+                    };
+                    DiceText.BeginAnimation(OpacityProperty, OpacityAnimation);
                 };
             }
 

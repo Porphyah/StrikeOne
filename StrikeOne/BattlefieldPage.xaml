@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:StrikeOne"
              xmlns:Components="clr-namespace:StrikeOne.Components"
              mc:Ignorable="d" 
-             d:DesignHeight="640" d:DesignWidth="1080">
+             d:DesignHeight="640" d:DesignWidth="1080" Background="Transparent">
     <UserControl.Resources>
         <ResourceDictionary Source="Assets/Assets.xaml"/>
     </UserControl.Resources>
