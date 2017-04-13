@@ -188,6 +188,28 @@ namespace StrikeOne
                 DrawingImage.Source = null;
                 SetDrawingButton.Visibility = Visibility.Visible;
             }
+            switch (Ai.Inclination)
+            {
+                default:
+                case AttackInclination.Random:
+                    ((RadioButton)InclinationPanel.Children[0]).IsChecked = true;
+                    break;
+                case AttackInclination.Bloody:
+                    ((RadioButton)InclinationPanel.Children[1]).IsChecked = true;
+                    break;
+                case AttackInclination.Relentless:
+                    ((RadioButton)InclinationPanel.Children[2]).IsChecked = true;
+                    break;
+                case AttackInclination.Jealous:
+                    ((RadioButton)InclinationPanel.Children[3]).IsChecked = true;
+                    break;
+                case AttackInclination.Vindictive:
+                    ((RadioButton)InclinationPanel.Children[4]).IsChecked = true;
+                    break;
+                case AttackInclination.TargetHard:
+                    ((RadioButton)InclinationPanel.Children[5]).IsChecked = true;
+                    break;
+            }
 
             SkillListBox.ItemsSource = Ai.SkillPool.Keys;
             DeleteSkillButton.IsEnabled = false;
@@ -221,6 +243,7 @@ namespace StrikeOne
             AiListBox.ItemsSource = App.AiList;
             AiListBox.Items.Refresh();
             AiListBox.SelectedIndex = AiListBox.Items.Count - 1;
+            ((RadioButton) InclinationPanel.Children[0]).IsChecked = true;
         }
 
         private void DeleteAi_Click(object Sender, RoutedEventArgs E)
@@ -390,6 +413,31 @@ namespace StrikeOne
 
             CurrentAi.SkillPool[CurrentSkill][0] = Dialog.ConditionScript;
             CurrentAi.SkillPool[CurrentSkill][1] = Dialog.TargetScript;
+        }
+
+        private void RandomChecked(object Sender, RoutedEventArgs E)
+        {
+            CurrentAi.Inclination = AttackInclination.Random;
+        }
+        private void BloodyChecked(object Sender, RoutedEventArgs E)
+        {
+            CurrentAi.Inclination = AttackInclination.Bloody;
+        }
+        private void RelentlessChecked(object Sender, RoutedEventArgs E)
+        {
+            CurrentAi.Inclination = AttackInclination.Relentless;
+        }
+        private void JealousChecked(object Sender, RoutedEventArgs E)
+        {
+            CurrentAi.Inclination = AttackInclination.Jealous;
+        }
+        private void VindictiveChecked(object Sender, RoutedEventArgs E)
+        {
+            CurrentAi.Inclination = AttackInclination.Vindictive;
+        }
+        private void TargetHardChecked(object Sender, RoutedEventArgs E)
+        {
+            CurrentAi.Inclination = AttackInclination.TargetHard;
         }
     }
 }

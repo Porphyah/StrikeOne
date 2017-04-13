@@ -36,8 +36,8 @@ namespace StrikeOne.Components
 
             GroupBrush.Color = Source.BattleData.Group.Color;
             HpProgress.Foreground = Brushes.LimeGreen;
-            HpProgress.Value = Source.BattleData.CurrentHp;
-            HpText.Text = Source.BattleData.CurrentHp.ToString();
+            HpProgress.Value = Source.BattleData.CurrentHp.GetDouble();
+            HpText.Text = Source.BattleData.CurrentHp.GetDouble().ToString("0");
             PlayerName.Text = Player.Name;
             GroupName.Text = Source.BattleData.Group.Name;
             GroupName.Foreground = new SolidColorBrush(Source.BattleData.Group.Color);
@@ -65,18 +65,19 @@ namespace StrikeOne.Components
         }
         public void UpdateHp()
         {
-            HpText.Text = Player.BattleData.CurrentHp == 0 ? "-" : Player.BattleData.CurrentHp.ToString("0");
+            HpText.Text = Player.BattleData.CurrentHp.GetDouble() > 0 ? 
+                Player.BattleData.CurrentHp.GetDouble().ToString("0") : "-";
             HpProgress.BeginAnimation(RangeBase.ValueProperty, new DoubleAnimation()
             {
                 From = HpProgress.Value,
-                To = Player.BattleData.CurrentHp,
+                To = Player.BattleData.CurrentHp.GetDouble(),
                 Duration = TimeSpan.FromSeconds(0.3),
                 EasingFunction = new ExponentialEase() { EasingMode = EasingMode.EaseInOut }
             });
 
-            double HpRatio = Player.BattleData.CurrentHp/Player.BattleData.TotalHp;
+            double HpRatio = Player.BattleData.CurrentHp.GetDouble()/BattleData.TotalHp;
             Color Color;
-            if (Player.BattleData.CurrentHp == 0)
+            if (Player.BattleData.CurrentHp.GetInt() == 0)
                 Color = Colors.Gray;
             else if (HpRatio <= 0.25)
                 Color = Colors.Red;

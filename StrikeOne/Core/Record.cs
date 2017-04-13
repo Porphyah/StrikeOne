@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace StrikeOne.Core
 {
     [Serializable]
-    public class Record
+    public class Record : ICloneable
     {
         public Guid Id { set; get; }
         public BattleType Type { set; get; }
@@ -18,6 +18,18 @@ namespace StrikeOne.Core
         public Dictionary<Guid, Participant> Participants { set; get; } = new Dictionary<Guid, Participant>();
         public int Rounds { set; get; }
 
+        public object Clone()
+        {
+            return new Record()
+            {
+                Id = Id,
+                Type = Type,
+                Time = Time,
+                Duration = Duration,
+                Participants = Participants.ToDictionary(O => O.Key, P => P.Value),
+                Rounds = Rounds
+            };
+        }
     }
 
     [Serializable]

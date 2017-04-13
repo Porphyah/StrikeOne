@@ -20,8 +20,11 @@
     <BitmapImage x:Key="Skill_white" UriSource="Skill_white.png"/>
     <BitmapImage x:Key="Skill_grey" UriSource="Skill_grey.png"/>
     <BitmapImage x:Key="Attack" UriSource="Attack.png"/>
+    <BitmapImage x:Key="Attack_grey" UriSource="Attack_grey.png"/>
     <BitmapImage x:Key="Defend" UriSource="Defend.png"/>
+    <BitmapImage x:Key="Defend_grey" UriSource="Defend_grey.png"/>
     <BitmapImage x:Key="Counter" UriSource="Counter.png"/>
+    <BitmapImage x:Key="Counter_grey" UriSource="Counter_grey.png"/>
     <BitmapImage x:Key="Abondon" UriSource="Abondon.png"/>
     <BitmapImage x:Key="Confirm" UriSource="Confirm.png"/>
     <BitmapImage x:Key="Cancel" UriSource="Cancel.png"/>
@@ -33,6 +36,7 @@
     <BitmapImage x:Key="CreateRoom" UriSource="CreateRoom.png"/>
     <BitmapImage x:Key="JoinRoom" UriSource="JoinRoom.png"/>
     <BitmapImage x:Key="Quit" UriSource="Quit.png"/>
+    <BitmapImage x:Key="Statistics" UriSource="Statistics.png"/>
     
     <BitmapImage x:Key="Matches" UriSource="Matches.png"/>
     <BitmapImage x:Key="Victories" UriSource="Victories.png"/>
@@ -73,6 +77,9 @@
 
     <BitmapImage x:Key="Vs" UriSource="VS.png"/>
     <BitmapImage x:Key="OneVsOne" UriSource="OneVsOne.png"/>
+    <BitmapImage x:Key="TriangleMess" UriSource="TriangleMess.png"/>
+    <BitmapImage x:Key="SquareMess" UriSource="SquareMess.png"/>
+    <BitmapImage x:Key="TwinningFight" UriSource="TwinningFight.png"/>
 
     <BitmapImage x:Key="One" UriSource="One.png"/>
     <BitmapImage x:Key="Two" UriSource="Two.png"/>
@@ -80,7 +87,12 @@
     <BitmapImage x:Key="Four" UriSource="Four.png"/>
     <BitmapImage x:Key="Five" UriSource="Five.png"/>
     <BitmapImage x:Key="Six" UriSource="Six.png"/>
-    
+
+    <BitmapImage x:Key="Victory_flag" UriSource="Victory_flag.png"/>
+    <BitmapImage x:Key="Luck_flag" UriSource="Luck_flag.png"/>
+    <BitmapImage x:Key="Contributor_flag" UriSource="Contributor_flag.png"/>
+    <BitmapImage x:Key="Executioner_flag" UriSource="Executioner_flag.png"/>
+
     <BitmapImage x:Key="TBG" UriSource="TBG.png"/>
     <BitmapImage x:Key="CBG" UriSource="ChatBackground.png"/>
 </ResourceDictionary>

@@ -43,8 +43,35 @@ namespace StrikeOne
                 Height = 100, Width = 780,
                 Image = { Source = Resources["OneVsOne"] as BitmapImage },
                 TypeText = { Text = "One Vs One" },
-                DescriptionText = { Text = "进行一对一的骰子对战。" },
+                DescriptionText = { Text = "进行单独的一对一对决。" },
                 BattleType = BattleType.OneVsOne 
+            });
+            BattleTypeComboBox.Items.Add(new BattleTypeItem()
+            {
+                Height = 100,
+                Width = 780,
+                Image = { Source = Resources["TriangleMess"] as BitmapImage },
+                TypeText = { Text = "Triangle Mess" },
+                DescriptionText = { Text = "进行三角混战的骰子对战。" },
+                BattleType = BattleType.TriangleMess
+            });
+            BattleTypeComboBox.Items.Add(new BattleTypeItem()
+            {
+                Height = 100,
+                Width = 780,
+                Image = { Source = Resources["SquareMess"] as BitmapImage },
+                TypeText = { Text = "Square Mess" },
+                DescriptionText = { Text = "进行四角混战的骰子对战。" },
+                BattleType = BattleType.SquareMess
+            });
+            BattleTypeComboBox.Items.Add(new BattleTypeItem()
+            {
+                Height = 100,
+                Width = 780,
+                Image = { Source = Resources["TwinningFight"] as BitmapImage },
+                TypeText = { Text = "Twinning Fight" },
+                DescriptionText = { Text = "结成一个二人组与对方对抗。" },
+                BattleType = BattleType.TwinningFight
             });
 
             DoubleAnimation OpacityAnimation = new DoubleAnimation()
@@ -155,7 +182,7 @@ namespace StrikeOne
 
         private void Active_Click(object Sender, RoutedEventArgs E)
         {
-            if (GroupStack.Children.OfType<GroupItem>()
+            if (CurrentRoom.HasParticipated(App.CurrentUser.Id) && GroupStack.Children.OfType<GroupItem>()
                 .SelectMany(GroupItem => GroupItem.ParticipantStack.Children.OfType<ParticipantItem>())
                 .First(O => O.Participant.Id == App.CurrentUser.Id).SkillSelector.SelectedSkill == null
                 && MessageBox.Show("您还没有为自己选择技能，确定继续？", "开始对战",
@@ -215,26 +242,90 @@ namespace StrikeOne
                         Room = CurrentRoom,
                         Capacity = 1
                     });
-
-
+                    break;
+                case BattleType.TriangleMess:
+                    CurrentRoom.Groups.Add(new Group()
+                    {
+                        Name = "Group A",
+                        Color = Colors.DodgerBlue,
+                        Room = CurrentRoom,
+                        Capacity = 1
+                    });
+                    CurrentRoom.Groups.Add(new Group()
+                    {
+                        Name = "Group B",
+                        Color = Colors.Red,
+                        Room = CurrentRoom,
+                        Capacity = 1
+                    });
+                    CurrentRoom.Groups.Add(new Group()
+                    {
+                        Name = "Group C",
+                        Color = Colors.LimeGreen,
+                        Room = CurrentRoom,
+                        Capacity = 1
+                    });
+                    break;
+                case BattleType.SquareMess:
+                    CurrentRoom.Groups.Add(new Group()
+                    {
+                        Name = "Group A",
+                        Color = Colors.DodgerBlue,
+                        Room = CurrentRoom,
+                        Capacity = 1
+                    });
+                    CurrentRoom.Groups.Add(new Group()
+                    {
+                        Name = "Group B",
+                        Color = Colors.Red,
+                        Room = CurrentRoom,
+                        Capacity = 1
+                    });
+                    CurrentRoom.Groups.Add(new Group()
+                    {
+                        Name = "Group C",
+                        Color = Colors.LimeGreen,
+                        Room = CurrentRoom,
+                        Capacity = 1
+                    });
+                    CurrentRoom.Groups.Add(new Group()
+                    {
+                        Name = "Group D",
+                        Color = Colors.DarkOrange,
+                        Room = CurrentRoom,
+                        Capacity = 1
+                    });
+                    break;
+                case BattleType.TwinningFight:
+                    CurrentRoom.Groups.Add(new Group()
+                    {
+                        Name = "Group A",
+                        Color = Colors.DodgerBlue,
+                        Room = CurrentRoom,
+                        Capacity = 2
+                    });
+                    CurrentRoom.Groups.Add(new Group()
+                    {
+                        Name = "Group B",
+                        Color = Colors.Red,
+                        Room = CurrentRoom,
+                        Capacity = 2
+                    });
                     break;
             }
 
+            GroupStack.Children.Clear();
             foreach (var Group in CurrentRoom.Groups)
             {
-                var GroupItem = new Components.GroupItem();
-                GroupItem.JoinSyncAction = delegate (Player TargetUser)
+                var GroupItem = new GroupItem
                 {
-                    if (GroupStack.Children.OfType<Components.GroupItem>()
-                        .All(O => O.ParticipantStack.Children.OfType<ParticipantItem>()
-                            .All(P => P.Participant != null)))
-                        ActiveButton.IsEnabled = true;
-                    else
-                        ActiveButton.IsEnabled = false;
-                };
-                GroupItem.QuitSyncAction = delegate
-                {
-                    ActiveButton.IsEnabled = false;
+                    JoinSyncAction = delegate
+                    {
+                        ActiveButton.IsEnabled = GroupStack.Children.OfType<Components.GroupItem>()
+                            .All(O => O.ParticipantStack.Children.OfType<ParticipantItem>()
+                                .All(P => P.Participant != null));
+                    },
+                    QuitSyncAction = delegate { ActiveButton.IsEnabled = false; }
                 };
                 GroupItem.LocalInit(Group, CurrentRoom);
                 GroupItem.Padding = new Thickness(0, 10, 0, 0);

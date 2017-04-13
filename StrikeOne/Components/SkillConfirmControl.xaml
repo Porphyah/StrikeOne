@@ -1,0 +1,62 @@
+﻿<UserControl x:Class="StrikeOne.Components.SkillConfirmControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:StrikeOne.Components"
+             mc:Ignorable="d" 
+             d:DesignHeight="120" d:DesignWidth="450">
+    <Grid>
+        <Grid HorizontalAlignment="Left" Width="85" Margin="10,10,0,10">
+            <Image x:Name="SkillImg" Height="65" Margin="10,10,10,0" VerticalAlignment="Top"/>
+            <TextBlock x:Name="SkillName" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,5" 
+                       Text="Skill Name" FontSize="15" FontWeight="Light" Foreground="White"/>
+        </Grid>
+        <Image Source="{StaticResource Count_white}" HorizontalAlignment="Left" Height="25" Margin="100,10,0,0" VerticalAlignment="Top" Width="25" ToolTip="可使用次数"/>
+        <TextBlock x:Name="CountText" HorizontalAlignment="Left" Margin="130,15,0,0" Foreground="White" Text="0/0" VerticalAlignment="Top" Width="30"/>
+        <Image Source="{StaticResource Duration_white}"  HorizontalAlignment="Left" Height="25" Margin="170,10,0,0" VerticalAlignment="Top" Width="25" ToolTip="持续回合"/>
+        <TextBlock x:Name="DurationText" HorizontalAlignment="Left" Margin="200,15,0,0" Foreground="White" Text="0" VerticalAlignment="Top" Width="30"/>
+        <Image Source="{StaticResource CoolDown_white}"  HorizontalAlignment="Left" Height="25" Margin="240,10,0,0" VerticalAlignment="Top" Width="22" ToolTip="冷却回合"/>
+        <TextBlock x:Name="CoolDownText" HorizontalAlignment="Left" Margin="270,15,0,0" Foreground="White" Text="0" VerticalAlignment="Top" Width="30"/>
+        <TextBlock x:Name="DescriptionText" HorizontalAlignment="Left" Margin="100,40,0,30" TextWrapping="Wrap" Foreground="White" Text="TextBlock" Width="250"/>
+        <Button HorizontalAlignment="Right" Margin="0,-20,10,20" VerticalAlignment="Center" Width="80" Height="35" Click="Confirm_Click">
+            <Button.Template>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid x:Name="Container">
+                        <Image HorizontalAlignment="Left" Margin="5" Width="25" Source="{StaticResource Confirm}"/>
+                        <TextBlock Text="使用" Foreground="White" FontSize="18" FontFamily="Microsoft YaHei UI Light" Margin="35,0,0,0" VerticalAlignment="Center"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Effect" TargetName="Container">
+                                <Setter.Value>
+                                    <DropShadowEffect ShadowDepth="0" Color="White"/>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
+        <Button HorizontalAlignment="Right" Margin="0,20,10,-20" VerticalAlignment="Center" Width="80" Height="35" Click="Cancel_Click">
+            <Button.Template>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Grid x:Name="Container">
+                        <Image HorizontalAlignment="Left" Margin="5" Width="25" Source="{StaticResource Cancel}"/>
+                        <TextBlock Text="取消" Foreground="White" FontSize="18" FontFamily="Microsoft YaHei UI Light" Margin="35,0,0,0" VerticalAlignment="Center"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Effect" TargetName="Container">
+                                <Setter.Value>
+                                    <DropShadowEffect ShadowDepth="0" Color="White"/>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Button.Template>
+        </Button>
+        <local:ProbabilityControl x:Name="SkillProbability" HorizontalAlignment="Left" Margin="100,0,0,10" VerticalAlignment="Bottom" Height="20" Width="250"/>
+    </Grid>
+</UserControl>

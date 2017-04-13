@@ -44,7 +44,6 @@ namespace StrikeOne.Components
             }
             this.Height = 50 + ParticipantStack.Children.Count*50;
         }
-
         public void LocalInit(Group Target, Room ParentRoom)
         {
             this.Group = Target;

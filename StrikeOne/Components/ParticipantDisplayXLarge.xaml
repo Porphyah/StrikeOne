@@ -1,0 +1,23 @@
+﻿<UserControl x:Class="StrikeOne.Components.ParticipantDisplayXLarge"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:StrikeOne.Components"
+             mc:Ignorable="d" 
+             d:DesignHeight="150" d:DesignWidth="150">
+    <Grid>
+        <Ellipse Height="80" VerticalAlignment="Top" Margin="35,5,35,0">
+            <Ellipse.Fill>
+                <ImageBrush x:Name="AvatorImage" ImageSource="{DynamicResource Icon_empty}"/>
+            </Ellipse.Fill>
+            <Ellipse.Effect>
+                <DropShadowEffect x:Name="ShadowEffect" ShadowDepth="0" BlurRadius="8"/>
+            </Ellipse.Effect>
+        </Ellipse>
+        <TextBlock x:Name="PlayerName" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,90,0,0" 
+                   Text="Player Name" FontWeight="Light" FontSize="20"/>
+        <TextBlock x:Name="Description" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,120,0,0" Foreground="Gray"
+                   Text="Description" TextWrapping="Wrap" TextAlignment="Center" Width="150"/>
+    </Grid>
+</UserControl>

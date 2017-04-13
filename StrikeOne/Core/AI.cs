@@ -17,7 +17,9 @@ namespace StrikeOne.Core
     {
         public double RadicalRatio { set; get; }
         public Image Drawing { set; get; }
-        public System.Collections.Generic.Dictionary<Skill, string[]> SkillPool { set; get; } = new System.Collections.Generic.Dictionary<Skill, string[]>();
+        public Dictionary<Skill, string[]> SkillPool { set; get; } = new System.Collections.Generic.Dictionary<Skill, string[]>();
+        public AttackInclination Inclination { set; get; } = AttackInclination.Random;
+        public Dictionary<Player, double> PlayerDataCollection { set; get; }
 
         public override bool Equals(object obj)
         {
@@ -89,45 +91,85 @@ namespace StrikeOne.Core
 
         public string ChooseAttackChoice()
         {
-            if (BattleData.Skill.Occasion == SkillOccasion.BeforeAttacking &&
+            if (BattleData.Skill != null && BattleData.Skill.IsActive &&
                 BattleData.Skill.Enable && JudgeSkillCondition(BattleData.Skill))
                 return "Skill";
             else
             {
-                long Tick = DateTime.Now.Ticks;
-                Random Temp = new Random(
-                    (int) (Tick & 0xffffffffL) | (int) (Tick >> 32));
-                if (BattleData.CurrentHp/BattleData.TotalHp > 0.25 && Temp.NextDouble() >= RadicalRatio)
+                if (Inclination == AttackInclination.Vindictive &&
+                    PlayerDataCollection.Where(O => O.Key.BattleData.Group.Name != BattleData.Group.Name &&
+                         O.Key.BattleData.CurrentHp.GetInt() > 0).All(O => O.Value <= 0))
                     return "Abondon";
-                else
-                    return "Attack";
+                double Rand = new Random((int)(DateTime.Now.Ticks & 0xffffffffL) | 
+                    (int)(DateTime.Now.Ticks >> 32)).NextDouble();
+                return Rand >= RadicalRatio ? "Abondon" : "Attack";
             }
         }
         public string ChooseDefendChoice()
         {
-            if (BattleData.Skill.Occasion == SkillOccasion.UnderAttack &&
+            if (BattleData.Skill != null && BattleData.Skill.IsActive &&
                 BattleData.Skill.Enable && JudgeSkillCondition(BattleData.Skill))
                 return "Skill";
             else
-                return BattleData.CurrentHp/BattleData.TotalHp >= RadicalRatio ? "Defend" : "Counter";
+                return BattleData.CurrentHp.GetDouble()/BattleData.TotalHp >= RadicalRatio ? "Defend" : "Counter";
         }
 
         public Player GetAttackTarget()
         {
-            return BattleData.Battlefield.PlayerList.Where(O => O.BattleData.Group.Name != 
-                this.BattleData.Group.Name).OrderBy(O => O.BattleData.CurrentHp).First();
+            var PlayerList = BattleData.Battlefield.PlayerList.Where(O => O.BattleData.Group.Name !=
+                            this.BattleData.Group.Name && O.BattleData.CurrentHp.GetDouble() > 0).ToList();
+            long Tick = DateTime.Now.Ticks;
+            Random Temp = new Random(
+                (int)(Tick & 0xffffffffL) | (int)(Tick >> 32));
+            if (BattleData.Battlefield.Round == 0 && Inclination != AttackInclination.Vindictive)
+                return PlayerList[Temp.Next(PlayerList.Count)];
+            else
+                switch (Inclination)
+                {
+                    default:
+                    case AttackInclination.Random:
+                        return PlayerList[Temp.Next(PlayerList.Count)];
+                    case AttackInclination.Bloody:
+                        var Bloodless = PlayerList.Where(O => O.BattleData.CurrentHp.GetDouble() <= 
+                            PlayerList.Min(P => P.BattleData.CurrentHp.GetDouble())).ToList();
+                        return Bloodless[Temp.Next(Bloodless.Count)];
+                    case AttackInclination.Relentless:
+                        var Luckless = PlayerList.Where(O => O.BattleData.Luck <=
+                            PlayerList.Min(P => P.BattleData.Luck)).ToList();
+                        return Luckless[Temp.Next(Luckless.Count)];
+                    case AttackInclination.Jealous:
+                        var Lucky = PlayerList.Where(O => O.BattleData.Luck >=
+                            PlayerList.Max(P => P.BattleData.Luck)).ToList();
+                        return Lucky[Temp.Next(Lucky.Count)];
+                    case AttackInclination.Vindictive:
+                        var Vindictive = PlayerDataCollection.Where(O => PlayerList.Contains(O.Key)).ToList();
+                        Vindictive = Vindictive.Where(O => O.Value >= Vindictive.Max(P => P.Value)).ToList();
+                        return Vindictive[Temp.Next(Vindictive.Count)].Key;
+                    case AttackInclination.TargetHard:
+                        var Targets = PlayerDataCollection.Where(O => PlayerList.Contains(O.Key)).ToList();
+                        Targets = Targets.Where(O => O.Value >= Targets.Max(P => P.Value)).ToList();
+                        return Targets[Temp.Next(Targets.Count)].Key;
+                }
         }
         private bool JudgeSkillCondition(Skill TargetSkill)
         {
-            return false;
-            //return (bool)((NLua.LuaFunction)LuaMain.LuaState.ExecuteString("return function(Skill)\n" +
-            //    SkillPool[TargetSkill][0] + "\nend")[0]).Call(TargetSkill)[0];
+            return (bool)((NLua.LuaFunction)LuaMain.LuaState.ExecuteString("return function(Skill)\n" +
+                SkillPool[TargetSkill][0] + "\nend")[0]).Call(TargetSkill)[0];
         }
-        public List<Player> GetSkillTargets(Skill TargetSkill)
+        public LuaList<Player> GetSkillTargets(Skill TargetSkill)
         {
-            return new List<Player>();
-            //return (((NLua.LuaFunction)LuaMain.LuaState.ExecuteString("return function(Skill)\n" +
-            //    SkillPool[TargetSkill][1] + "\nend")[0]).Call(TargetSkill)).Cast<Player>().ToList();
+            return (LuaList<Player>)((NLua.LuaFunction)LuaMain.LuaState.ExecuteString("return function(Skill)\n" +
+                SkillPool[TargetSkill][1] + "\nend")[0]).Call(TargetSkill)[0];
         }
+    }
+
+    public enum AttackInclination
+    {
+        Random,
+        Bloody,
+        Relentless,
+        Jealous,
+        Vindictive,
+        TargetHard
     }
 }

@@ -72,9 +72,9 @@ namespace StrikeOne.Components
                 VictoryRatioProgress.Foreground = Brushes.LimeGreen;
             }
 
-            var DiceRolls = Ai.Records.SelectMany(O => O.Participants[App.CurrentUser.Id].Rolls).ToList();
+            var DiceRolls = Ai.Records.SelectMany(O => O.Participants[Ai.Id].Rolls).ToList();
             double LuckRatio = Ai.LuckRatio;
-            LuckRatioText.Text = LuckRatio.ToString("0.0") + "%";
+            LuckRatioText.Text = (LuckRatio * 100).ToString("0.0") + "%";
             LuckRatioProgress.Value = LuckRatio;
             if (DiceRolls.Count == 0)
                 LuckRatioText.Foreground = Brushes.Gray;

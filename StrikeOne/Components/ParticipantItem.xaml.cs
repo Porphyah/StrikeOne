@@ -42,7 +42,7 @@ namespace StrikeOne.Components
             StatusImg.ToolTip = "该角色槽当前正等待玩家的加入。";
             UserGrid.Visibility = Visibility.Hidden;
             EmptyText.Visibility = Visibility.Visible;
-            if (!Group.Room.HasParticipate(App.CurrentUser.Id))
+            if (!Group.Room.HasParticipated(App.CurrentUser.Id))
             {
                 ActionButton.Style = Resources["DefaultGreenButtonStyle"] as Style;
                 ActionButton.Content = "+";
@@ -201,7 +201,7 @@ namespace StrikeOne.Components
                 StatusImg.ToolTip = "该角色槽当前正等待玩家的加入。";
                 UserGrid.Visibility = Visibility.Hidden;
                 EmptyText.Visibility = Visibility.Visible;
-                if (!Group.Room.HasParticipate(App.CurrentUser.Id) || Local)
+                if (!Group.Room.HasParticipated(App.CurrentUser.Id) || Local)
                 {
                     ActionButton.Style = Resources["DefaultGreenButtonStyle"] as Style;
                     ActionButton.Content = "+";
@@ -279,7 +279,12 @@ namespace StrikeOne.Components
         {
             if (Participant == null)
             {
-                AiWindow AiWindow = new AiWindow();
+                AiWindow AiWindow = new AiWindow
+                {
+                    SelfChoosable = !Group.Room.HasParticipated(App.CurrentUser.Id),
+                    ChosenAi = Group.Room.Groups
+                        .SelectMany(O => O.Participants).OfType<AI>().ToList()
+                };
                 AiWindow.ShowDialog();
                 if (AiWindow.Canceled) return;
 

@@ -29,7 +29,7 @@ namespace StrikeOne.Core
             LuaMain.LuaState["Battlefield"] = this;
             Record = new Record()
             {
-                Id = Guid.NewGuid(),
+                Id = Room.Id,
                 Participants = PlayerList.Select(O =>
                     new Participant()
                     {
@@ -65,12 +65,37 @@ namespace StrikeOne.Core
         {
             Round++;
             PlayerQueue = new Queue<Player>(PlayerList);
+            while (CurrentPlayer.BattleData.CurrentHp.GetInt() == 0)
+                PlayerQueue.Dequeue();
         }
         public bool NextPlayer()
         {
-            PlayerQueue.Dequeue();
+            do { PlayerQueue.Dequeue(); }
+            while (PlayerQueue.Count != 0 &&
+                CurrentPlayer.BattleData.CurrentHp.GetInt() == 0);
             if (PlayerQueue.Count == 0) return false;
             return true;
         }
+
+        public bool IsGameOver()
+        {
+            return Room.Groups.Count(O => O.Participants.Any(P =>
+                P.BattleData.CurrentHp.GetDouble() > 0)) <= 1;
+        }
+        public Group GetWinnerGroup()
+        {
+            if (!IsGameOver()) return null;
+            return Room.Groups.First(O => O.Participants.Any(P =>
+                P.BattleData.CurrentHp.GetDouble() > 0));
+        }
+        public void SetStatisticsRatio()
+        {
+            PlayerList.ForEach(O => O.BattleData.SetStatisticsRatio());
+        }
+
+        public LuaList<Player> GetLuaPlayerList()
+        {
+            return new LuaList<Player>(PlayerList);
+        } 
     }
 }

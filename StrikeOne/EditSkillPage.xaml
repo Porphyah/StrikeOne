@@ -16,14 +16,8 @@
                 <x:Type Type="Core:SkillTarget"/>
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
-        <ObjectDataProvider x:Key="OccasionEnum" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
-            <ObjectDataProvider.MethodParameters>
-                <x:Type Type="Core:SkillOccasion"/>
-            </ObjectDataProvider.MethodParameters>
-        </ObjectDataProvider>
         <Components:BitmapConverter x:Key="BitmapConverter"/>
         <local:SkillTargetConverter x:Key="SkillTargetConverter"/>
-        <local:SkillOccasionConverter x:Key="SkillOccasionConverter"/>
     </UserControl.Resources>
     <Grid>
         <Rectangle Height="100" Fill="#88000000" VerticalAlignment="Top"/>
@@ -100,7 +94,7 @@
             </Button>
         </Grid>
         <ScrollViewer x:Name="ContentViewer" Margin="300,100,0,0">
-            <Grid Height="635">
+            <Grid>
                 <Label Content="技能名：" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
                 <TextBox x:Name="SkillName" Height="23" Margin="73,12,160,0" Style="{StaticResource DefaultTextBoxStyle}"  VerticalAlignment="Top"/>
                 <Label Content="技能描述：" HorizontalAlignment="Left" Margin="10,40,0,0" VerticalAlignment="Top"/>
@@ -115,42 +109,55 @@
                     <Grid Margin="-5">
                         <Label Content="发动成功概率：" HorizontalAlignment="Left" Margin="10,13,0,0" VerticalAlignment="Top"/>
                         <Components:ProbabilityControl x:Name="SkillProbability" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" Width="300" Margin="110,10,0,0"/>
-                        <Label Content="发动时机：" Margin="425,13,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-                        <ComboBox x:Name="SkillOccasionBox" HorizontalAlignment="Left" Margin="500,10,0,0" VerticalAlignment="Top" Width="234" Height="30"
-                                  ItemsSource="{Binding Source={StaticResource OccasionEnum}, Converter={StaticResource SkillOccasionConverter}}"/>
                         <Label Content="发动效果函数：" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top"/>
-                        <RichTextBox x:Name="LaunchScriptBox" HorizontalAlignment="Left" Height="150" Margin="10,80,0,0" VerticalAlignment="Top" Width="500">
+                        <CheckBox x:Name="ActiveCheckBox" Content="攻击时使用" HorizontalAlignment="Left" Margin="285,53,0,0" VerticalAlignment="Top" Width="90" ToolTip="是否在发动攻击时激活技能。是则为攻击时，否则为防御时。"/>
+                        <CheckBox x:Name="DefendableCheckBox" Content="发动对象触发防御" IsThreeState="True"  HorizontalAlignment="Left" Margin="380,53,0,0" VerticalAlignment="Top" Width="130">
+                            <CheckBox.ToolTip>
+                                <StackPanel>
+                                    <TextBlock Text="是否使技能的发动对象触发防御选项。"/>
+                                    <WrapPanel>
+                                        <TextBlock Text="√" FontWeight="Bold" Foreground="DodgerBlue"/>
+                                        <TextBlock Text="表示触发完整的防御选项，包括防御/反击/技能/放弃。"/>
+                                    </WrapPanel>
+                                    <WrapPanel>
+                                        <TextBlock Text="—" FontWeight="Bold" Foreground="Gray"/>
+                                        <TextBlock Text="表示只触发防御本身，包括防御/放弃。"/>
+                                    </WrapPanel>
+                                    <WrapPanel>
+                                        <TextBlock Text="空白" FontWeight="Bold" Foreground="Black"/>
+                                        <TextBlock Text="表示不触发防御选项。"/>
+                                    </WrapPanel>
+                                </StackPanel>
+                            </CheckBox.ToolTip>
+                        </CheckBox>
+                        <RichTextBox x:Name="LaunchScriptBox" HorizontalAlignment="Left" Height="234" Margin="10,80,0,0" VerticalAlignment="Top" Width="500">
                             <RichTextBox.Document>
                                 <FlowDocument Focusable="True" LineHeight="1"/>
                             </RichTextBox.Document>
                         </RichTextBox>
-                        <Label Content="发动对象列表：" HorizontalAlignment="Right" Margin="0,50,116,0" VerticalAlignment="Top"/>
-                        <ListBox x:Name="SkillTargetsListBox" HorizontalAlignment="Right" Height="150" Margin="0,80,10,0" VerticalAlignment="Top" Width="200" SelectionChanged="SelectSkillTarget"
+                        <Label Content="发动对象列表：" HorizontalAlignment="Right" Margin="0,10,115,0" VerticalAlignment="Top"/>
+                        <ListBox x:Name="SkillTargetsListBox" HorizontalAlignment="Right" Height="150" Margin="0,40,10,0" VerticalAlignment="Top" Width="200" SelectionChanged="SelectSkillTarget"
                                  ItemsSource="{Binding Converter={StaticResource SkillTargetConverter}, ConverterParameter=false}"/>
                         <Controls:DropDownButton x:Name="AddSkillTargetButton" Content="＋" Foreground="LimeGreen" ArrowBrush="LimeGreen" BorderBrush="LimeGreen" Background="#88FFFFFF"
-                                                 HorizontalAlignment="Right" Margin="0,48,66,0" VerticalAlignment="Top" Width="45" Height="27"
+                                                 HorizontalAlignment="Right" Margin="0,8,65,0" VerticalAlignment="Top" Width="45" Height="27"
                                                  ItemsSource="{Binding Source={StaticResource TargetEnum}, Converter={StaticResource SkillTargetConverter}, ConverterParameter=true}"/>
                         <Button x:Name="DeleteSkillTargetButton" Content="－" Style="{DynamicResource SquareRedButtonStyle}" IsEnabled="False"
-                                HorizontalAlignment="Right" Margin="0,48,10,0" VerticalAlignment="Top" Width="45" Height="27" Click="DeleteSkillTarget_Click"/>
-                        <Label Content="持续效果函数：" HorizontalAlignment="Left" Margin="10,246,0,0" VerticalAlignment="Top"/>
-                        <RichTextBox x:Name="AffectScriptBox" HorizontalAlignment="Left" Height="120" Margin="10,276,0,0" VerticalAlignment="Top" Width="500" IsEnabled="{Binding IsChecked, ElementName=DurationCheckBox}">
-                            <FlowDocument Focusable="True" LineHeight="1"/>
-                        </RichTextBox>
+                                HorizontalAlignment="Right" Margin="0,8,10,0" VerticalAlignment="Top" Width="45" Height="27" Click="DeleteSkillTarget_Click"/>
 
-                        <Image Source="{StaticResource Count_grey}"  HorizontalAlignment="Right" Height="30" Margin="0,235,180,0" VerticalAlignment="Top" Width="30"/>
-                        <CheckBox x:Name="CountCheckBox" Content="是否有次数限制" HorizontalAlignment="Right" Margin="0,241,67,0" VerticalAlignment="Top"/>
-                        <Label Content="仅允许使用                  次" HorizontalAlignment="Right" Margin="0,260,64,0" VerticalAlignment="Top"/>
-                        <TextBox x:Name="CountText" Style="{StaticResource DefaultTextBoxStyle}" HorizontalAlignment="Right" Height="23" Margin="0,261,85,0" IsEnabled="{Binding IsChecked, ElementName=CountCheckBox}" Text="0" VerticalAlignment="Top" Width="55"/>
+                        <Image Source="{StaticResource Count_grey}"  HorizontalAlignment="Right" Height="30" Margin="0,195,180,0" VerticalAlignment="Top" Width="30"/>
+                        <CheckBox x:Name="CountCheckBox" Content="是否有次数限制" HorizontalAlignment="Right" Margin="0,200,65,0" VerticalAlignment="Top"/>
+                        <Label Content="仅允许使用                  次" HorizontalAlignment="Right" Margin="0,220,65,0" VerticalAlignment="Top"/>
+                        <TextBox x:Name="CountText" Style="{StaticResource DefaultTextBoxStyle}" HorizontalAlignment="Right" Height="25" Margin="0,220,85,0" IsEnabled="{Binding IsChecked, ElementName=CountCheckBox}" Text="0" VerticalAlignment="Top" Width="55"/>
 
-                        <Image Source="{StaticResource Duration_grey}"  HorizontalAlignment="Right" Height="30" Margin="0,290,180,0" VerticalAlignment="Top" Width="30"/>
-                        <CheckBox x:Name="DurationCheckBox" Content="是否有持续效果" HorizontalAlignment="Right" Margin="0,296,67,0" VerticalAlignment="Top"/>
-                        <Label Content="持续                   回合" HorizontalAlignment="Right" Margin="0,316,85,0" VerticalAlignment="Top"/>
-                        <TextBox x:Name="DurationText" Style="{StaticResource DefaultTextBoxStyle}" HorizontalAlignment="Right" Height="23" Margin="0,317,120,0" IsEnabled="{Binding IsChecked, ElementName=DurationCheckBox}" Text="0" VerticalAlignment="Top" Width="55"/>
+                        <Image Source="{StaticResource Duration_grey}"  HorizontalAlignment="Right" Height="30" Margin="0,250,180,0" VerticalAlignment="Top" Width="30"/>
+                        <CheckBox x:Name="DurationCheckBox" Content="是否有持续效果" HorizontalAlignment="Right" Margin="0,255,65,0" VerticalAlignment="Top"/>
+                        <Label Content="持续                   回合" HorizontalAlignment="Right" Margin="0,275,85,0" VerticalAlignment="Top"/>
+                        <TextBox x:Name="DurationText" Style="{StaticResource DefaultTextBoxStyle}" HorizontalAlignment="Right" Height="25" Margin="0,275,120,0" IsEnabled="{Binding IsChecked, ElementName=DurationCheckBox}" Text="0" VerticalAlignment="Top" Width="55"/>
 
-                        <Image Source="{StaticResource CoolDown_grey}"  HorizontalAlignment="Right" Height="30" Margin="0,345,183,0" VerticalAlignment="Top" Width="27"/>
-                        <CheckBox x:Name="CoolDownCheckBox" Content="是否有冷却时间" HorizontalAlignment="Right" Margin="0,350,67,0" VerticalAlignment="Top"/>
-                        <Label Content="冷却                   回合" HorizontalAlignment="Right" Margin="0,370,85,0" VerticalAlignment="Top"/>
-                        <TextBox x:Name="CoolDownText" Style="{StaticResource DefaultTextBoxStyle}" HorizontalAlignment="Right" Height="23" Margin="0,371,120,0" IsEnabled="{Binding IsChecked, ElementName=CoolDownCheckBox}" Text="0" VerticalAlignment="Top" Width="55"/>
+                        <Image Source="{StaticResource CoolDown_grey}"  HorizontalAlignment="Right" Height="30" Margin="0,305,180,0" VerticalAlignment="Top" Width="27"/>
+                        <CheckBox x:Name="CoolDownCheckBox" Content="是否有冷却时间" HorizontalAlignment="Right" Margin="0,310,65,0" VerticalAlignment="Top"/>
+                        <Label Content="冷却                   回合" HorizontalAlignment="Right" Margin="0,330,85,0" VerticalAlignment="Top"/>
+                        <TextBox x:Name="CoolDownText" Style="{StaticResource DefaultTextBoxStyle}" HorizontalAlignment="Right" Height="25" Margin="0,330,120,0" IsEnabled="{Binding IsChecked, ElementName=CoolDownCheckBox}" Text="0" VerticalAlignment="Top" Width="55"/>
                     </Grid>
                 </GroupBox>
             </Grid>

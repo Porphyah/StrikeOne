@@ -142,7 +142,7 @@
                         SmallChange="0.01" LargeChange="0.1" TickFrequency="0.1" TickPlacement="BottomRight" Maximum="1" Value="0.5" ValueChanged="SetRadicalValue"/>
                 <TextBlock x:Name="RadicalText" HorizontalAlignment="Left" Margin="428,140,0,0" Text="100%" VerticalAlignment="Top"/>
                 <Label Content="拥有技能：" HorizontalAlignment="Left" Margin="10,169,0,0" VerticalAlignment="Top"/>
-                <ListBox x:Name="SkillListBox" HorizontalAlignment="Left" Margin="10,195,0,50" Width="450" Background="#88000000" SelectionChanged="SelectSkillPool">
+                <ListBox x:Name="SkillListBox" HorizontalAlignment="Left" Margin="10,195,0,50" Width="250" Background="#88000000" SelectionChanged="SelectSkillPool">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <WrapPanel VerticalAlignment="Center">
@@ -156,6 +156,16 @@
                 <Button x:Name="DeleteSkillButton" Content="-" Style="{StaticResource DefaultRedButtonStyle}" IsEnabled="False" HorizontalAlignment="Left" Margin="50,0,0,10" VerticalAlignment="Bottom" Width="35" Height="35" Click="DeleteSkill_Click"/>
                 <Button x:Name="EditSkillButton" Content="设置使用脚本" Style="{StaticResource DefaultBlueButtonStyle}" IsEnabled="False" HorizontalAlignment="Left" Margin="100,0,0,10" VerticalAlignment="Bottom" Width="100" Height="35" 
                         Click="EditSkill_Click" ToolTip="教会AI使用这项技能，包括使用条件和使用对象。"/>
+                <GroupBox Header="AI攻击倾向" HorizontalAlignment="Left" Margin="265,169,0,0" VerticalAlignment="Top" Width="213" Height="275">
+                    <StackPanel x:Name="InclinationPanel">
+                        <RadioButton Content="随机" ToolTip="该AI会随机抽取一个敌人进行进攻。" Checked="RandomChecked"/>
+                        <RadioButton Content="嗜血的" ToolTip="该AI会选取血量最低的敌人进行进攻。" Checked="BloodyChecked"/>
+                        <RadioButton Content="无情的" ToolTip="该AI会选取运气最差的敌人进行进攻。" Checked="RelentlessChecked"/>
+                        <RadioButton Content="嫉妒的" ToolTip="该AI会选取运气最好的敌人进行进攻。" Checked="JealousChecked"/>
+                        <RadioButton Content="复仇的" ToolTip="该AI会选取先前对自己伤害最大的敌人进行进攻。" Checked="VindictiveChecked"/>
+                        <RadioButton Content="练手的" ToolTip="该AI会选取先前伤害最多的敌人进行进攻。" Checked="TargetHardChecked"/>
+                    </StackPanel>
+                </GroupBox>
 
 
             </Grid>

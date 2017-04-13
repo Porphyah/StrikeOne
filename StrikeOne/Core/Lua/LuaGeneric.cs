@@ -9,16 +9,17 @@ namespace StrikeOne.Core.Lua
 {
     public class LuaGeneric
     {
-        public List<object> List() { return new List<object>(); }
+        public LuaList<object> List() { return new LuaList<object>(); }
         public HashSet<object> HashSet() { return new HashSet<object>(); }
         public Stack<object> Stack() { return new Stack<object>(); }
         public Queue<object> Queue() { return new Queue<object>(); }
-        public Dictionary<object, object> Dictionary() { return new Dictionary<object, object>(); }
+        public LuaDictionary<object, object> Dictionary() { return new LuaDictionary<object, object>(); }
 
         public DateTime DateTime(int Year, int Month, int Day) { return new DateTime(Year, Month, Day); }
         public TimeSpan TimeSpan { get; } = new TimeSpan();
-        public Random Random { get; } = new Random
-            ((int)(System.DateTime.Now.Ticks & 0xffffffffL) | (int)(System.DateTime.Now.Ticks >> 32));
+        public Random Random() { return new Random
+            ((int)(System.DateTime.Now.Ticks & 0xffffffffL) | (int)(System.DateTime.Now.Ticks >> 32)); }
+        public Guid Guid() { return System.Guid.NewGuid(); }
 
         public void ForEach(IEnumerable List, NLua.LuaFunction Function)
         {
@@ -35,10 +36,7 @@ namespace StrikeOne.Core.Lua
         }
     }
 
-    public class Dictionary<TKey, TValue> : System.Collections.Generic.Dictionary<TKey, TValue>
-    {
-        public TValue Get(TKey Key) { return this[Key]; }
-    }
+    
 
     public class TimeSpan
     {

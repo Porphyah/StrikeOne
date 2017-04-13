@@ -1,0 +1,38 @@
+﻿<UserControl x:Class="StrikeOne.Components.LuckGraph"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:StrikeOne.Components"
+             mc:Ignorable="d" 
+             d:DesignHeight="155" d:DesignWidth="365">
+    <Grid>
+        <TextBlock HorizontalAlignment="Left" Text="100%" VerticalAlignment="Top" Margin="0,0,0,0"/>
+        <TextBlock HorizontalAlignment="Left" Text="75%" VerticalAlignment="Top" Margin="5,35,0,0"/>
+        <TextBlock HorizontalAlignment="Left" Text="50%" VerticalAlignment="Top" Margin="5,70,0,0"/>
+        <TextBlock HorizontalAlignment="Left" Text="25%" VerticalAlignment="Top" Margin="5,105,0,0"/>
+        <TextBlock HorizontalAlignment="Left" Text="0%" VerticalAlignment="Top" Margin="12,140,0,0"/>
+        <Canvas Margin="35,5,5,5" MouseMove="OnMouseMove" MouseEnter="OnMouseEnter" MouseLeave="OnMouseLeave">
+            <Path Data="M0,0 L0,145 L325,145" StrokeThickness="2" Stroke="#88000000"/>
+            <Line Canvas.Top="35" X1="0" X2="325" Stroke="#88000000"/>
+            <Line Canvas.Top="70" X1="0" X2="325" Stroke="#88000000"/>
+            <Line Canvas.Top="105" X1="0" X2="325" Stroke="#88000000"/>
+            <Path x:Name="PathLine" Height="145" Stretch="Fill" Width="325" StrokeThickness="2.5">
+                <Path.Stroke>
+                    <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                        <GradientStop x:Name="StrokeColor" Offset="0"/>
+                        <GradientStop Color="Red" Offset="1"/>
+                    </LinearGradientBrush>
+                </Path.Stroke>
+                <Path.Fill>
+                    <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1" Opacity="0.5">
+                        <GradientStop x:Name="FillColor" Offset="0"/>
+                        <GradientStop Color="Red" Offset="1"/>
+                    </LinearGradientBrush>
+                </Path.Fill>
+            </Path>
+            <Line x:Name="DisplayLine" Y1="0" Y2="145" Opacity="0.5"/>
+            <Ellipse x:Name="DisplayCircle" Height="10" Width="10" Visibility="Hidden"/>
+        </Canvas>
+    </Grid>
+</UserControl>

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,6 +34,22 @@ namespace StrikeOne.Components
             ButtonImage.Source = Resources[Image] as BitmapImage;
 
             ActionDescription.Init(Name, Resources[Image] as BitmapImage, Description, Probability);
+        }
+        public void Init(string Name, System.Drawing.Image Image, string Description, int? Probability = null)
+        {
+            ButtonName.Text = Name;
+
+            using (MemoryStream Stream = new MemoryStream())
+            {
+                Image.Save(Stream, ImageFormat.Png);
+                BitmapImage Temp = new BitmapImage();
+                Temp.BeginInit();
+                Temp.CacheOption = BitmapCacheOption.OnLoad;
+                Temp.StreamSource = Stream;
+                Temp.EndInit();
+                ButtonImage.Source = Temp;
+                ActionDescription.Init(Name, Temp, Description, Probability);
+            }
         }
 
 

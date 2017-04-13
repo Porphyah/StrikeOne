@@ -82,7 +82,7 @@ namespace StrikeOne.Components
             var DiceRolls = App.CurrentUser.Records
                 .SelectMany(O => O.Participants[App.CurrentUser.Id].Rolls).ToList();
             double LuckRatio = App.CurrentUser.LuckRatio;
-            LuckRatioText.Text = LuckRatio.ToString("0.0") + "%";
+            LuckRatioText.Text = (LuckRatio * 100).ToString("0.0") + "%";
             LuckRatioProgress.Value = LuckRatio;
             if (DiceRolls.Count == 0)
                 LuckRatioText.Foreground = Brushes.Gray;

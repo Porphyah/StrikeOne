@@ -42,7 +42,7 @@
                     </Controls:MetroProgressBar.RenderTransform>
                 </Controls:MetroProgressBar>
                 <TextBlock Text="状态：" FontSize="11" HorizontalAlignment="Left" Height="14" Margin="5,0,0,8" VerticalAlignment="Bottom"/>
-                <WrapPanel Height="20" Margin="40,0,45,5" VerticalAlignment="Bottom"/>
+                <WrapPanel x:Name="StatusPanel"  Height="20" Margin="40,0,45,5" VerticalAlignment="Bottom"/>
             </Grid>
         </Border>
         <Border x:Name="ActionBorder" Margin="0,0,200,0" Background="Gray" CornerRadius="50,50,50,50">

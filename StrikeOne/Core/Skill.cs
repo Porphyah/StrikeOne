@@ -19,8 +19,8 @@ namespace StrikeOne.Core
         public Image Image { set; get; }
         public string Description { set; get; }
         public string LaunchScript { set; get; }
-        public string AffectScript { set; get; }
-        public SkillOccasion Occasion { set; get; } = SkillOccasion.BeforeAttacking;
+        public bool IsActive { set; get; } = true;
+        public bool? IsDefendable { set; get; } = false;
         public List<SkillTarget> TargetSelections { set; get; } = new List<SkillTarget>();
         public int Probability { set; get; } = 2;
         public int TotalCount { set; get; } = -1;
@@ -28,12 +28,13 @@ namespace StrikeOne.Core
         public int CoolDown { set; get; } = 0;
         
         public Player Owner { set; get; }
+        private NLua.LuaFunction LaunchFunc { set; get; }
         public int RemainedCount { set; get; }
-        public int ContinuedDuration { set; get; } = -1;
+        public List<Player> TargetCollection { set; get; } = new List<Player>();
+        public KeyValuePair<SkillTarget, int>? CurrentTarget { set; get; } = null;
+        public int DurationStartRound { set; get; } = -1;
         public int CoolDownStartRound { set; get; } = -1;
         public object Tag { set; get; }
-        public event EventHandler<SkillLaunchEventArgs> SkillLaunch;
-        public event EventHandler<SkillLaunchEventArgs> SkillAffect; 
 
         public Skill() { }
 
@@ -55,51 +56,53 @@ namespace StrikeOne.Core
         {
             Owner = Player;
             RemainedCount = TotalCount;
-            ContinuedDuration = -1;
+            DurationStartRound = -1;
             CoolDownStartRound = -1;
             Tag = null;
 
-            LuaMain.LuaState["CurrentSkill"] = this;
-            LuaMain.LuaState.ExecuteString("CurrentSkill.SkillLaunch:Add(function(Skill, E)\n" +
-                LaunchScript + "\nend)");
-            LuaMain.LuaState.ExecuteString("CurrentSkill.SkillAffect:Add(function(Skill, E)\n" +
-                AffectScript + "\nend)");
-            LuaMain.LuaState["CurrentSkill"] = null;
+            LaunchFunc = (NLua.LuaFunction)LuaMain.LuaState
+                .ExecuteString("return function(Skill, E)\n" +
+                               LaunchScript + "\nend")[0];
+
+            //LuaMain.LuaState["CurrentSkill"] = this;
+            //LuaMain.LuaState.ExecuteString("CurrentSkill.SkillLaunch:Add(function(Skill, E)\n" +
+            //    LaunchScript + "\nend)");
+            //LuaMain.LuaState.ExecuteString("CurrentSkill.SkillAffect:Add(function(Skill, E)\n" +
+            //    AffectScript + "\nend)");
+            //LuaMain.LuaState["CurrentSkill"] = null;
         }
 
         public bool Enable =>
-            !IsCoolingDown() && RemainedCount != 0 && !IsAffecting();
-        public void Launch(List<Player> TargetPlayers)
+            IsRemainingCount() && !IsAffecting() && !IsCoolingDown() ;
+        public void NextTarget()
         {
-            SkillLaunch?.Invoke(this, new SkillLaunchEventArgs()
+            if (CurrentTarget == null)
+                CurrentTarget = new KeyValuePair<SkillTarget, int>(TargetSelections[0], 0);
+            else if (CurrentTarget.Value.Value == TargetSelections.Count - 1)
+                CurrentTarget = null;
+            else
+                CurrentTarget = new KeyValuePair<SkillTarget, int>
+                    (TargetSelections[CurrentTarget.Value.Value + 1], CurrentTarget.Value.Value + 1);
+        }
+        public void Launch()
+        {
+            LaunchFunc.Call(this, new SkillLaunchEventArgs()
             {
                 Skill = this,
                 Launcher = Owner,
-                Targets = TargetPlayers
+                Targets = TargetCollection
             });
+            if (TotalCount != -1) RemainedCount--;
             if (Duration == 0)
-            {
-                if (TotalCount != -1) RemainedCount--;
                 CoolDownStartRound = Owner.BattleData.Battlefield.Round;
-            }
             else
-                ContinuedDuration = 0;
+                DurationStartRound = Owner.BattleData.Battlefield.Round;
         }
-        public void Affect()
+        private void EndAffect()
         {
-            if (Duration == 0) return;
-            SkillAffect?.Invoke(this, new SkillLaunchEventArgs()
-            {
-                Skill = this,
-                Launcher = Owner
-            });
-            ContinuedDuration++;
-            if (ContinuedDuration >= Duration)
-            {
-                if (TotalCount != -1) RemainedCount--;
-                ContinuedDuration = 0;
+            DurationStartRound = -1;
+            if (CoolDown != 0)
                 CoolDownStartRound = Owner.BattleData.Battlefield.Round;
-            }
         }
 
         public bool IsRemainingCount()
@@ -109,12 +112,17 @@ namespace StrikeOne.Core
         }
         public bool IsAffecting()
         {
-            if (Duration == 0) return false;
-            return ContinuedDuration != -1;
+            if (DurationStartRound == -1 || Duration == 0) return false;
+            if (Owner.BattleData.Battlefield.Round > DurationStartRound + Duration)
+            {
+                EndAffect();
+                return false;
+            }
+            return true;
         }
         public bool IsCoolingDown()
         {
-            if (CoolDownStartRound == -1) return false;
+            if (CoolDownStartRound == -1 || CoolDown == 0) return false;
             if (Owner.BattleData.Battlefield.Round > CoolDownStartRound + CoolDown)
             {
                 CoolDownStartRound = -1;
@@ -125,13 +133,18 @@ namespace StrikeOne.Core
 
         private Skill(SerializationInfo info, StreamingContext context)
         {
+            //foreach (var InfoPair in info)
+            //{
+            //    GetType().GetProperty(InfoPair.Name)
+            //        .SetValue(this, InfoPair.Value);
+            //}
             Id = info.GetValue<Guid>("Id");
             Name = info.GetString("Name");
             Image = info.GetValue<Image>("Image");
             Description = info.GetString("Description");
             LaunchScript = info.GetString("LaunchScript");
-            AffectScript = info.GetString("AffectScript");
-            Occasion = info.GetValue<SkillOccasion>("Occasion");
+            IsActive = info.GetBoolean("IsActive");
+            IsDefendable = info.GetBoolean("IsDefendable");
             TargetSelections = info.GetValue<List<SkillTarget>>("TargetSelections");
             Probability = info.GetInt32("Probability");
             TotalCount = info.GetInt32("TotalCount");
@@ -145,10 +158,11 @@ namespace StrikeOne.Core
             {
                 Id = Id,
                 Name = Name,
+                Image = Image,
                 Description = Description,
                 LaunchScript = LaunchScript,
-                AffectScript = AffectScript,
-                Occasion = Occasion,
+                IsActive = IsActive,
+                IsDefendable = IsDefendable,
                 Probability = Probability,
                 TotalCount = TotalCount,
                 Duration = Duration,
@@ -171,8 +185,8 @@ namespace StrikeOne.Core
                 info.AddValue("Image", Encoding.UTF8.GetBytes("NULL"));
             info.AddValue("Description", Description);
             info.AddValue("LaunchScript", LaunchScript);
-            info.AddValue("AffectScript", AffectScript);
-            info.AddValue("Occasion", Occasion);
+            info.AddValue("IsActive", IsActive);
+            info.AddValue("IsDefendable", IsDefendable);
             info.AddValue("TargetSelections", TargetSelections);
             info.AddValue("Probability", Probability);
             info.AddValue("TotalCount", TotalCount);
@@ -181,17 +195,6 @@ namespace StrikeOne.Core
         }
     }
 
-    [Serializable]
-    public enum SkillOccasion
-    {
-        UnderAttack,
-        Defending,
-        CounterAttacking,
-        Defended,
-        CounterAttacked,
-        BeforeAttacking,
-        AfterAttacking
-    }
     [Serializable]
     public enum SkillTarget
     {

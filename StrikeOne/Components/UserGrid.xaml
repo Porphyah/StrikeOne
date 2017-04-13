@@ -38,12 +38,12 @@
                 <TextBlock x:Name="VictoryRatioText" FontSize="15" Foreground="LimeGreen" Text="%100"/>
                 <TextBlock x:Name="VictoryCountText" FontSize="15" Text=" - xxx/xxx"/>
             </WrapPanel>
-            <Controls:MetroProgressBar x:Name="VictoryRatioProgress" Background="LightGray" Foreground="LimeGreen" Value="100" Margin="60,267.5,10,0" VerticalAlignment="Top" Height="12"/>
+            <Controls:MetroProgressBar x:Name="VictoryRatioProgress" Background="LightGray" Foreground="LimeGreen" Value="1" Margin="60,267.5,10,0" VerticalAlignment="Top" Height="12"  Maximum="1"/>
 
             <Image Source="{StaticResource Luck}" HorizontalAlignment="Left" Height="35" Margin="10,290,0,0" VerticalAlignment="Top" Width="35"/>
             <TextBlock FontSize="15" HorizontalAlignment="Left" Margin="60,290,0,0" Text="血统指数" VerticalAlignment="Top"/>
             <TextBlock x:Name="LuckRatioText" HorizontalAlignment="Right" Margin="0,290,10,0" VerticalAlignment="Top" FontSize="15" Foreground="LimeGreen" Text="100%"/>
-            <Controls:MetroProgressBar x:Name="LuckRatioProgress" Background="LightGray" Foreground="LimeGreen" Value="100" Margin="60,312.5,10,0" VerticalAlignment="Top" Height="12"/>
+            <Controls:MetroProgressBar x:Name="LuckRatioProgress" Background="LightGray" Foreground="LimeGreen" Value="1" Margin="60,312.5,10,0" VerticalAlignment="Top" Height="12" Maximum="1"/>
         </Grid>
     </Grid>
 </UserControl>

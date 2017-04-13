@@ -30,7 +30,10 @@ namespace StrikeOne
     {
         private static readonly Dictionary<BattleType, string> BattleTypeDictionary = new Dictionary<BattleType, string>()
         {
-            { BattleType.OneVsOne, "One vs One" }
+            { BattleType.OneVsOne, "One vs One" },
+            { BattleType.TriangleMess, "Triangle Mess" },
+            { BattleType.SquareMess, "Square Mess" },
+            { BattleType.TwinningFight, "Twinning Fight" }
         };
         public PrepareStrikePage()
         {
@@ -47,11 +50,11 @@ namespace StrikeOne
             for (int i = 0; i < Room.Groups.Count; i++)
             {
                 var Panel = new WrapPanel()
-                { Height = 130, Width = Room.Groups[i].Capacity * 100 };
+                { Height = 130, Width = Room.Groups[i].Capacity * 150 };
                 foreach (var Participant in Room.Groups[i].Participants)
                 {
                     var DisplayItem = new ParticipantDisplayLarge()
-                    { Height = 130, Width = 100 };
+                    { Height = 130, Width = 150 };
                     if (Participant.Avator != null)
                         using (MemoryStream Stream = new MemoryStream())
                         {
@@ -215,6 +218,23 @@ namespace StrikeOne
                     {
                         case 0: SetItemPosition(Item, 90); break;
                         case 1: SetItemPosition(Item, 270); break;
+                    }
+                    break;
+                case 3:
+                    switch (GroupIndex)
+                    {
+                        case 0: SetItemPosition(Item, 60); break;
+                        case 1: SetItemPosition(Item, 180); break;
+                        case 2: SetItemPosition(Item, 300); break;
+                    }
+                    break;
+                case 4:
+                    switch (GroupIndex)
+                    {
+                        case 0: SetItemPosition(Item, 60); break;
+                        case 1: SetItemPosition(Item, 120); break;
+                        case 2: SetItemPosition(Item, 240); break;
+                        case 3: SetItemPosition(Item, 300); break;
                     }
                     break;
             }

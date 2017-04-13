@@ -5,9 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:StrikeOne.Components"
              mc:Ignorable="d" 
-             d:DesignHeight="130" d:DesignWidth="100">
+             d:DesignHeight="130" d:DesignWidth="150">
     <Grid>
-        <Ellipse Height="80" VerticalAlignment="Top" Margin="10,10,10,0">
+        <Ellipse Height="80" VerticalAlignment="Top" Margin="0,10,0,0" HorizontalAlignment="Center" Width="80">
             <Ellipse.Fill>
                 <ImageBrush x:Name="AvatorImage" ImageSource="{DynamicResource Icon_empty}"/>
             </Ellipse.Fill>

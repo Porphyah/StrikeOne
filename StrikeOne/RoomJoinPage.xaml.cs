@@ -33,7 +33,10 @@ namespace StrikeOne
     {
         private static readonly Dictionary<BattleType, string> BattleTypeDictionary = new Dictionary<BattleType, string>()
         {
-            { BattleType.OneVsOne, "One vs One" }
+            { BattleType.OneVsOne, "One vs One" },
+            { BattleType.TriangleMess, "Triangle Mess" },
+            { BattleType.SquareMess, "Square Mess" },
+            { BattleType.TwinningFight, "Twinning Fight" }
         };
 
         private Room CurrentRoom { set; get; }

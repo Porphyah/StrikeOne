@@ -26,6 +26,8 @@ namespace StrikeOne
     public partial class AiWindow : MetroWindow
     {
         public bool Canceled { private set; get; } = true;
+        public bool SelfChoosable { set; private get; } = true;
+        public List<AI> ChosenAi { set; private get; } = new List<AI>();  
         public bool IsSelectingAi { private set; get; } = false;
         public AI SelectedAi { private set; get; }
 
@@ -107,6 +109,7 @@ namespace StrikeOne
                         AiStack.Children.Clear();
                         foreach (var Ai in App.AiList)
                         {
+                            if (ChosenAi.Contains(Ai)) continue;
                             var AiItem = new AiItem()
                             { Height = 350, Width = 250 };
                             AiItem.Init(Ai);
@@ -154,6 +157,13 @@ namespace StrikeOne
                 }
                 else
                 {
+                    if (!SelfChoosable)
+                    {
+                        MessageBox.Show("您已经将自己加入某个角色槽了。若要重新选择角色槽，请先从原来的角色槽退出。",
+                            "选择加入者", MessageBoxButton.OK, MessageBoxImage.Information);
+                        return;
+                    }
+
                     IsSelectingAi = false;
                     Canceled = false;
                     this.Close();

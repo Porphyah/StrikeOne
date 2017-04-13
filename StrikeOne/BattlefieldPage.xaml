@@ -43,6 +43,8 @@
         <Border x:Name="CenterBorder" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,80,0,0" Height="0" Background="#88000000">
             <Grid>
                 <Grid x:Name="CenterGrid" Visibility="Hidden"/>
+                <Components:SkillConfirmControl x:Name="SkillConfirmControl" Visibility="Hidden"
+                            VerticalAlignment="Stretch" HorizontalAlignment="Center" Width="450" Height="120"/>
                 <TextBlock x:Name="CenterText" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White"
                            Text="This is the Center Text" FontSize="45" FontWeight="Light" Visibility="Hidden"/>
             </Grid>

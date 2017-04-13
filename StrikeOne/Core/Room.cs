@@ -52,7 +52,7 @@ namespace StrikeOne.Core
         {
             return Members.Any(O => O.Id == UserId);
         }
-        public bool HasParticipate(Guid UserId)
+        public bool HasParticipated(Guid UserId)
         {
             return Groups.SelectMany(O => O.Participants).Any(O =>
             {
@@ -99,6 +99,9 @@ namespace StrikeOne.Core
     [Serializable]
     public enum BattleType
     {
-        OneVsOne
+        OneVsOne,
+        TriangleMess,
+        SquareMess,
+        TwinningFight,
     }
 }

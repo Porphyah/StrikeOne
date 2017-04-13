@@ -8,7 +8,7 @@
         xmlns:Components="clr-namespace:StrikeOne.Components"
         mc:Ignorable="d"
         Title="选择加入者..." Height="428" Width="756" ResizeMode="NoResize" ShowInTaskbar="False" WindowStyle="ToolWindow"
-        GlowBrush="DodgerBlue" BorderBrush="DodgerBlue" WindowStartupLocation="CenterScreen">
+        GlowBrush="DodgerBlue" BorderBrush="DodgerBlue" WindowStartupLocation="CenterScreen" Topmost="True">
     <Grid>
         <Grid x:Name="FirstGrid" Visibility="Visible">
             <Grid.ColumnDefinitions>

@@ -160,7 +160,8 @@ namespace StrikeOne
                 SkillImage.Source = null;
 
             SkillProbability.SetValue(Skill.Probability);
-            SkillOccasionBox.SelectedItem = SkillOccasionConverter.ConverterDictionary[Skill.Occasion];
+            ActiveCheckBox.IsChecked = Skill.IsActive;
+            DefendableCheckBox.IsChecked = Skill.IsDefendable;
             SkillTargetsListBox.ItemsSource = Skill.TargetSelections
                 .Select(O => SkillTargetConverter.ConverterDictionary[O]);
             LaunchScriptBox.Document.Blocks.Clear();
@@ -172,9 +173,6 @@ namespace StrikeOne
             DurationText.Text = Skill.Duration.ToString();
             CoolDownCheckBox.IsChecked = Skill.CoolDown != 0;
             CoolDownText.Text = Skill.CoolDown.ToString();
-            AffectScriptBox.Document.Blocks.Clear();
-            AffectScriptBox.Document.Blocks.Add(new Paragraph(
-                new Run(Skill.AffectScript)));
 
             DeleteButton.Visibility = Visibility.Visible;
             if (ContentViewer.Visibility == Visibility.Hidden)
@@ -222,18 +220,14 @@ namespace StrikeOne
             CurrentSkill.Description = SkillDescription.Text;
             CurrentSkill.Image = SkillImg;
             CurrentSkill.Probability = SkillProbability.Numerator;
-            CurrentSkill.Occasion = SkillOccasionConverter.ConverterDictionary
-                .ToDictionary(P => P.Value, Q => Q.Key)
-                [(string) SkillOccasionBox.SelectedItem];
+            CurrentSkill.IsActive = ActiveCheckBox.IsChecked.Value;
+            CurrentSkill.IsDefendable = DefendableCheckBox.IsChecked;
             CurrentSkill.TargetSelections = SkillTargetsListBox.Items.Cast<string>()
                 .Select(O => SkillTargetConverter.ConverterDictionary
                 .ToDictionary(P => P.Value, Q => Q.Key)[O]).ToList();
             CurrentSkill.LaunchScript = LaunchScriptBox.Document.Blocks.OfType<Paragraph>()
-                .SelectMany(O => O.Inlines.OfType<Run>().Select(P => P.Text))
-                .Aggregate((A, B) => A + "\n" + B);
-            CurrentSkill.AffectScript = AffectScriptBox.Document.Blocks.OfType<Paragraph>()
-                .SelectMany(O => O.Inlines.OfType<Run>().Select(P => P.Text))
-                .Aggregate((A, B) => A + "\n" + B);
+                .Select(O => O.Inlines.OfType<Run>().Select(P => P.Text).
+                Aggregate((A, B) => A + B)).Aggregate((A, B) => A + "\n" + B);
 
             int Count;
             if (CountCheckBox.IsChecked.Value && int.TryParse(CountText.Text, out Count))
@@ -316,32 +310,6 @@ namespace StrikeOne
         }
     }
 
-    public class SkillOccasionConverter : IValueConverter
-    {
-        public static readonly Dictionary<SkillOccasion, string> ConverterDictionary = new Dictionary<SkillOccasion, string>()
-        {
-            { SkillOccasion.UnderAttack, "遭到攻击时" },
-            { SkillOccasion.Defending, "选择防御时" },
-            { SkillOccasion.Defended, "防御结束时" },
-            { SkillOccasion.CounterAttacking, "选择反击时" },
-            { SkillOccasion.CounterAttacked, "反击结束时" },
-            { SkillOccasion.BeforeAttacking, "攻击前" },
-            { SkillOccasion.AfterAttacking, "攻击后" }
-        };
-
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            var SourceList = value as IEnumerable<SkillOccasion>;
-            return SourceList?.Select(Enum => ConverterDictionary[Enum]).ToList();
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            var SourceList = value as IEnumerable<string>;
-            return SourceList?.Select(Enum => ConverterDictionary
-                .ToDictionary(O => O.Value, P => P.Key)[Enum]).ToList();
-        }
-    }
     public class SkillTargetConverter : IValueConverter
     {
         public static readonly Dictionary<SkillTarget, string> ConverterDictionary = new Dictionary<SkillTarget, string>()

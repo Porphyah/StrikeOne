@@ -1,0 +1,166 @@
+﻿<UserControl x:Class="StrikeOne.StatisticsPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:StrikeOne"
+             xmlns:Components="clr-namespace:StrikeOne.Components"
+             mc:Ignorable="d" 
+             d:DesignHeight="640" d:DesignWidth="1080">
+    <UserControl.Resources>
+        <ResourceDictionary Source="Assets/Assets.xaml"/>
+    </UserControl.Resources>
+    <Grid Height="640" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="1080">
+        <Rectangle Height="100" Fill="#88000000" VerticalAlignment="Top"/>
+        <Grid x:Name="TitleGrid" Height="100" VerticalAlignment="Top">
+            <Image Source="Assets/Statistics.png" HorizontalAlignment="Left" Height="80" Margin="10,10,0,0" VerticalAlignment="Top" Width="80"/>
+            <Label Content="对战统计" Foreground="White" FontSize="35" HorizontalAlignment="Left" Margin="100,10,0,0" VerticalAlignment="Top"/>
+            <Label Content="Strike Statistics" Foreground="White" FontSize="20" HorizontalAlignment="Left" Margin="100,54,0,0" VerticalAlignment="Top"/>
+        </Grid>
+        <Grid x:Name="ContentGrid" Margin="0,100,0,0">
+            <Grid x:Name="WinnersGrid" Visibility="Hidden">
+                <TextBlock HorizontalAlignment="Center" Margin="0,80,0,0" Text="The Winners are..." VerticalAlignment="Top"
+                           FontSize="35" FontWeight="Light"/>
+                <ScrollViewer Height="160" Margin="0,200,0,0" VerticalAlignment="Top" 
+                              HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Hidden">
+                    <WrapPanel x:Name="WinnersDisplayPanel" HorizontalAlignment="Center"/>
+                </ScrollViewer>
+            </Grid>
+            <Grid x:Name="WinnersStatGrid" Visibility="Hidden">
+                <TextBlock HorizontalAlignment="Left" Margin="30,30,0,0" VerticalAlignment="Top"
+                           Text="统计明细" FontSize="30" FontWeight="Light"/>
+                <ListBox x:Name="PlayersListBox" HorizontalAlignment="Left" Height="360" Margin="30,85,0,0" VerticalAlignment="Top" Width="250" SelectionChanged="SelectPlayer">
+                    <ListBox.Resources>
+                        <Components:BitmapConverter x:Key="BitmapConverter"/>
+                    </ListBox.Resources>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid VerticalAlignment="Center">
+                                <Ellipse Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="30" Height="30">
+                                    <Ellipse.Effect>
+                                        <DropShadowEffect ShadowDepth="0" Color="{Binding BattleData.Group.Color}"/>
+                                    </Ellipse.Effect>
+                                    <Ellipse.Fill>
+                                        <ImageBrush x:Name="PlayerImg" ImageSource="{Binding Avator, Converter={StaticResource BitmapConverter}, ConverterParameter=Png}"/>
+                                    </Ellipse.Fill>
+                                </Ellipse>
+                                <TextBlock Margin="35,0,0,0" FontWeight="Light" FontSize="15" VerticalAlignment="Center" x:Name="PlayerName" Text="{Binding Name}"/>
+                                <TextBlock Margin="0,0,5,0" FontWeight="Light" HorizontalAlignment="Right" VerticalAlignment="Center" x:Name="GroupName" Text="{Binding BattleData.Group.Name}">
+                                    <TextBlock.Foreground>
+                                        <SolidColorBrush Color="{Binding BattleData.Group.Color}"/>
+                                    </TextBlock.Foreground>
+                                </TextBlock>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+                <Ellipse HorizontalAlignment="Left" Height="100" Margin="310,30,0,0" VerticalAlignment="Top" Width="100">
+                    <Ellipse.Fill>
+                        <ImageBrush x:Name="AvatorImage" ImageSource="{DynamicResource Icon_empty}"/>
+                    </Ellipse.Fill>
+                </Ellipse>
+                <TextBlock x:Name="PlayerName" HorizontalAlignment="Left" Margin="415,30,0,0" Text="Player Name" VerticalAlignment="Top"
+                           FontSize="25" FontWeight="Light"/>
+                <TextBlock x:Name="GroupName" HorizontalAlignment="Left" Margin="415,62,0,0" Text="Group Name" VerticalAlignment="Top"
+                           FontSize="15" FontWeight="Light" Foreground="DodgerBlue"/>
+                <TextBlock x:Name="PlayerDescription" HorizontalAlignment="Left" Margin="415,85,0,0" Foreground="Gray"
+                           TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Width="365" Height="45"/>
+                <ScrollViewer HorizontalAlignment="Right" Height="100" Margin="0,30,30,0" VerticalAlignment="Top" Width="250" 
+                              VerticalScrollBarVisibility="Hidden">
+                    <StackPanel x:Name="PlayerMarkPanel" VerticalAlignment="Center"/>
+                </ScrollViewer>
+                <Grid Height="40" Margin="310,145,30,0" VerticalAlignment="Top">
+                    <Image Source="Assets/Attack_grey.png" HorizontalAlignment="Left" Width="40"/>
+                    <TextBlock x:Name="AttackRatioText" HorizontalAlignment="Left" Margin="45,0,0,0" Text="0/0 (0%)" VerticalAlignment="Center"/>
+                    <Image Source="Assets/Defend_grey.png" HorizontalAlignment="Left" Margin="125,0,0,0"  Width="40"/>
+                    <TextBlock x:Name="DefendRatioText" HorizontalAlignment="Left" Margin="170,0,0,0" Text="0/0 (0%)" VerticalAlignment="Center"/>
+                    <Image Source="Assets/Counter_grey.png" HorizontalAlignment="Left" Margin="250,0,0,0"  Width="40"/>
+                    <TextBlock x:Name="CounterRatioText" HorizontalAlignment="Left" Margin="295,0,0,0" Text="0/0 (0%)" VerticalAlignment="Center"/>
+                    <Image Source="Assets/Skill_grey.png" HorizontalAlignment="Left" Margin="375,0,0,0"  Width="40"/>
+                    <TextBlock x:Name="SkillRatioText" HorizontalAlignment="Left" Margin="420,0,0,0" Text="0/0 (0%)" VerticalAlignment="Center"/>
+
+                    <Image Source="Assets/Luck.png" HorizontalAlignment="Left" Margin="655,0,0,0"  Width="35"/>
+                    <TextBlock x:Name="LuckRatioText" Margin="690,12,0,12" Text="100.0%" VerticalAlignment="Center" HorizontalAlignment="Left" Width="45"/>
+                </Grid>
+                <Path HorizontalAlignment="Left" Height="75" Margin="295,200,0,0" VerticalAlignment="Top" Width="375" Fill="White">
+                    <Path.Effect>
+                        <DropShadowEffect x:Name="VictoryBackground" Color="DodgerBlue" ShadowDepth="0" BlurRadius="8"/>
+                    </Path.Effect>
+                    <Path.Data>
+                        <PathGeometry>
+                            <PathFigure StartPoint="0,0" IsClosed="True">
+                                <LineSegment Point="375,0"/>
+                                <LineSegment Point="375,50"/>
+                                <LineSegment Point="125,50"/>
+                                <ArcSegment Point="100,75" Size="25,25" SweepDirection="Clockwise"/>
+                                <LineSegment Point="0,75"/>
+                            </PathFigure>
+                        </PathGeometry>
+                    </Path.Data>
+                </Path>
+                <Components:MarkerProgressBar x:Name="VictoryMarkerProgressBar" HorizontalAlignment="Left" Margin="310,210,0,0" VerticalAlignment="Top" Width="360" Height="35"/>
+                <TextBlock x:Name="VictoryText" HorizontalAlignment="Left" Margin="330,254,0,0" VerticalAlignment="Top"
+                           Text="对战获胜率" Foreground="DodgerBlue" FontWeight="Light" FontSize="13.5"/>
+                <Image Source="{StaticResource Victories}" HorizontalAlignment="Left" Height="25" Margin="300,250,0,0" VerticalAlignment="Top" Width="25"/>
+
+                <Path HorizontalAlignment="Left" Height="75" Margin="675,200,0,0" VerticalAlignment="Top" Width="375" Fill="White">
+                    <Path.Effect>
+                        <DropShadowEffect x:Name="LuckBackground" Color="DodgerBlue" ShadowDepth="0" BlurRadius="8"/>
+                    </Path.Effect>
+                    <Path.Data>
+                        <PathGeometry>
+                            <PathFigure StartPoint="0,0" IsClosed="True">
+                                <LineSegment Point="375,0"/>
+                                <LineSegment Point="375,50"/>
+                                <LineSegment Point="125,50"/>
+                                <ArcSegment Point="100,75" Size="25,25" SweepDirection="Clockwise"/>
+                                <LineSegment Point="0,75"/>
+                            </PathFigure>
+                        </PathGeometry>
+                    </Path.Data>
+                </Path>
+                <Components:MarkerProgressBar x:Name="LuckMarkerProgressBar" HorizontalAlignment="Left" Margin="690,210,0,0" VerticalAlignment="Top" Width="360" Height="35"/>
+                <TextBlock x:Name="LuckText" HorizontalAlignment="Left" Margin="710,254,0,0" VerticalAlignment="Top"
+                           Text="血统指数" Foreground="DodgerBlue" FontWeight="Light" FontSize="13.5"/>
+                <Image Source="{StaticResource Luck}" HorizontalAlignment="Left" Height="25" Margin="680,250,0,0" VerticalAlignment="Top" Width="25"/>
+
+                <Path Margin="295,255,0,0" HorizontalAlignment="Left" Height="190" VerticalAlignment="Top" Width="375" Fill="White">
+                    <Path.Effect>
+                        <DropShadowEffect x:Name="VictoryToPlayersBackground" Color="DodgerBlue" ShadowDepth="0" BlurRadius="8"/>
+                    </Path.Effect>
+                    <Path.Data>
+                        <PathGeometry>
+                            <PathFigure StartPoint="0,25" IsClosed="True">
+                                <LineSegment Point="250,25"/>
+                                <ArcSegment Point="275,0" Size="25,25" SweepDirection="Clockwise"/>
+                                <LineSegment Point="375,0"/>
+                                <LineSegment Point="375,190"/>
+                                <LineSegment Point="0,190"/>
+                            </PathFigure>
+                        </PathGeometry>
+                    </Path.Data>
+                </Path>
+                <ScrollViewer HorizontalAlignment="Left" Height="155" Margin="300,285,0,0" VerticalAlignment="Top" Width="365" VerticalScrollBarVisibility="Auto">
+                    <StackPanel x:Name="VictoryToPlayersPanel"/>
+                </ScrollViewer>
+                <TextBlock x:Name="VictoryToPlayersText" HorizontalAlignment="Left" Margin="598,258,0,0" VerticalAlignment="Top"
+                    Text="对角色胜率" Foreground="DodgerBlue" FontWeight="Light" FontSize="13.5"/>
+
+                <Path Margin="675,255,0,0" HorizontalAlignment="Left" Height="190" VerticalAlignment="Top" Width="375" Fill="White" 
+                      Data="M0,25 L250,25 A25,25,0,0,1,275,0 L375,0 L375,190 L0,190 z">
+                    <Path.Effect>
+                        <DropShadowEffect x:Name="BattleLuckBackground" Color="DodgerBlue" ShadowDepth="0" BlurRadius="8"/>
+                    </Path.Effect>
+                </Path>
+                <Components:LuckGraph x:Name="LuckGraph" HorizontalAlignment="Left" Margin="680,285,0,0" VerticalAlignment="Top" Width="365"/>
+                <TextBlock x:Name="BattleLuckText" HorizontalAlignment="Left" Margin="965,258,0,0" VerticalAlignment="Top"
+                    Text="本场血统变化" Foreground="DodgerBlue" FontWeight="Light" FontSize="13.5"/>
+
+
+            </Grid>
+        </Grid>
+        <Grid x:Name="NavigationGrid" Width="500" HorizontalAlignment="Center" Margin="0,0,0,50" VerticalAlignment="Bottom" Height="10"/>
+        <Button x:Name="ContinueButton" Content="结束战斗" Style="{StaticResource DefaultGreenButtonStyle}" FontSize="22.5" FontWeight="Light" 
+                HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="200" Height="60" IsEnabled="False" Click="Continue_Click"/>
+    </Grid>
+</UserControl>

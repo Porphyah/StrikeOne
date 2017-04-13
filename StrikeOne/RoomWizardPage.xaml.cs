@@ -27,7 +27,10 @@ namespace StrikeOne
     {
         private static readonly Dictionary<string, BattleType> BattleTypeDictionary = new Dictionary<string, BattleType>()
         {
-            { "One vs One", BattleType.OneVsOne }
+            { "One vs One", BattleType.OneVsOne },
+            { "Triangle Mess", BattleType.TriangleMess },
+            { "Square Mess", BattleType.SquareMess },
+            { "Twinning Fight", BattleType.TwinningFight }
         }; 
 
         public Action LeaveAction { set; private get; }
@@ -198,6 +201,75 @@ namespace StrikeOne
                                 Color = Colors.Red,
                                 Capacity = 1,
                                 Room = NewRoom
+                            });
+                            break;
+                        case BattleType.TriangleMess:
+                            NewRoom.Groups.Add(new Group()
+                            {
+                                Name = "Group A",
+                                Color = Colors.DodgerBlue,
+                                Room = NewRoom,
+                                Capacity = 1
+                            });
+                            NewRoom.Groups.Add(new Group()
+                            {
+                                Name = "Group B",
+                                Color = Colors.Red,
+                                Room = NewRoom,
+                                Capacity = 1
+                            });
+                            NewRoom.Groups.Add(new Group()
+                            {
+                                Name = "Group C",
+                                Color = Colors.LimeGreen,
+                                Room = NewRoom,
+                                Capacity = 1
+                            });
+                            break;
+                        case BattleType.SquareMess:
+                            NewRoom.Groups.Add(new Group()
+                            {
+                                Name = "Group A",
+                                Color = Colors.DodgerBlue,
+                                Room = NewRoom,
+                                Capacity = 1
+                            });
+                            NewRoom.Groups.Add(new Group()
+                            {
+                                Name = "Group B",
+                                Color = Colors.Red,
+                                Room = NewRoom,
+                                Capacity = 1
+                            });
+                            NewRoom.Groups.Add(new Group()
+                            {
+                                Name = "Group C",
+                                Color = Colors.LimeGreen,
+                                Room = NewRoom,
+                                Capacity = 1
+                            });
+                            NewRoom.Groups.Add(new Group()
+                            {
+                                Name = "Group D",
+                                Color = Colors.DarkOrange,
+                                Room = NewRoom,
+                                Capacity = 1
+                            });
+                            break;
+                        case BattleType.TwinningFight:
+                            NewRoom.Groups.Add(new Group()
+                            {
+                                Name = "Group A",
+                                Color = Colors.DodgerBlue,
+                                Room = NewRoom,
+                                Capacity = 2
+                            });
+                            NewRoom.Groups.Add(new Group()
+                            {
+                                Name = "Group B",
+                                Color = Colors.Red,
+                                Room = NewRoom,
+                                Capacity = 2
                             });
                             break;
                     }

@@ -108,11 +108,26 @@
     <Compile Include="Components\GroupItem.xaml.cs">
       <DependentUpon>GroupItem.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Components\LuckGraph.xaml.cs">
+      <DependentUpon>LuckGraph.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\MarkerProgressBar.xaml.cs">
+      <DependentUpon>MarkerProgressBar.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\NavigationControl.xaml.cs">
+      <DependentUpon>NavigationControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Components\ParticipantDisplayLarge.xaml.cs">
       <DependentUpon>ParticipantDisplayLarge.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Components\ParticipantDisplayLuck.xaml.cs">
+      <DependentUpon>ParticipantDisplayLuck.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Components\ParticipantDisplaySmall.xaml.cs">
       <DependentUpon>ParticipantDisplaySmall.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\ParticipantDisplayXLarge.xaml.cs">
+      <DependentUpon>ParticipantDisplayXLarge.xaml</DependentUpon>
     </Compile>
     <Compile Include="Components\ParticipantItem.xaml.cs">
       <DependentUpon>ParticipantItem.xaml</DependentUpon>
@@ -128,6 +143,9 @@
     </Compile>
     <Compile Include="Components\ProgressItem.xaml.cs">
       <DependentUpon>ProgressItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Components\SkillConfirmControl.xaml.cs">
+      <DependentUpon>SkillConfirmControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Components\SkillItem.xaml.cs">
       <DependentUpon>SkillItem.xaml</DependentUpon>
@@ -154,8 +172,10 @@
     <Compile Include="Core\IO.cs" />
     <Compile Include="Core\Lua\LuaFramework.cs" />
     <Compile Include="Core\Lua\LuaGeneric.cs" />
+    <Compile Include="Core\Lua\LuaLinq.cs" />
     <Compile Include="Core\Lua\LuaMain.cs" />
     <Compile Include="Core\Lua\LuaMath.cs" />
+    <Compile Include="Core\Lua\LuaUI.cs" />
     <Compile Include="Core\Player.cs" />
     <Compile Include="Core\Network\ISocket.cs" />
     <Compile Include="Core\Network\ISocketHandler.cs" />
@@ -171,6 +191,7 @@
     <Compile Include="Core\Room.cs" />
     <Compile Include="Core\SerializableExtension.cs" />
     <Compile Include="Core\Skill.cs" />
+    <Compile Include="Core\Value.cs" />
     <Compile Include="DebugWindow.xaml.cs">
       <DependentUpon>DebugWindow.xaml</DependentUpon>
     </Compile>
@@ -210,6 +231,9 @@
     <Compile Include="Core\User.cs" />
     <Compile Include="SkillWindow.xaml.cs">
       <DependentUpon>SkillWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="StatisticsPage.xaml.cs">
+      <DependentUpon>StatisticsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserPage.xaml.cs">
       <DependentUpon>UserPage.xaml</DependentUpon>
@@ -270,11 +294,31 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Components\LuckGraph.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\MarkerProgressBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\NavigationControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Components\ParticipantDisplayLarge.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Components\ParticipantDisplayLuck.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Components\ParticipantDisplaySmall.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\ParticipantDisplayXLarge.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -299,6 +343,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Components\ProgressItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Components\SkillConfirmControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -394,6 +442,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="SkillWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="StatisticsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -563,6 +615,29 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Assets\OK.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Statistics.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Contributor_flag.png" />
+    <Resource Include="Assets\Executioner_flag.png" />
+    <Resource Include="Assets\Luck_flag.png" />
+    <Resource Include="Assets\Victory_flag.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Attack_grey.png" />
+    <Resource Include="Assets\Counter_grey.png" />
+    <Resource Include="Assets\Defend_grey.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\TriangleMess.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\SquareMess.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\TwinningFight.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

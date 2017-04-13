@@ -19,6 +19,8 @@ namespace StrikeOne.Core
             get { return Participants.Length; } }
         public Player[] Participants { private set; get; }
 
+        public bool IsVictorious { set; get; } = false;
+
         private readonly Guid?[] ParticipantIds;
 
         public Group() { }

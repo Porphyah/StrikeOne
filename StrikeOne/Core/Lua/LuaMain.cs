@@ -23,8 +23,11 @@ namespace StrikeOne.Core.Lua
                 ["Debug"] = new LuaDebug(),
                 ["Math"] = new LuaMath(),
                 ["Generic"] = new LuaGeneric(),
+                ["UI"] = new LuaUI()
             };
             LuaState["Core"] = LuaState;
+            //LuaState.ExecuteString("require \"luanet\"");
+            //LuaState.ExecuteString("luanet.load_assembly(\"System.Linq\")");
             LuaState.LuaState.DebugHook += (sender, e) => { MainWindow.Instance?.SetLog(e.LuaDebug.source, Colors.Black); };
             LuaState.LuaState.HookException += (sender, e) => { MainWindow.Instance?.SetLog(e.Exception.Message, Colors.Red); };
             //LuaState.ExecuteFile("Object.lua");

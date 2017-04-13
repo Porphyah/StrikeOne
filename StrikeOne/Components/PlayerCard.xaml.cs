@@ -74,6 +74,11 @@ namespace StrikeOne.Components
                     SkillImage.Source = null;
                 SkillName.Text = Skill.Name;
             }
+            else
+            {
+                SkillImage.Source = null;
+                SkillName.Text = "No Skill";
+            }
             SetStatus("Joined");
         }
         public void Collapse()
@@ -172,20 +177,69 @@ namespace StrikeOne.Components
             };
             ActionBorder.BeginAnimation(MarginProperty, ShowActionBorderAnimation);
         }
+        public void SetAction(string Name, System.Drawing.Image Image, string Description, int? Probability)
+        {
+            CurrentAction.Init(Name, Image, Description, Probability);
+            ThicknessAnimation ShowActionBorderAnimation = new ThicknessAnimation()
+            {
+                From = ActionBorder.Margin,
+                To = new Thickness(0, 0, 0, 0),
+                Duration = TimeSpan.FromSeconds(0.5),
+                EasingFunction = new ExponentialEase() { EasingMode = EasingMode.EaseOut }
+            };
+            ShowActionBorderAnimation.Completed += delegate
+            {
+                DispatcherTimer Timer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(3) };
+                Timer.Tick += delegate
+                {
+                    DoubleAnimation OpacityAnimation = new DoubleAnimation()
+                    {
+                        From = CurrentAction.Opacity,
+                        To = 0,
+                        Duration = TimeSpan.FromSeconds(0.3),
+                        EasingFunction = new ExponentialEase() { EasingMode = EasingMode.EaseIn }
+                    };
+                    OpacityAnimation.Completed += delegate
+                    {
+                        CurrentAction.Visibility = Visibility.Hidden;
+                        ActionBorder.BeginAnimation(MarginProperty, new ThicknessAnimation()
+                        {
+                            From = ActionBorder.Margin,
+                            To = new Thickness(0, 0, 200, 0),
+                            Duration = TimeSpan.FromSeconds(0.5),
+                            EasingFunction = new ExponentialEase() { EasingMode = EasingMode.EaseIn }
+                        });
+                    };
+                    CurrentAction.BeginAnimation(OpacityProperty, OpacityAnimation);
+                    Timer.Stop();
+                };
+                CurrentAction.Visibility = Visibility.Visible;
+                CurrentAction.BeginAnimation(OpacityProperty, new DoubleAnimation()
+                {
+                    From = CurrentAction.Opacity,
+                    To = 1,
+                    Duration = TimeSpan.FromSeconds(0.3),
+                    EasingFunction = new ExponentialEase() { EasingMode = EasingMode.EaseOut }
+                });
+                Timer.Start();
+            };
+            ActionBorder.BeginAnimation(MarginProperty, ShowActionBorderAnimation);
+        }
         public void UpdateHp()
         {
-            HealthText.Text = Player.BattleData.CurrentHp == 0 ? "-" : Player.BattleData.CurrentHp.ToString("0");
+            HealthText.Text = Player.BattleData.CurrentHp.GetDouble() > 0 ? 
+                Player.BattleData.CurrentHp.GetDouble().ToString("0") : "-" ;
             Hp.BeginAnimation(RangeBase.ValueProperty, new DoubleAnimation()
             {
                 From = Hp.Value,
-                To = Player.BattleData.CurrentHp,
+                To = Player.BattleData.CurrentHp.GetDouble(),
                 Duration = TimeSpan.FromSeconds(0.3),
                 EasingFunction = new ExponentialEase() { EasingMode = EasingMode.EaseInOut }
             });
 
-            double HpRatio = Player.BattleData.CurrentHp / Player.BattleData.TotalHp;
+            double HpRatio = Player.BattleData.CurrentHp.GetDouble() / BattleData.TotalHp;
             Color Color;
-            if (Player.BattleData.CurrentHp == 0)
+            if (Player.BattleData.CurrentHp.GetInt() == 0)
                 Color = Colors.Gray;
             else if (HpRatio <= 0.25)
                 Color = Colors.Red;

@@ -25,6 +25,7 @@ namespace StrikeOne
         public RoomPage RoomPage { set; get; }
         public PrepareStrikePage PrepareStrikePage { set; get; }
         public BattlefieldPage BattlefieldPage { set; get; }
+        public StatisticsPage StatisticsPage { set; get; }
 
         public EditorPage EditorPage { set; get; }
         public EditSkillPage EditSkillPage { set; get; }
@@ -229,6 +230,22 @@ namespace StrikeOne
             MainGrid.Children.Add(BattlefieldPage);
             CurrentPage = BattlefieldPage;
             BattlefieldPage.PageEnter(Battlefield);
+        }
+
+        public void EnterStatistics(Battlefield Battlefield)
+        {
+            if (CurrentPage != null)
+                MainGrid.Children.Remove(CurrentPage);
+
+            StatisticsPage = new StatisticsPage()
+            {
+                Height = MainGrid.ActualHeight,
+                Width = MainGrid.ActualWidth
+            };
+
+            MainGrid.Children.Add(StatisticsPage);
+            CurrentPage = StatisticsPage;
+            StatisticsPage.PageEnter(Battlefield);
         }
 
         public void EnterEditorMode()

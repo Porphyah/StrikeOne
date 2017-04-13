@@ -1,0 +1,43 @@
+﻿<UserControl x:Class="StrikeOne.Components.MarkerProgressBar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:StrikeOne.Components"
+             xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="35" d:DesignWidth="360">
+    <Grid>
+        <Rectangle Fill="#88000000" Margin="0,20,0,0" Width="300" Height="Auto" HorizontalAlignment="Left"/>
+        <Rectangle x:Name="BottomBar" Margin="0,20,0,0" VerticalAlignment="Stretch" HorizontalAlignment="Left" Width="300">
+            <Rectangle.Fill>
+                <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
+                    <GradientStop Offset="0" x:Name="StartChangeColor"/>
+                    <GradientStop Offset="1" x:Name="EndChangeColor"/>
+                </LinearGradientBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+        <Rectangle x:Name="TopBar" Margin="0,20,0,0" VerticalAlignment="Stretch" HorizontalAlignment="Left" Width="300"/>
+        <Line x:Name="BeforeLine" X1="0" X2="0" Y1="15" Y2="{Binding RelativeSource={RelativeSource Self}, Path=ActualHeight}" 
+              Stroke="#88808080" StrokeThickness="2">
+            <!--<Line.Stroke>
+                <LinearGradientBrush>
+                    <GradientStop Offset="0" Color="#88000000"/>
+                    <GradientStop Offset="1" Color="#88FFFFFF"/>
+                </LinearGradientBrush>
+            </Line.Stroke>-->
+        </Line>
+        <TextBlock x:Name="BeforeText" HorizontalAlignment="Left" Margin="-15,0,0,0" Text="100%" Foreground="Gray" VerticalAlignment="Top"/>
+        <Line x:Name="AfterLine" X1="0" X2="0" Y1="15" Y2="{Binding RelativeSource={RelativeSource Self}, Path=ActualHeight}"
+              Stroke="#88000000" StrokeThickness="2">
+            <!--<Line.Stroke>
+                <LinearGradientBrush>
+                    <GradientStop Offset="0" Color="#88000000"/>
+                    <GradientStop Offset="1" Color="#88FFFFFF"/>
+                </LinearGradientBrush>
+            </Line.Stroke>-->
+        </Line>
+        <TextBlock x:Name="AfterText" HorizontalAlignment="Left" Margin="-15,0,0,0" Text="100%" VerticalAlignment="Top"/>
+        <TextBlock x:Name="ChangeText" VerticalAlignment="Bottom" Margin="305,0,0,0" HorizontalAlignment="Left" Text="100.0%"/>
+    </Grid>
+</UserControl>

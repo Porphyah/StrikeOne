@@ -86,7 +86,9 @@ namespace StrikeOne.Core.Lua
         /// <param name="luaCommand">lua指令</param>  
         public object[] ExecuteString(string luaCommand)
         {
-            return LuaState.DoString(luaCommand);
+            return LuaState.DoString(Encoding.UTF8.GetString
+                (Encoding.Convert(Encoding.Default, Encoding.UTF8, 
+                Encoding.Default.GetBytes(luaCommand))));
         }
     }
 }

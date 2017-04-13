@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -16,6 +17,12 @@ namespace StrikeOne
     /// </summary>
     public partial class App : Application
     {
+        public App()
+        {
+            Current.DispatcherUnhandledException += Current_DispatcherUnhandledException;
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+        }
+
         public static User CurrentUser { set; get; }
         public static List<User> UserList { set; get; } = new List<User>();
         public static List<AI> AiList { set; get; } = new List<AI>();
@@ -40,6 +47,38 @@ namespace StrikeOne
                     StringComparison.CurrentCultureIgnoreCase))
                     DebugMode = true;
             }
+        }
+
+        void Current_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            string LogFileName = "Log\\" + "StrikeOne_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".txt";
+            StreamWriter Writer = new StreamWriter(LogFileName);
+            Writer.WriteLine("Log Generate Date：" + DateTime.Now);
+            Writer.WriteLine();
+            Writer.WriteLine("Error Message：" + e.Exception.Message + "\n");
+            Writer.WriteLine();
+            Writer.WriteLine("Error StackTrace：\n" + e.Exception.StackTrace + "\n");
+            Writer.Close();
+
+            MessageBox.Show("StrikeOne遇到了问题无法续命，把以下的信息甩给开发者背锅：\n" + e.Exception.Message + "\n\n以上信息已保存到" + LogFileName + "，将该文件发给开发者即可。",
+                "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
+            e.Handled = true;//使用这一行代码告诉运行时，该异常被处理了，不再作为UnhandledException抛出了。
+        }
+        void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            var Exception = (Exception)e.ExceptionObject;
+
+            string LogFileName = "Log\\" + "StrikeOne_" + DateTime.Now.ToString("yyyyMMddhhmm") + ".txt";
+            StreamWriter Writer = new StreamWriter(LogFileName);
+            Writer.WriteLine("Log Generate Date：" + DateTime.Now);
+            Writer.WriteLine();
+            Writer.WriteLine("Error Message：" + Exception.Message + "\n");
+            Writer.WriteLine();
+            Writer.WriteLine("Error StackTrace：\n" + Exception.StackTrace + "\n");
+            Writer.Close();
+
+            MessageBox.Show("StrikeOne遇到了问题无法续命，把以下的信息甩给开发者背锅：\n" + Exception.Message + "\n\n以上信息已保存到" + LogFileName + "，将该文件发给开发者即可。",
+                "Error!", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 }
